@@ -1,0 +1,24 @@
+Player prefab
+	- 
+
+Non-player objects "need to be managed by the server only"
+	- Network Identity - Server only (Enemy spawner, but not enemy?)
+	- OnStartServer (runs only on server)
+
+Shooting
+	- Prefab
+	- Spawn point prefab
+	- Spawn on server: [Command] + Cmd...methodName
+		- i.e. run this on the server
+		- Add line: NetworkServer.Spawn(obj);
+	- Destrony(bullet) - "because it's a network managed object it will be destroyed on the server and clients"
+
+Health
+	- The bullet can get destroyed before it can reach the client
+	- [SyncVar(hook="OnChangeHealth")]
+	- if (!isServer) return;
+	- 
+
+Death and respawning
+	- [ClientRpc] Rpc_
+	- if (isLocalPlayer)
