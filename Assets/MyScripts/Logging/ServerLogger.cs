@@ -1,61 +1,61 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Logging.Models;
-using CubeArena.Assets.MyScripts.Logging.SQLite;
+using CubeArena.Assets.MyScripts.Data;
+using CubeArena.Assets.MyScripts.Data.Models;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
 namespace CubeArena.Assets.MyScripts.Logging {
-	public class ServerLogger {
+	public class ServerLogger : NetworkBehaviour {
 
-		private CubeArenaMeasurementsDb db;
-		private ServerLogger () {
-			db = new CubeArenaMeasurementsDb ();
-		}
+		private DataService dataService;
 
-		private static ServerLogger instance;
-		public static ServerLogger Logger {
-			get {
-				if (instance == null) {
-					instance = new ServerLogger ();
-				}
-				return instance;
+		void Start () {
+			if (isServer) {
+				dataService = DataService.Instance;
 			}
 		}
 
-		public void Log (object msg) {
-			Debug.Log (msg);
+		[Command]
+		public void CmdLog (string msg) {
+			dataService.Log (msg);
 		}
 
-		public void LogMove (Move move) {
-			Log (db.InsertMove (move));
+		[Command]
+		public void CmdLogMove (Move move) {
+			dataService.SaveMove (move);
 		}
 
-		public void LogRotation (Rotation rotation) {
-			Log (db.InsertRotation (rotation));
+		[Command]
+		public void CmdLogRotation (Rotation rotation) {
+			dataService.SaveRotation (rotation);
 		}
 
-		public void LogKill (Kill kill) {
-			Log (db.InsertKill (kill));
+		[Command]
+		public void CmdLogSelectionAction (SelectionAction selectionAction) {
+			dataService.SaveSelectionAction (selectionAction);
 		}
 
-		public void LogSelectionAction (SelectionAction selectionAction) {
-			Log (db.InsertSelectionAction (selectionAction));
+		[Command]
+		public void CmdLogSelection (Selection selection) {
+			dataService.SaveSelecion (selection);
 		}
 
-		public void LogSelecion (Selection selection) {
-			Log (db.InsertSelection (selection));
+		[Command]
+		public void CmdLogPlacement (Placement placement) {
+			dataService.SavePlacement (placement);
 		}
 
-		public void LogPlacement (Placement placement) {
-			Log (db.InsertPlacement (placement));
+		[Command]
+		public void CmdLogKill (Kill kill, Assist[] assists) {
+			dataService.SaveKill (kill, new List<Assist> (assists));
 		}
 
-		public void LogKill (Kill kill, List<Assist> assists) {
-			Log (db.InsertKill(kill));
-			foreach (var assist in assists) {
-				Log (db.InsertAssist(assist));
-			}
+		[Command]
+		public void CmdLogAreaInteraction (AreaInteraction areaInteraction) {
+			dataService.SaveAreaInteraction (areaInteraction);
 		}
 	}
 }

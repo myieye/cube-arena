@@ -4,6 +4,7 @@ using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cubes;
 using CubeArena.Assets.MyScripts.Agents;
 using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Data.Models;
 using CubeArena.Assets.MyScripts.Fire;
 using CubeArena.Assets.MyScripts.Logging.Models;
 using CubeArena.Assets.MyScripts.Network;
@@ -11,45 +12,41 @@ using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging {
     public static class Calc {
-        public static Move CalcMove (GameObjectState from, GameObjectState to, int playerId, int ui) {
+        public static Move CalcMove (float cumulativeDistance, GameObjectState from, GameObjectState to, int playerRoundId) {
             return new Move {
                 Distance = Vector3.Distance (from.Position, to.Position),
+                    CumulativeDistance = cumulativeDistance,
                     Time = (to.Time - from.Time).TotalMilliseconds,
-                    PlayerId = playerId,
-                    UI = ui
+                    PlayerRoundId = playerRoundId
             };
         }
 
-        public static Rotation CalcRotate (GameObjectState from, GameObjectState to, int playerId, int ui) {
+        public static Rotation CalcRotate (float cumulativeRotation, GameObjectState from, GameObjectState to, int playerRoundId) {
             return new Rotation {
                 Angle = Quaternion.Angle (from.Rotation, to.Rotation),
+                    CumulativeAngle = cumulativeRotation,
                     Time = (to.Time - from.Time).TotalMilliseconds,
-                    PlayerId = playerId,
-                    UI = ui
+                    PlayerRoundId = playerRoundId
             };
         }
 
-        public static SelectionAction BuildSelectionAction (SelectionActionType type, int playerId, int ui) {
+        public static SelectionAction BuildSelectionAction (SelectionActionType type, int playerRoundId) {
             return new SelectionAction {
-                Type = type,
-                    PlayerId = playerId,
-                    UI = ui
+                Type = type, PlayerRoundId = playerRoundId
             };
         }
 
-        public static Selection BuildSelection (DateTime from, DateTime to, int playerId, int ui) {
+        public static Selection BuildSelection (DateTime from, DateTime to, int playerRoundId) {
             return new Selection {
                 Time = (to - from).TotalMilliseconds,
-                    PlayerId = playerId,
-                    UI = ui
+                    PlayerRoundId = playerRoundId
             };
         }
 
-        public static Placement BuildPlacement (int? placedOnPlayerId, int playerId, int uIMode) {
+        public static Placement BuildPlacement (int? placedOnPlayerId, int playerRoundId) {
             return new Placement {
                 PlacedOnPlayerId = placedOnPlayerId.HasValue ? placedOnPlayerId.Value : -1,
-                PlayerId = playerId,
-                UI = uIMode
+                    PlayerRoundId = playerRoundId
             };
         }
 
@@ -57,41 +54,45 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return Quaternion.Angle (gameObject.transform.rotation, Quaternion.identity) < 45;
         }
 
-        public static Kill BuildKill(Enemy enemy, int playerId) {
+        public static Kill BuildKill (Enemy enemy, int playerRoundId) {
             return new Kill {
                 Level = enemy.level,
-                PlayerId = playerId
+                    PlayerRoundId = playerRoundId
             };
         }
 
         public static List<Assist> CalcAssists (GameObject hitter) {
             var hitFireCube = hitter.GetComponentInChildren<FireCube> ();
-            var cubes = new List<FireCube> { hitFireCube };
-            FindAttachedFireCubesRec (hitFireCube, cubes);
+            var fireCubes = new List<FireCube> { hitFireCube };
 
-            Debug.Log("Cubes used: " + cubes.Count);
+            FindAttachedFireCubesRec (hitFireCube, fireCubes);
+            var assistCubes = FindAssists (fireCubes);
 
-            var assists = GetAssists (cubes);
-            assists.Remove (hitFireCube);
-            var tippers = GetTippers (hitter, assists);
-            
-            return (from assist in assists
-                select  BuildAssist(assist.gameObject.transform.parent.gameObject,
-                tippers.Contains(assist) ? AssistType.Tipper : AssistType.Stacker)).ToList();
+            assistCubes.Remove (hitFireCube);
+            var tippers = GetTippers (hitter, assistCubes);
+
+            return BuildAssists (assistCubes.Except (tippers), tippers);
         }
 
-        private static Assist BuildAssist(GameObject assist, AssistType assistType) {
-            return new Assist {
-                Type = assistType,
-                PlayerId = assist.GetComponent<PlayerId>().Id
-            };
+        private static List<Assist> BuildAssists (IEnumerable<FireCube> stackerCubes, List<FireCube> tipperCubes) {
+            var assists = new List<Assist> ();
+            foreach (var assist in stackerCubes) {
+                assists.Add (new Assist {
+                    Type = AssistType.Stacker,
+                        PlayerRoundId = GetPlayerRoundId (assist.Cube)
+                });
+            }
+            foreach (var tipper in tipperCubes) {
+                assists.Add (new Assist {
+                    Type = AssistType.Tipper,
+                        PlayerRoundId = GetPlayerRoundId (tipper.Cube)
+                });
+            }
+            return assists;
         }
 
         private static List<FireCube> GetTippers (GameObject hitter, List<FireCube> assists) {
-            return
-            (from assist in assists
-            where IsBelow (assist.gameObject, hitter) && IsRotating (assist)
-            select assist).ToList();
+            return (from assist in assists where IsBelow (assist.gameObject, hitter) && IsRotating (assist) select assist).ToList ();
         }
 
         private static bool IsBelow (GameObject assist, GameObject hitter) {
@@ -99,7 +100,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
         }
 
         private static bool IsRotating (FireCube assist) {
-            return assist.GetComponentInParent<CubeStateManager>().IsRotating;
+            return assist.Cube.GetComponent<CubeStateManager> ().IsRotating;
         }
 
         private static void FindAttachedFireCubesRec (FireCube source, List<FireCube> cubes) {
@@ -114,44 +115,68 @@ namespace CubeArena.Assets.MyScripts.Logging {
             }
         }
 
-        private static List<FireCube> GetAssists (List<FireCube> cubes) {
+        private static List<FireCube> FindAssists (List<FireCube> cubes) {
+            // Cubes that count as assists are:
+            // (1) All attached cubes that are off the ground
             var offGroundAssists = new List<FireCube> ();
             foreach (var fireCube in cubes) {
                 if (!FireCubeIsOnGround (fireCube)) {
                     offGroundAssists.Add (fireCube);
                 }
             }
+
+            // (2) All cubes on the ground attached to a cube off the grounf
             var allAssists = new List<FireCube> (offGroundAssists);
             foreach (var fireCube in cubes.Except (offGroundAssists)) {
-                Debug.Log("Checking for on ground: ");
-                if (FireCubeAttachedToAny (fireCube, offGroundAssists)) {
-                    Debug.Log("FireCubeAttachedToAny");
+                if (FireCubeIsAttachedToAny (fireCube, offGroundAssists)) {
                     allAssists.Add (fireCube);
                 }
             }
+
             return allAssists;
         }
 
-        private static bool FireCubeAttachedToAny (FireCube fireCube, List<FireCube> fireCubes) {
-            var fires = from fc in fireCubes select fireCube.gameObject.transform.parent.gameObject;
-            Debug.Log("Equals: " + fireCubes.Contains(fireCube));
-            Debug.Log("Fires");
-            foreach (var f in fires) {
-                Debug.Log(f);
-                Debug.Log(f.GetInstanceID());
+        public static int CalcArea (Vector3? interactionPoint, Vector3 playerStartPos) {
+            if (interactionPoint.HasValue) {
+                var intPoint = interactionPoint.Value;
+                var maxMagnitude = playerStartPos.magnitude + Settings.Instance.AreaCenterPlayerStartPointOffset;
+                intPoint.y = playerStartPos.y = 0;
+                var areaCenter = Vector3.ClampMagnitude (playerStartPos * 1000, maxMagnitude);
+                var distance = Vector3.Distance (areaCenter, intPoint);
+                var areaIndex = Array.FindIndex(Settings.Instance.AreaRadiuses, r => r > distance);
+                if (areaIndex >= 0) {
+                    return areaIndex + 1;
+                } else {
+                    return Settings.Instance.AreaRadiuses.Length + 1;
+                }
+            } else {
+                return 0;
             }
-            Debug.Log("Fource Sources");
+        }
+
+        public static AreaInteraction CalcAreaInteraction (DateTime from,
+            DateTime to, int area, int playerRoundId) {
+            return new AreaInteraction {
+                Area = area,
+                    Time = (to - from).TotalMilliseconds,
+                    PlayerRoundId = playerRoundId
+            };
+        }
+
+        private static bool FireCubeIsAttachedToAny (FireCube fireCube, List<FireCube> fireCubes) {
+            var fires = from fc in fireCubes select fc.Cube;
             return fireCube.FireSources
-                .Exists (fs => {
-                    Debug.Log(fs.gameObject);
-                    Debug.Log(fs.gameObject.GetInstanceID());
-                    return fires.Contains (fs.gameObject);
-                });
+                .Exists (fireSrc => fires.Contains (fireSrc.gameObject));
         }
 
         private static bool FireCubeIsOnGround (FireCube fireCube) {
             return fireCube.FireSources
-                .Exists (fs => fs.gameObject.CompareTag (Tags.Ground));
+                .Exists (fireSrc => fireSrc.gameObject.CompareTag (Tags.Ground));
+        }
+
+        private static int GetPlayerRoundId (GameObject playerObj) {
+            var playerId = playerObj.GetComponent<PlayerId> ().Id;
+            return PlayerManager.Instance.GetPlayerRoundId (playerId);
         }
     }
 }

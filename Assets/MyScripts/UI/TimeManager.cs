@@ -17,16 +17,20 @@ namespace CubeArena.Assets.MyScripts.UI.Mode
 		private RoundOverListener roundOverListener;
 		
 		public void StartRound(float roundLength, RoundOverListener roundOverListener) {
-			this.roundOverListener = roundOverListener;
-			roundTimeRemaining_S = Mathf.CeilToInt(roundLength * 60f);
-			InvokeRepeating(TickClock_Method, 0, 1);
+			if (isServer) {
+				this.roundOverListener = roundOverListener;
+				roundTimeRemaining_S = Mathf.CeilToInt(roundLength * 60f);
+				InvokeRepeating(TickClock_Method, 0, 1);
+			}
 		}
 
 		private void TickClock() {
-			roundTimeRemaining_S -= 1;
-			if (roundTimeRemaining_S <= 0) {
-				CancelInvoke(TickClock_Method);
-				roundOverListener.OnRoundOver();
+			if (isServer) {
+				roundTimeRemaining_S -= 1;
+				if (roundTimeRemaining_S <= 0) {
+					CancelInvoke(TickClock_Method);
+					roundOverListener.OnRoundOver();
+				}
 			}
 		}
 

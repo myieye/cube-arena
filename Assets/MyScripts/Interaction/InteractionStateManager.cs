@@ -14,6 +14,14 @@ namespace CubeArena.Assets.MyScripts.Interaction
 		public CubeStatePair HoveredCube { get; private set; }
 		public CubeStatePair SelectedCube { get; private set; }
 
+		public void Update() {
+			if (IsMoving()) {
+				Measure.UpdateMove(SelectedCube.Cube);
+			} else if (IsRotating()) {
+				Measure.UpdateRotation(SelectedCube.Cube);
+			}
+		}
+
 		public void StartHover(GameObject cube) {
 			if (!IsHovered(cube)) {
 				EndHover();
@@ -82,6 +90,13 @@ namespace CubeArena.Assets.MyScripts.Interaction
 
 		public void StartRotation() {
 			FinishAnyMeasurements();
+			if (IsMoving()) {
+				if (InState(InteractionState.Disallowed)) {
+					Debug.LogError("StartRotation while disallowed");
+				} else {
+					Debug.LogWarning("StartRotation while Moving");
+				}
+			}
 			if (SelectedCube != null) {
 				State = InteractionState.Rotating;
 				Measure.StartRotation(SelectedCube.Cube);
@@ -139,9 +154,13 @@ namespace CubeArena.Assets.MyScripts.Interaction
 			if (InState(InteractionState.Moving)) {
 				Measure.EndMove(SelectedCube.Cube);
 				Debug.LogWarning("FinishAnyMeasurements.EndMove");
-			} else if (InState(InteractionState.Rotating)) {
+			} else if (IsRotating()) {
 				Measure.EndRotation(SelectedCube.Cube);
 			}
+		}
+
+		public bool IsRotating() {
+			return InState(InteractionState.Rotating);
 		}
 	}
 

@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Network
 {
-	public class CustomNetworkManager : NetworkManager {
+	public class CustomNetworkManager : UnityEngine.Networking.NetworkManager {
 
 		public Transform spawnPoints;
 		public GameObject cubeStartPoints;
@@ -28,10 +28,7 @@ namespace CubeArena.Assets.MyScripts.Network
 			Debug.Log("OnServerAddPlayer");
 			var key = GenerateConnectionKey(conn, playerControllerId);
 			if (!networkPlayers.ContainsKey(key)) {
-				var netPlayer = new NetworkPlayer {
-					Connection = conn,
-					PlayerControllerId = playerControllerId,
-					PlayerId = numPlayers + 1 };
+				var netPlayer = PlayerManager.Instance.AddPlayer(conn, playerControllerId);
 				networkPlayers[key] = netPlayer;
 				SpawnPlayer(netPlayer);
 			}
@@ -50,8 +47,9 @@ namespace CubeArena.Assets.MyScripts.Network
 
 		private void SpawnPlayer(NetworkPlayer netPlayer) {
 			var startPos = GetStartPosition();
-			var color = materials[netPlayer.PlayerId - 1].color;
-			netPlayer.Player = SpawnPlayerCursor(netPlayer, color);
+			var color = materials[netPlayer.PlayerNum - 1].color;
+			netPlayer.PlayerGameObject = SpawnPlayerCursor(netPlayer, color);
+			netPlayer.StartPosition = startPos;
 			SpawnCubesForPlayer(startPos, netPlayer, color);
 			enemyManager.OnPlayerAdded();
 		}
@@ -63,7 +61,7 @@ namespace CubeArena.Assets.MyScripts.Network
 			}
 			color = Highlight.ReduceTransparency(color, Highlight.CursorTransparency);
 			player.GetComponent<Colourer>().color = color;
-			player.GetComponent<PlayerId>().Id = netPlayer.PlayerId;
+			player.GetComponent<PlayerId>().Id = netPlayer.PlayerNum;
 			NetworkServer.AddPlayerForConnection(netPlayer.Connection, player, netPlayer.PlayerControllerId);
 			return player;
 		}
@@ -72,14 +70,16 @@ namespace CubeArena.Assets.MyScripts.Network
 			cubeStartPoints.transform.rotation = startPos.rotation;
 			cubeStartPoints.transform.position = startPos.position;
 
+			var i = 1;
 			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate(cubePrefab, trans.position, trans.rotation);
 				if (settings.AREnabled) {
 					arManager.AddGameObjectToWorld(cube);
 				}
 				cube.GetComponent<Colourer>().color = color;
-				cube.GetComponent<PlayerId>().Id = netPlayer.PlayerId;
-				NetworkServer.SpawnWithClientAuthority(cube, netPlayer.Player);
+				cube.GetComponent<PlayerId>().Id = netPlayer.PlayerNum;
+				cube.name += i++;
+				NetworkServer.SpawnWithClientAuthority(cube, netPlayer.PlayerGameObject);
 			}
 		}
 

@@ -7,7 +7,6 @@ using CubeArena.Assets.MyScripts.Constants;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
-
 namespace CubeArena.Assets.MyScripts.Interaction
 {
     public class SelectAndAxesGestures : MonoBehaviour {

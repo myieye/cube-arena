@@ -7,8 +7,13 @@ namespace CubeArena.Assets.MyScripts.Fire
 	public class FireCube : MonoBehaviour {
 
 		public FireSource Source { get; private set; }
-		public List<FireSource> FireSources { get; private set; }
+		public List<FireSource> FireSources;// { get; private set; }
 		private List<GameObject> fireObjects = new List<GameObject>();
+		public GameObject Cube {
+			get {
+				return transform.parent.gameObject;
+			}
+		}
 		
 		void Awake() {
 			FireSources = new List<FireSource>();
