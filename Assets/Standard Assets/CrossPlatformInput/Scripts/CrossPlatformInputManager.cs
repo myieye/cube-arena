@@ -139,6 +139,11 @@ namespace UnityStandardAssets.CrossPlatformInput
 			activeInput.SetButtonUp(name);
 		}
 
+		public static void ResetButton(string name)
+		{
+			activeInput.ResetButton(name);
+		}
+
 
 		public static void SetAxisPositive(string name)
 		{

@@ -8,45 +8,42 @@ using CubeArena.Assets.MyScripts.Data.Models;
 using CubeArena.Assets.MyScripts.Fire;
 using CubeArena.Assets.MyScripts.Logging.Models;
 using CubeArena.Assets.MyScripts.Network;
+using CubeArena.Assets.MyScripts.Rounds;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging {
     public static class Calc {
-        public static Move CalcMove (float cumulativeDistance, GameObjectState from, GameObjectState to, int playerRoundId) {
+        public static Move CalcMove (float cumulativeDistance, GameObjectState from, GameObjectState to) {
             return new Move {
                 Distance = Vector3.Distance (from.Position, to.Position),
                     CumulativeDistance = cumulativeDistance,
-                    Time = (to.Time - from.Time).TotalMilliseconds,
-                    PlayerRoundId = playerRoundId
+                    Time = (to.Time - from.Time).TotalMilliseconds
             };
         }
 
-        public static Rotation CalcRotate (float cumulativeRotation, GameObjectState from, GameObjectState to, int playerRoundId) {
+        public static Rotation CalcRotate (float cumulativeRotation, GameObjectState from, GameObjectState to) {
             return new Rotation {
                 Angle = Quaternion.Angle (from.Rotation, to.Rotation),
                     CumulativeAngle = cumulativeRotation,
-                    Time = (to.Time - from.Time).TotalMilliseconds,
-                    PlayerRoundId = playerRoundId
+                    Time = (to.Time - from.Time).TotalMilliseconds
             };
         }
 
-        public static SelectionAction BuildSelectionAction (SelectionActionType type, int playerRoundId) {
+        public static SelectionAction BuildSelectionAction (SelectionActionType type) {
             return new SelectionAction {
-                Type = type, PlayerRoundId = playerRoundId
+                Type = type
             };
         }
 
-        public static Selection BuildSelection (DateTime from, DateTime to, int playerRoundId) {
+        public static Selection BuildSelection (DateTime from, DateTime to) {
             return new Selection {
-                Time = (to - from).TotalMilliseconds,
-                    PlayerRoundId = playerRoundId
+                Time = (to - from).TotalMilliseconds
             };
         }
 
-        public static Placement BuildPlacement (int? placedOnPlayerId, int playerRoundId) {
+        public static Placement BuildPlacement (int? placedOnPlayerId) {
             return new Placement {
-                PlacedOnPlayerId = placedOnPlayerId.HasValue ? placedOnPlayerId.Value : -1,
-                    PlayerRoundId = playerRoundId
+                PlacedOnPlayerId = placedOnPlayerId.HasValue ? placedOnPlayerId.Value : -1
             };
         }
 
@@ -54,10 +51,9 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return Quaternion.Angle (gameObject.transform.rotation, Quaternion.identity) < 45;
         }
 
-        public static Kill BuildKill (Enemy enemy, int playerRoundId) {
+        public static Kill BuildKill (Enemy enemy) {
             return new Kill {
-                Level = enemy.level,
-                    PlayerRoundId = playerRoundId
+                Level = enemy.level
             };
         }
 
@@ -143,7 +139,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
                 intPoint.y = playerStartPos.y = 0;
                 var areaCenter = Vector3.ClampMagnitude (playerStartPos * 1000, maxMagnitude);
                 var distance = Vector3.Distance (areaCenter, intPoint);
-                var areaIndex = Array.FindIndex(Settings.Instance.AreaRadiuses, r => r > distance);
+                var areaIndex = Array.FindIndex (Settings.Instance.AreaRadiuses, r => r > distance);
                 if (areaIndex >= 0) {
                     return areaIndex + 1;
                 } else {
@@ -155,11 +151,10 @@ namespace CubeArena.Assets.MyScripts.Logging {
         }
 
         public static AreaInteraction CalcAreaInteraction (DateTime from,
-            DateTime to, int area, int playerRoundId) {
+            DateTime to, int area) {
             return new AreaInteraction {
                 Area = area,
-                    Time = (to - from).TotalMilliseconds,
-                    PlayerRoundId = playerRoundId
+                    Time = (to - from).TotalMilliseconds
             };
         }
 
@@ -173,7 +168,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return fireCube.FireSources
                 .Exists (fireSrc => fireSrc.gameObject.CompareTag (Tags.Ground));
         }
-
+        
         private static int GetPlayerRoundId (GameObject playerObj) {
             var playerId = playerObj.GetComponent<PlayerId> ().Id;
             return PlayerManager.Instance.GetPlayerRoundId (playerId);

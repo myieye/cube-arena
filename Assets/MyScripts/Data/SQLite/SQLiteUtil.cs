@@ -21,7 +21,6 @@ namespace CubeArena.Assets.MyScripts.Data.SQLite {
                 Debug.Log ("Database not in Persistent path");
                 // if it doesn't ->
                 // open StreamingAssets directory and load the db ->
-
 #if UNITY_ANDROID 
                 var loadDb = new WWW ("jar:file://" + Application.dataPath + "!/assets/" + DatabaseName); // this is the path to your StreamingAssets in android
                 while (!loadDb.isDone) { } // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check

@@ -13,6 +13,16 @@ namespace CubeArena.Assets.MyScripts.Data.Models {
             get { return _playerRoundId;}
             set { _playerRoundId = value;}
         }
+
+        public bool _practiceMode;
+        
+        [NotNull]
+        public bool PracticeMode
+        {
+            get { return _practiceMode;}
+            set { _practiceMode = value;}
+        }
+        
         
         public override string ToString() {
             return string.Format(

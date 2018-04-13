@@ -16,36 +16,16 @@ namespace CubeArena.Assets.MyScripts.Logging {
     public class Measure : NetworkBehaviour {
 
         public ServerLogger logger;
-        private static ServerLogger Logger { get; set; }
-        private static GameObjectState movingObjStartState;
-        private static GameObjectState movingObjCurrState;
-        private static GameObjectState rotatingObjStartState;
-        private static GameObjectState rotatingObjCurrState;
-        private static float cumulativeMoveDistance;
-        private static float cumulativeRotationAngle;
-        private static DateTime selectionStart;
-        private static int? interactionArea;
-        private static DateTime areaInteractionStart;
-        private static int? _playerRoundId;
-        private static int PlayerRoundId {
-            get {
-                if (!_playerRoundId.HasValue) {
-                    var playerId = FindObjectOfType<Network.PlayerId> ().Id;
-                    _playerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
-                }
-                return _playerRoundId.Value;
-            }
-        }
-        private static int? _playerId;
-        private static int PlayerId {
-            get {
-                if (!_playerId.HasValue) {
-                    _playerId = FindObjectOfType<Network.PlayerId> ().Id;
-                }
-                return _playerId.Value;
-            }
-        }
-        private static UIModeManager _uiModeManager;
+        private GameObjectState movingObjStartState;
+        private GameObjectState movingObjCurrState;
+        private GameObjectState rotatingObjStartState;
+        private GameObjectState rotatingObjCurrState;
+        private float cumulativeMoveDistance;
+        private float cumulativeRotationAngle;
+        private DateTime selectionStart;
+        private int? interactionArea;
+        private DateTime areaInteractionStart;
+        /*private static UIModeManager _uiModeManager;
         private static int UIMode {
             get {
                 if (!_uiModeManager) {
@@ -53,108 +33,141 @@ namespace CubeArena.Assets.MyScripts.Logging {
                 }
                 return (int) _uiModeManager.CurrentUIMode;
             }
-        }
-        private static CursorController CursorCtrl {
+        }*/
+        private CursorController CursorCtrl {
             get {
-                return Logger.GetComponent<CursorController> ();
+                return logger.GetComponent<CursorController> ();
             }
         }
-        private static RoundManager RoundManager {
+        private RoundManager RoundManager {
             get {
                 return FindObjectOfType<RoundManager>();
             }
         }
+        private Vector3 StartPosition {
+            get {
+                return logger.GetComponent<StartPositionTracker>().StartPosition;
+            }
+        }
 
+        public static Measure Instance { get; private set; }
+        
         void Start () {
-            Logger = logger;
+            if (Instance) {
+                Destroy(this);
+            } else {
+                Instance = this;
+            }
+
             interactionArea = -1;
         }
 
-        public static void StartMove (GameObject obj) {
+        public void StartMove (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             movingObjStartState = movingObjCurrState = new GameObjectState (obj);
             cumulativeMoveDistance = 0;
         }
 
-        public static void UpdateMove (GameObject obj) {
+        public void UpdateMove (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             var newState = new GameObjectState (obj);
             cumulativeMoveDistance += Vector3.Distance (movingObjCurrState.Position, newState.Position);
             movingObjCurrState = newState;
         }
 
-        public static void EndMove (GameObject obj) {
+        public void EndMove (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             UpdateMove (obj);
-            Logger.CmdLogMove (Calc.CalcMove (cumulativeMoveDistance,
-                movingObjStartState, movingObjCurrState, PlayerRoundId));
+            logger.CmdLogMove (Calc.CalcMove (cumulativeMoveDistance, movingObjStartState, movingObjCurrState));
 
             var placedOn = CursorCtrl.GetAlignedWith ();
             var pointingUp = Calc.IsAlignedUp (CursorCtrl.gameObject);
-            var placedOnCube = pointingUp && placedOn.CompareTag (Tags.Cube);
+            var placedOnCube = pointingUp && placedOn && placedOn.CompareTag (Tags.Cube);
             int? placedOnPlayerId = null;
             if (placedOnCube) {
                 placedOnPlayerId = placedOn.GetComponent<PlayerId> ().Id;
             }
-            Logger.CmdLogPlacement (Calc.BuildPlacement (placedOnPlayerId, PlayerRoundId));
+            logger.CmdLogPlacement (Calc.BuildPlacement (placedOnPlayerId));
         }
 
-        public static void StartRotation (GameObject obj) {
+        public void StartRotation (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             rotatingObjStartState = rotatingObjCurrState = new GameObjectState (obj);
             cumulativeRotationAngle = 0;
         }
 
-        public static void UpdateRotation (GameObject obj) {
+        public void UpdateRotation (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             var newState = new GameObjectState (obj);
             cumulativeRotationAngle += Quaternion.Angle (rotatingObjCurrState.Rotation, newState.Rotation);
             rotatingObjCurrState = newState;
         }
 
-        public static void EndRotation (GameObject obj) {
+        public void EndRotation (GameObject obj) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             UpdateRotation (obj);
-            Logger.CmdLogRotation (Calc.CalcRotate (cumulativeRotationAngle,
-                rotatingObjStartState, rotatingObjCurrState, PlayerRoundId));
+            logger.CmdLogRotation (Calc.CalcRotate (cumulativeRotationAngle,
+                rotatingObjStartState, rotatingObjCurrState));
         }
 
-        public static void MadeKill (GameObject cube, Enemy enemy) {
-            Logger.CmdLogKill (
-                Calc.BuildKill (enemy, PlayerRoundId),
+        public void MadeKill (GameObject cube, Enemy enemy) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
+            logger.CmdLogKill (
+                Calc.BuildKill (enemy),
                 Calc.CalcAssists (cube).ToArray ());
         }
 
-        public static void MadeSelection (SelectionActionType type) {
+        public void MadeSelection (SelectionActionType type) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             MeasureSelection (type);
-            Logger.CmdLogSelectionAction (Calc.BuildSelectionAction (type, PlayerRoundId));
+            logger.CmdLogSelectionAction (Calc.BuildSelectionAction (type));
         }
 
-        private static void MeasureSelection (SelectionActionType type) {
+        private void MeasureSelection (SelectionActionType type) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
             if (SelectionActionType.Deselect.Equals (type)) {
-                Logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now, PlayerRoundId));
+                logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now));
             } else if (SelectionActionType.Reselect.Equals (type)) {
-                Logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now, PlayerRoundId));
+                logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now));
                 selectionStart = DateTime.Now;
             } else if (SelectionActionType.Select.Equals (type)) {
                 selectionStart = DateTime.Now;
             }
         }
 
-        public static void UpdateInteractionArea (Vector3? interactionPoint) {
-            //if (RoundManager.InPracticeMode) return;
+        public void UpdateInteractionArea (Vector3? interactionPoint) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
-            int area = Calc.CalcArea(interactionPoint,
-                PlayerManager.Instance.GetPlayerStartPosition(PlayerId));
+            int area = Calc.CalcArea(interactionPoint, StartPosition);
             if (interactionArea.HasValue && interactionArea.Value != area) {
-                Debug.Log("Entered area: " + area);
-                AreaInteraction areaInteraction = Calc.CalcAreaInteraction(
-                    areaInteractionStart, DateTime.Now, interactionArea.Value, PlayerRoundId);
-                Logger.CmdLogAreaInteraction(areaInteraction);
-                areaInteractionStart = DateTime.Now;
+                //Debug.Log("Entered area: " + area);
+                SaveCurrentAreaInteraction();
             } else if (!interactionArea.HasValue) {
                 areaInteractionStart = DateTime.Now;
             }
             interactionArea = area;
         }
 
-        public static void FlushMeasurements () {
-            rotatingObjStartState = null;
-            movingObjStartState = null;
+        private void SaveCurrentAreaInteraction() {
+            AreaInteraction areaInteraction = Calc.CalcAreaInteraction(
+                areaInteractionStart, DateTime.Now, interactionArea.Value);
+            logger.CmdLogAreaInteraction(areaInteraction);
+            areaInteractionStart = DateTime.Now;
+        }
+
+        public void FlushMeasurements () {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
+            SaveCurrentAreaInteraction();
         }
     }
 }

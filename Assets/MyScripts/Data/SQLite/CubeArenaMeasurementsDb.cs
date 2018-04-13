@@ -39,16 +39,18 @@ namespace CubeArena.Assets.MyScripts.Data.SQLite {
             conn.CreateTable<PlayerCounter> ();
             conn.CreateTable<AreaInteraction> ();
 
-            PrintTable<PlayerRound> ();
-            PrintTable<Move> ();
-            PrintTable<Rotation> ();
-            PrintTable<SelectionAction> ();
-            PrintTable<Selection> ();
-            PrintTable<Placement> ();
-            PrintTable<Kill> ();
-            PrintTable<Assist> ();
-            PrintTable<PlayerCounter> ();
-            PrintTable<AreaInteraction> ();
+            if (Settings.Instance.LogMeasurementsToConsole) {
+                PrintTable<PlayerRound> ();
+                PrintTable<Move> ();
+                PrintTable<Rotation> ();
+                PrintTable<SelectionAction> ();
+                PrintTable<Selection> ();
+                PrintTable<Placement> ();
+                PrintTable<Kill> ();
+                PrintTable<Assist> ();
+                PrintTable<PlayerCounter> ();
+                PrintTable<AreaInteraction> ();
+            }
         }
 
         internal int GetNextPlayerId () {

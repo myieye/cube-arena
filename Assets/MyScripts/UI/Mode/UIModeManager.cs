@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Interaction.HMD;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityStandardAssets.CrossPlatformInput;
@@ -10,21 +11,20 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyScripts.UI.Mode
 {
 	public class UIModeManager : MonoBehaviour {
-		
-		/*
-		Relevant components:
-			- Cursor controller
-
-		UI:
-			- Joystick
-			- Select button
-			- Touch pad
-		*/
 
 		public GameObject joystick;
 		public GameObject selectButton;
 		public GameObject touchpad;
-		
+		public RaycastCubeMover RaycastCubeMover {
+			get {
+				return FindObjectOfType<RaycastCubeMover>();
+			}
+		}
+		public GestureCubeMover GestureCubeMover {
+			get {
+				return FindObjectOfType<GestureCubeMover>();
+			}
+		}
 		#if (UNITY_WSA || UNITY_EDITOR)
 		public SelectAndAxesGestures SelectAndAxesGestures {
 			get {
@@ -37,40 +37,39 @@ namespace CubeArena.Assets.MyScripts.UI.Mode
 			}
 		}
 		#endif
-
-		public UIMode defaultUIMode;
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
-		private UIMode currentUIMode;
-		public UIMode CurrentUIMode {
-			get {
-				return currentUIMode;
-			}
-			set {
-				currentUIMode = value;
-				ChangeUIMode(currentUIMode);
-			}
-		}
+		public UIMode CurrentUIMode { get; private set; }
+		public static UIModeManager Instance { get; private set; }
+
+		[SerializeField]
+		private UIMode defaultUIMode;
 		private UIMode[] modes = (UIMode[]) Enum.GetValues(typeof(UIMode));
 
-		void Start () {
-			CurrentUIMode = defaultUIMode;
-		}
-		
-		void Update () {
+
+		void Awake() {
+			if (Instance) {
+				Destroy(this);
+				return;
+			}
 			
+			Instance = this;
+			SetUIMode(defaultUIMode);
 		}
 
 		public void OnUIModeChanged(int uiMode) {
-			CurrentUIMode = modes[uiMode];
+			SetUIMode(modes[uiMode]);
 		}
 
-		private void ChangeUIMode(UIMode mode) {
+		private void SetUIMode(UIMode mode) {
+			CurrentUIMode = mode;
 			DisableAll();
 			switch (mode) {
 				case UIMode.Mouse:
 					CurrentCursorMode = CursorController.CursorMode.Mouse;
 					CrossPlatformInputManager.SwitchActiveInputMethod(
 						CrossPlatformInputManager.ActiveInputMethod.Hardware);
+					//RaycastCubeMover.enabled = false;
+					//GestureCubeMover.enabled = true;
 					break;
 				case UIMode.HHD1_Camera:
 					joystick.SetActive(true);
@@ -125,6 +124,10 @@ namespace CubeArena.Assets.MyScripts.UI.Mode
 			if (SelectAxesAndCursorPointerGestures)
 				SelectAxesAndCursorPointerGestures.enabled = false;
 			#endif
+		}
+
+		public static bool InMode(UIMode mode) {
+			return Instance.CurrentUIMode.Equals(mode);
 		}
 	}
 }

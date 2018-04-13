@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Constants;
 using CubeArena.Assets.MyScripts.Data.Models;
 using CubeArena.Assets.MyScripts.Data.SQLite;
 using UnityEngine;
@@ -25,34 +26,43 @@ namespace CubeArena.Assets.MyScripts.Data {
 		}
 
 		public void Log (object msg) {
-			Debug.Log (msg);
+			if (Settings.Instance.LogMeasurementsToConsole) {
+				Debug.Log (msg);
+			}
 		}
 
 		public void SaveMove (Move move) {
-			Log (db.InsertMove (move));
+			Log (SaveToDb(db.InsertMove, move));
 		}
 
 		public void SaveRotation (Rotation rotation) {
-			Log (db.InsertRotation (rotation));
+			Log (SaveToDb(db.InsertRotation, rotation));
 		}
 
 		public void SaveSelectionAction (SelectionAction selectionAction) {
-			Log (db.InsertSelectionAction (selectionAction));
+			Log (SaveToDb(db.InsertSelectionAction, selectionAction));
 		}
 
 		public void SaveSelecion (Selection selection) {
-			Log (db.InsertSelection (selection));
+			Log (SaveToDb(db.InsertSelection, selection));
 		}
 
 		public void SavePlacement (Placement placement) {
-			Log (db.InsertPlacement (placement));
+			Log (SaveToDb(db.InsertPlacement, placement));
 		}
 
 		public void SaveKill (Kill kill, List<Assist> assists) {
-			Log (db.InsertKill (kill));
+			Log (SaveToDb(db.InsertKill, kill));
 			foreach (var assist in assists) {
-				Log (db.InsertAssist (assist));
+				Log (SaveToDb(db.InsertAssist, assist));
 			}
+		}
+
+		private T SaveToDb<T>(Func<T,T> saveFunc, T entity) {
+			if (Settings.Instance.LogMeasurementsToDb) {
+				entity = saveFunc(entity);
+			}
+			return entity;
 		}
 
 		public int GetNextPlayerId () {

@@ -81,7 +81,6 @@ namespace UnityStandardAssets.CrossPlatformInput
             }
         }
 
-
         public void UnRegisterVirtualButton(string name)
         {
             // if we have a button with this name then remove it from our dictionary of registered buttons
@@ -125,6 +124,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 
         public abstract void SetButtonDown(string name);
         public abstract void SetButtonUp(string name);
+        public abstract void ResetButton(string name);
         public abstract void SetAxisPositive(string name);
         public abstract void SetAxisNegative(string name);
         public abstract void SetAxisZero(string name);

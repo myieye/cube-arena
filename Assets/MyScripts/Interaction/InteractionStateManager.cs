@@ -5,6 +5,8 @@ using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cubes;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.Models;
+using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Interaction.Listeners;
 
 namespace CubeArena.Assets.MyScripts.Interaction
 {
@@ -13,13 +15,29 @@ namespace CubeArena.Assets.MyScripts.Interaction
 		public InteractionState State { get; private set; }
 		public CubeStatePair HoveredCube { get; private set; }
 		public CubeStatePair SelectedCube { get; private set; }
+		private List<OnCubeDeselectedListener> onCubeDeselectedListeners;
+		private InteractionState prevState = InteractionState.Idle;
+
+
+		public void Awake() {
+			onCubeDeselectedListeners = new List<OnCubeDeselectedListener>();
+		}
 
 		public void Update() {
-			if (IsMoving()) {
-				Measure.UpdateMove(SelectedCube.Cube);
-			} else if (IsRotating()) {
-				Measure.UpdateRotation(SelectedCube.Cube);
+			if (Settings.Instance.LogInteractionStateChanges && prevState != State) {
+				Debug.Log("Entered State: " + State);
+				prevState = State;
 			}
+
+			if (IsMoving()) {
+				Measure.Instance.UpdateMove(SelectedCube.Cube);
+			} else if (IsRotating()) {
+				Measure.Instance.UpdateRotation(SelectedCube.Cube);
+			}
+		}
+
+		public void AddOnCubeDeselectedListener(OnCubeDeselectedListener onCubeDeselectedListener) {
+			onCubeDeselectedListeners.Add(onCubeDeselectedListener);
 		}
 
 		public void StartHover(GameObject cube) {
@@ -42,13 +60,14 @@ namespace CubeArena.Assets.MyScripts.Interaction
 		}
 
 		public void Select(GameObject cube) {
+			Debug.Log("StateManager.Select");
 			var reselecting = HasSelection() && !IsSelected(cube);
 			if (reselecting) {
-				Measure.MadeSelection(SelectionActionType.Reselect);
+				Measure.Instance.MadeSelection(SelectionActionType.Reselect);
 			}
 			Deselect(reselecting);
 			if (!reselecting) {
-				Measure.MadeSelection(SelectionActionType.Select);
+				Measure.Instance.MadeSelection(SelectionActionType.Select);
 			}
 			if (IsHovered(cube)) {
 				SelectedCube = HoveredCube;
@@ -63,10 +82,10 @@ namespace CubeArena.Assets.MyScripts.Interaction
 			FinishAnyMeasurements();
 			if (SelectedCube != null) {
 				if (!reselecting) {
-					Measure.MadeSelection(SelectionActionType.Deselect);
+					Measure.Instance.MadeSelection(SelectionActionType.Deselect);
 				}
-
 				SelectedCube.StateManager.Deselect();
+				onCubeDeselectedListeners.ForEach(l => l.OnCubeDeselected(SelectedCube.Cube));
 				SelectedCube = null;
 			}
 			State = InteractionState.Idle;
@@ -80,15 +99,17 @@ namespace CubeArena.Assets.MyScripts.Interaction
 				Select(HoveredCube.Cube);
 				State = InteractionState.Moving;
 			}
-			Measure.StartMove(SelectedCube.Cube);
+			Measure.Instance.StartMove(SelectedCube.Cube);
 		}
 
 		public void EndMove() {
-			Measure.EndMove(SelectedCube.Cube);
+			Debug.Log("StateManager.EndMove");
+			Measure.Instance.EndMove(SelectedCube.Cube);
 			State = InteractionState.Selected;
 		}
 
 		public void StartRotation() {
+			Debug.Log("StateManager.StartRotation");
 			FinishAnyMeasurements();
 			if (IsMoving()) {
 				if (InState(InteractionState.Disallowed)) {
@@ -99,14 +120,15 @@ namespace CubeArena.Assets.MyScripts.Interaction
 			}
 			if (SelectedCube != null) {
 				State = InteractionState.Rotating;
-				Measure.StartRotation(SelectedCube.Cube);
+				Measure.Instance.StartRotation(SelectedCube.Cube);
 				SelectedCube.StateManager.CmdStartRotation();
 			}
 		}
 
 		public void EndRotation() {
+			Debug.Log("StateManager.EndRotation");
 			SelectedCube.StateManager.CmdEndRotation();
-			Measure.EndRotation(SelectedCube.Cube);
+			Measure.Instance.EndRotation(SelectedCube.Cube);
 			State = InteractionState.Selected;
 		}
 
@@ -152,10 +174,10 @@ namespace CubeArena.Assets.MyScripts.Interaction
 
 		private void FinishAnyMeasurements() {
 			if (InState(InteractionState.Moving)) {
-				Measure.EndMove(SelectedCube.Cube);
+				Measure.Instance.EndMove(SelectedCube.Cube);
 				Debug.LogWarning("FinishAnyMeasurements.EndMove");
 			} else if (IsRotating()) {
-				Measure.EndRotation(SelectedCube.Cube);
+				Measure.Instance.EndRotation(SelectedCube.Cube);
 			}
 		}
 

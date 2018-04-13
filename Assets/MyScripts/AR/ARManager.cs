@@ -7,7 +7,7 @@ using UnityEngine;
 namespace CubeArena.Assets.MyScripts.AR
 {
 	public class ARManager :
-		#if !UNITY_STANDALONE
+		#if !UNITY_STANDALONE && !UNITY_ANDROID
 			DefaultTrackableEventHandler
 		#else
 			DummyTrackableEventHandler

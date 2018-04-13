@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Constants;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
@@ -29,6 +30,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 			if (HasRotationInput()) {
 				rotationWaitTime = 0;
 			}
+			
 			base.Update();
 		}
 
@@ -39,12 +41,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 		}
 
 		protected override bool IsStartingRotate() {
-			if (stateManager.HasSelection() && HasRotationInput() &&
-				!stateManager.IsMoving() && !CrossPlatformInputManager.GetButton(Buttons.Select)) {
-				SelectCube(stateManager.SelectedCube.Cube);
-				return true;
-			} else
-				return false;
+			return stateManager.HasSelection() && HasRotationInput() &&
+				!stateManager.IsMoving() && !CrossPlatformInputManager.GetButton(Buttons.Select);
+		}
+
+		protected override void StartRotate() {
+			SelectCube(stateManager.SelectedCube.Cube);
 		}
 
         private void SelectCube(GameObject cube) {
@@ -59,7 +61,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 				selectedRigidbody.angularVelocity.magnitude < settings.MinRotationVelocity;
 		}
 
-		private Vector3 CalculateRotationTorque() {
+		protected virtual Vector3 CalculateRotationTorque() {
 			var x = CrossPlatformInputManager.GetAxis(Axes.Horizontal) * speed;
 			var y = CrossPlatformInputManager.GetAxis(Axes.Vertical) * speed;
 			var cameraRelativeTorque = Camera.main.transform.TransformDirection(new Vector3(y, 0, -x));
@@ -67,7 +69,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 			return cameraRelativeTorque;
 		}
 
-		private bool HasRotationInput() {
+		protected bool HasRotationInput() {
 			return CalculateRotationTorque().magnitude > 0;
 		}
 	}

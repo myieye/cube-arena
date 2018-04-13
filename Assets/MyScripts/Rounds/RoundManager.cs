@@ -18,13 +18,17 @@ namespace CubeArena.Assets.MyScripts.Rounds
 		public float practiceRoundLength;
 		public int numRounds;
 		public bool InPracticeMode { get; private set; }
-		private int currRound = 0;
+		private int currRound;
 		// Flag for reacting to Scene Loads triggered by RoundManager
 		//	Currently RoundManager is the only class that causes Scene changes
 		private bool startingRound = false;
 		
-		void Start () {
+		public override void OnStartClient() {
+			Debug.Log("RoundManager.OnStartClient");
+			base.OnStartClient();
 			InPracticeMode = false;
+			currRound = 0;
+			startingRound = false;
 		}
 
 		[Server]
@@ -60,14 +64,16 @@ namespace CubeArena.Assets.MyScripts.Rounds
 		}
 
 		public void OnRoundOver() {
-			Measure.FlushMeasurements();
+			Measure.Instance.FlushMeasurements();
 			if (!InLastRound()) {
 				StartNewRound();
+			} else {
+				currRound = 0;
 			}
 		}
 
 		private bool InLastRound() {
-			return currRound < numRounds || (currRound == numRounds && InPracticeMode);
+			return currRound == numRounds && !InPracticeMode;
 		}
 	}
 }

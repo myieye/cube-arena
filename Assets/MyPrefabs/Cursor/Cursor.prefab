@@ -26,9 +26,9 @@ GameObject:
   - component: {fileID: 23596713286297402}
   - component: {fileID: 114861424286629492}
   - component: {fileID: 114406208612879510}
-  - component: {fileID: 114202523747177180}
-  - component: {fileID: 114945857770537932}
-  - component: {fileID: 114208672047208938}
+  - component: {fileID: 114929147157624204}
+  - component: {fileID: 114384645145117268}
+  - component: {fileID: 114783138639940740}
   - component: {fileID: 114758858901104374}
   - component: {fileID: 114154341302727124}
   - component: {fileID: 114637218967109976}
@@ -36,6 +36,7 @@ GameObject:
   - component: {fileID: 114149130840081820}
   - component: {fileID: 54475806859779810}
   - component: {fileID: 114383090961952712}
+  - component: {fileID: 114664024161728946}
   m_Layer: 2
   m_Name: Cursor
   m_TagString: UI
@@ -324,30 +325,6 @@ MonoBehaviour:
   ignoreList:
   - UI
   touchedObjects: []
---- !u!114 &114202523747177180
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 440be0738fbf0364098128f9a5ac9b4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114208672047208938
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb51d8a37c2ac034db762e936cb91b71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 1000
-  maxSpeed: 30000
 --- !u!114 &114383090961952712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,6 +336,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c44ad0e6b2283543962109674794d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114384645145117268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f711f79bea1674ba9829135d47b609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeOffset: 0.3
+  speed: 10
 --- !u!114 &114406208612879510
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -452,6 +442,17 @@ MonoBehaviour:
     i15: 159
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114664024161728946
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3dbf6116869ed54cbfce9bc65304152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114758858901104374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -463,6 +464,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69fcf2fd1ea9be64e90a594b61883dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114783138639940740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65e67ce651a72f14d8e1687201dae974, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10000
+  maxSpeed: 30000
 --- !u!114 &114822391865531928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -486,9 +500,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 500
-  isMovingSensitivity: 10
-  touchOffset: {x: 0, y: 70}
---- !u!114 &114945857770537932
+  touchOffsetSpeed: 50
+  isMovingSensitivity: 5
+  touchOffset: {x: 0, y: 100}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+--- !u!114 &114929147157624204
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -496,10 +514,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1596389934492644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3f0182cc3a60cd4a93af8bef795cb6d, type: 3}
+  m_Script: {fileID: 11500000, guid: d652ae5bc7934e04f9ea184aab103eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeOffset: 0.3
 --- !u!135 &135925918903204152
 SphereCollider:
   m_ObjectHideFlags: 1

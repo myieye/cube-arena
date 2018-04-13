@@ -49,6 +49,16 @@ namespace UnityStandardAssets.CrossPlatformInput.PlatformSpecific
         }
 
 
+        public override void ResetButton(string name)
+        {
+            if (m_VirtualButtons.ContainsKey(name))
+            {
+                UnRegisterVirtualButton(name);
+                AddButton(name);
+            }
+        }
+
+
         public override void SetAxisPositive(string name)
         {
             if (!m_VirtualAxes.ContainsKey(name))

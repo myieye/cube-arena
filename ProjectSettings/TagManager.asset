@@ -10,6 +10,7 @@ TagManager:
   - UI
   - Fire
   - Ground
+  - 2DTranslationPlane
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - 
   - Terrain
   - AR
-  - 
+  - TwoDTranslationPlane
   - 
   - 
   - 

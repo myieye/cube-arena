@@ -7,24 +7,21 @@ using System.Linq;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Network {
-    public class PlayerManager {
+    public class PlayerManager : NetworkBehaviour {
 
-        private static PlayerManager _instance;
-        public static PlayerManager Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new PlayerManager ();
-                }
-                return _instance;
-            }
-        }
+        public static PlayerManager Instance { get; private set; }
         private DataService dataService;
         private List<NetworkPlayer> players;
         private Dictionary<int, int> playerRoundIdByPlayerId;
         
-        private PlayerManager () {
-            dataService = DataService.Instance;
-            players = new List<NetworkPlayer> ();
+        void Start () {
+            if (Instance) {
+                Destroy(this);
+            } else {
+                Instance = this;
+                dataService = DataService.Instance;
+                players = new List<NetworkPlayer> ();
+            }
         }
 
         public void GeneratePlayerRoundIds (int roundNum) {
@@ -51,10 +48,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         public int GetPlayerRoundId(int playerId) {
             return playerRoundIdByPlayerId != null ? playerRoundIdByPlayerId[playerId] : -1;
-        }
-
-        public Vector3 GetPlayerStartPosition(int playerId) {
-            return players.First(p => p.PlayerId == playerId).StartPosition.position;
         }
     }
 }

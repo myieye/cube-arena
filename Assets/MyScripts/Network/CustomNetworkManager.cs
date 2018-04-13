@@ -30,7 +30,7 @@ namespace CubeArena.Assets.MyScripts.Network
 			if (!networkPlayers.ContainsKey(key)) {
 				var netPlayer = PlayerManager.Instance.AddPlayer(conn, playerControllerId);
 				networkPlayers[key] = netPlayer;
-				SpawnPlayer(netPlayer);
+				//SpawnPlayer(netPlayer);
 			}
 			//Debug.Log("AddPlayer: " + Network.connections.Length);
 			//GetComponent<NetworkIdentity>().netId.Value
@@ -48,13 +48,13 @@ namespace CubeArena.Assets.MyScripts.Network
 		private void SpawnPlayer(NetworkPlayer netPlayer) {
 			var startPos = GetStartPosition();
 			var color = materials[netPlayer.PlayerNum - 1].color;
-			netPlayer.PlayerGameObject = SpawnPlayerCursor(netPlayer, color);
+			netPlayer.PlayerGameObject = SpawnPlayerCursor(startPos, netPlayer, color);
 			netPlayer.StartPosition = startPos;
 			SpawnCubesForPlayer(startPos, netPlayer, color);
 			enemyManager.OnPlayerAdded();
 		}
 
-        GameObject SpawnPlayerCursor(NetworkPlayer netPlayer, Color color) {
+        GameObject SpawnPlayerCursor(Transform startPos, NetworkPlayer netPlayer, Color color) {
 			var player = (GameObject) GameObject.Instantiate(playerPrefab);
 			if (settings.AREnabled) {
 				arManager.AddARObjectToWorld(player.GetComponent<ARObject>());

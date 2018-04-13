@@ -43,6 +43,13 @@ namespace UnityStandardAssets.CrossPlatformInput.PlatformSpecific
         }
 
 
+        public override void ResetButton(string name)
+        {
+            throw new Exception(
+                " This is not possible to be called for standalone input. Please check your platform and code where this is called");
+        }
+
+
         public override void SetAxisPositive(string name)
         {
             throw new Exception(

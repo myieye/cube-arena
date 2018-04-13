@@ -2,27 +2,34 @@
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Constants;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Interaction.Abstract;
+using CubeArena.Assets.MyScripts.UI.Mode;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace CubeArena.Assets.MyPrefabs.Cursor
-{
+namespace CubeArena.Assets.MyPrefabs.Cursor {
     public class OverlapCubeSelecter : AbstractCubeSelecter {
 
-        private bool selecting;
+        protected bool selecting;
+        protected CursorController cursorCtrl;
 
-        protected override void Update() {
-            base.Update();
-            selecting = selecting && !CrossPlatformInputManager.GetButtonUp(Buttons.Select);
+        protected override void Start () {
+            base.Start ();
+            cursorCtrl = GetComponent<CursorController> ();
         }
 
-        protected override bool IsDeselecting() {
-            return !selecting && CrossPlatformInputManager.GetButtonUp(Buttons.Select) &&
-                !stateManager.InStates(InteractionState.Moving, InteractionState.Disallowed);
+        protected override void Update () {
+            base.Update ();
+            selecting = selecting && !CrossPlatformInputManager.GetButtonUp (Buttons.Select);
         }
 
-        protected override bool IsSelecting(out GameObject cube) {
-            if (stateManager.IsHovering() && IsPressingSelect() && IsNewSelection()) {
+        protected override bool IsDeselecting () {
+            return !selecting && CrossPlatformInputManager.GetButtonUp (Buttons.Select) &&
+                !stateManager.InStates (InteractionState.Moving, InteractionState.Disallowed);
+        }
+
+        protected override bool IsSelecting (out GameObject cube) {
+            if (stateManager.IsHovering () && IsPressingSelect () && IsNewSelection ()) {
                 cube = stateManager.HoveredCube.Cube;
                 return selecting = true;
             }
@@ -30,12 +37,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
             return false;
         }
 
-        protected override bool IsPressingSelect() {
-            return CrossPlatformInputManager.GetButtonDown(Buttons.Select);
+        protected override bool IsPressingSelect () {
+            return CrossPlatformInputManager.GetButtonDown (Buttons.Select);
         }
 
-        private bool IsNewSelection() {
-            return !stateManager.IsSelected(stateManager.HoveredCube.Cube);
+        private bool IsNewSelection () {
+            return !stateManager.IsSelected (stateManager.HoveredCube.Cube);
         }
     }
 }
