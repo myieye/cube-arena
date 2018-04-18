@@ -1,98 +1,52 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Agents;
-using CubeArena.Assets.MyScripts.AR;
-using CubeArena.Assets.MyScripts.Constants;
-using CubeArena.Assets.MyScripts.Rounds;
+using CubeArena.Assets.MyScripts.GameObjects.Agents;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
+using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
-namespace CubeArena.Assets.MyScripts.Network
-{
+namespace CubeArena.Assets.MyScripts.Network {
 	public class CustomNetworkManager : UnityEngine.Networking.NetworkManager {
 
-		public Transform spawnPoints;
-		public GameObject cubeStartPoints;
-		public GameObject cubePrefab;
-		public EnemyManager enemyManager;
-		public RoundManager roundManager;
-		public Settings settings;
-		public ARManager arManager;
-		public Material[] materials;
-		//private Dictionary<NetworkConnection, int> connectedPlayers = new Dictionary<NetworkConnection, int>();
-		private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
-
-		override public void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
-			Debug.Log("OnServerAddPlayer");
-			var key = GenerateConnectionKey(conn, playerControllerId);
-			if (!networkPlayers.ContainsKey(key)) {
-				var netPlayer = PlayerManager.Instance.AddPlayer(conn, playerControllerId);
-				networkPlayers[key] = netPlayer;
-				//SpawnPlayer(netPlayer);
-			}
-			//Debug.Log("AddPlayer: " + Network.connections.Length);
-			//GetComponent<NetworkIdentity>().netId.Value
-		}
-
-		public override void OnServerSceneChanged(string sceneName) {
-			CheckStartPositions();
-			if (roundManager.OnSceneLoaded()) {
-				foreach (var netPlayer in networkPlayers.Values) {
-					SpawnPlayer(netPlayer);
+		private DeviceManager _deviceManager;
+		public DeviceManager DeviceManager {
+			get {
+				if (!_deviceManager) {
+					_deviceManager = FindObjectOfType<DeviceManager> ();
 				}
+				return _deviceManager;
 			}
 		}
 
-		private void SpawnPlayer(NetworkPlayer netPlayer) {
-			var startPos = GetStartPosition();
-			var color = materials[netPlayer.PlayerNum - 1].color;
-			netPlayer.PlayerGameObject = SpawnPlayerCursor(startPos, netPlayer, color);
-			netPlayer.StartPosition = startPos;
-			SpawnCubesForPlayer(startPos, netPlayer, color);
-			enemyManager.OnPlayerAdded();
+		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId, NetworkReader msgReader) {
+			DeviceTypeMessage msg = new DeviceTypeMessage ();
+			msg.Deserialize (msgReader);
+			Debug.Log("Device Connected: " + msg.Model);
+			DeviceManager.RegisterConnectedDevice (
+				new ConnectedDevice(conn, playerControllerId, msg.Type, msg.Model));
 		}
 
-        GameObject SpawnPlayerCursor(Transform startPos, NetworkPlayer netPlayer, Color color) {
-			var player = (GameObject) GameObject.Instantiate(playerPrefab);
-			if (settings.AREnabled) {
-				arManager.AddARObjectToWorld(player.GetComponent<ARObject>());
+		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
+			Debug.LogWarning ("OnServerAddPlayer called without device type");
+		}
+
+		/*
+			Copied from NetworkManager.
+			Added extra message.
+		 */
+		public override void OnClientConnect (NetworkConnection conn) {
+			if (!clientLoadedScene) {
+				// Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
+				ClientScene.Ready (conn);
+				var msg = DeviceManager.BuildDeviceTypeMessage();
+				ClientScene.AddPlayer (client.connection, 0, msg);
 			}
-			color = Highlight.ReduceTransparency(color, Highlight.CursorTransparency);
-			player.GetComponent<Colourer>().color = color;
-			player.GetComponent<PlayerId>().Id = netPlayer.PlayerNum;
-			NetworkServer.AddPlayerForConnection(netPlayer.Connection, player, netPlayer.PlayerControllerId);
-			return player;
-		}
-
-		void SpawnCubesForPlayer(Transform startPos, NetworkPlayer netPlayer, Color color) {
-			cubeStartPoints.transform.rotation = startPos.rotation;
-			cubeStartPoints.transform.position = startPos.position;
-
-			var i = 1;
-			foreach (Transform trans in cubeStartPoints.transform) {
-				var cube = Instantiate(cubePrefab, trans.position, trans.rotation);
-				if (settings.AREnabled) {
-					arManager.AddGameObjectToWorld(cube);
-				}
-				cube.GetComponent<Colourer>().color = color;
-				cube.GetComponent<PlayerId>().Id = netPlayer.PlayerNum;
-				cube.name += i++;
-				NetworkServer.SpawnWithClientAuthority(cube, netPlayer.PlayerGameObject);
-			}
-		}
-
-		private void CheckStartPositions() {
-			if (startPositions == null || startPositions.Count == 0) {
-				foreach (Transform startPos in spawnPoints) {
-					RegisterStartPosition(startPos);
-				}
-			}
-		}
-
-		private string GenerateConnectionKey(NetworkConnection conn, short playerControllerId) {
-			return string.Format("{0}:{1}:{2}", conn.connectionId, conn.address, playerControllerId);
 		}
 	}
 }

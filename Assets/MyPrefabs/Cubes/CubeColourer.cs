@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Utils;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 
 namespace CubeArena.Assets.MyPrefabs.Cubes
 {

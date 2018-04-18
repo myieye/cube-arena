@@ -5,7 +5,7 @@ using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cubes;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.Models;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Interaction.Listeners;
 
 namespace CubeArena.Assets.MyScripts.Interaction
@@ -25,7 +25,7 @@ namespace CubeArena.Assets.MyScripts.Interaction
 
 		public void Update() {
 			if (Settings.Instance.LogInteractionStateChanges && prevState != State) {
-				Debug.Log("Entered State: " + State);
+				Debug.Log("Interaction State: " + State);
 				prevState = State;
 			}
 
@@ -60,7 +60,6 @@ namespace CubeArena.Assets.MyScripts.Interaction
 		}
 
 		public void Select(GameObject cube) {
-			Debug.Log("StateManager.Select");
 			var reselecting = HasSelection() && !IsSelected(cube);
 			if (reselecting) {
 				Measure.Instance.MadeSelection(SelectionActionType.Reselect);
@@ -99,17 +98,17 @@ namespace CubeArena.Assets.MyScripts.Interaction
 				Select(HoveredCube.Cube);
 				State = InteractionState.Moving;
 			}
+			SelectedCube.StateManager.StartDrag();
 			Measure.Instance.StartMove(SelectedCube.Cube);
 		}
 
 		public void EndMove() {
-			Debug.Log("StateManager.EndMove");
+			SelectedCube.StateManager.EndDrag();
 			Measure.Instance.EndMove(SelectedCube.Cube);
 			State = InteractionState.Selected;
 		}
 
 		public void StartRotation() {
-			Debug.Log("StateManager.StartRotation");
 			FinishAnyMeasurements();
 			if (IsMoving()) {
 				if (InState(InteractionState.Disallowed)) {
@@ -126,7 +125,6 @@ namespace CubeArena.Assets.MyScripts.Interaction
 		}
 
 		public void EndRotation() {
-			Debug.Log("StateManager.EndRotation");
 			SelectedCube.StateManager.CmdEndRotation();
 			Measure.Instance.EndRotation(SelectedCube.Cube);
 			State = InteractionState.Selected;

@@ -1,18 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 public class LogDeviceType : MonoBehaviour {
 
 	void Start () {
-		var deviceMsg = "FOUND DEVICE: ";
+
 		#if UNITY_WSA
-		deviceMsg += "HoloLens";
-		#elif UNITY_ANDROID 
-		deviceMsg += "Android";
-		#elif UNITY_EDITOR
-		deviceMsg += "Unity Editor";
+		Debug.Log("FOUND DEVICE: HoloLens");
 		#endif
-		Debug.Log(deviceMsg);
+		#if UNITY_ANDROID 
+		Debug.Log("FOUND DEVICE: Android");
+		#endif
+		#if UNITY_EDITOR
+		Debug.Log("FOUND DEVICE: Unity Editor");
+		#endif
+
+		Debug.Log(SystemInfo.deviceType);
+		Debug.Log(SystemInfo.operatingSystemFamily);
 	}
 }

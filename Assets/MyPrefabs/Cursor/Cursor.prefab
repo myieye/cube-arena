@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4827672913272124}
   - component: {fileID: 33829509279236970}
   - component: {fileID: 135925918903204152}
-  - component: {fileID: 114822391865531928}
-  - component: {fileID: 114009427241836548}
   - component: {fileID: 23596713286297402}
+  - component: {fileID: 114429402525392466}
+  - component: {fileID: 114009427241836548}
   - component: {fileID: 114861424286629492}
   - component: {fileID: 114406208612879510}
   - component: {fileID: 114929147157624204}
@@ -361,6 +361,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlapManager: {fileID: 114154341302727124}
+--- !u!114 &114429402525392466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ec84b93393d794a879336446259930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114459557905559330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -477,17 +488,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10000
   maxSpeed: 30000
---- !u!114 &114822391865531928
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e5cd323114c9724a9af1d70930b1296, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114861424286629492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -501,7 +501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 500
   touchOffsetSpeed: 50
-  isMovingSensitivity: 5
+  isMovingSensitivity: 10
   touchOffset: {x: 0, y: 100}
   raycastLayerMask:
     serializedVersion: 2

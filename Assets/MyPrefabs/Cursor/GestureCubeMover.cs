@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
-using CubeArena.Assets.MyScripts.Constants;
-using CubeArena.Assets.MyScripts.Helpers;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Interaction.Util;
-using CubeArena.Assets.MyScripts.UI.Mode;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
@@ -85,11 +85,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected override void StartMove (GameObject cube) {
 			base.StartMove (cube);
-			if (StartingYMove (out cube)) {
-				SetMoveState (MoveState.Y);
-				prevYPoint = TouchInput.GetPOCPosition (0);
-			} else if (InGestureMode) {
-				SetMoveState (MoveState.XZ);
+
+			if (InGestureMode) {
+				if (StartingYMove (out cube)) {
+					SetMoveState (MoveState.Y);
+					prevYPoint = TouchInput.GetPOCPosition (0);
+				} else {
+					SetMoveState (MoveState.XZ);
+				}
 			}
 		}
 
@@ -108,7 +111,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private bool StartingYMove (out GameObject cube) {
 			cube = stateManager.HasSelection () ? stateManager.SelectedCube.Cube : null;
-			return InGestureMode && !moveState.Equals(MoveState.Y) && stateManager.HasSelection () &&
+			return !moveState.Equals(MoveState.Y) && stateManager.HasSelection () &&
 				HoldingSinglePOC () && dragCubeTarget == null;
 		}
 
@@ -120,10 +123,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (moveState.Equals(this.moveState)) return;
 
 			if (moveState.Equals (MoveState.XZ)) {
-				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlane;
+				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
 				translationPlane.transform.position = Vector3.up * cubeRb.transform.position.y;
 			} else {
-				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCast;
+				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCastMask;
 				translationPlane.transform.position = Vector3.zero;
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;

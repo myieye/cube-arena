@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cubes;
-using CubeArena.Assets.MyScripts.Agents;
-using CubeArena.Assets.MyScripts.Constants;
-using CubeArena.Assets.MyScripts.Data.Models;
-using CubeArena.Assets.MyScripts.Fire;
+using CubeArena.Assets.MyScripts.GameObjects.Agents;
+using CubeArena.Assets.MyScripts.GameObjects.Fire;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Logging.Models;
 using CubeArena.Assets.MyScripts.Network;
-using CubeArena.Assets.MyScripts.Rounds;
+using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging {
@@ -168,7 +169,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return fireCube.FireSources
                 .Exists (fireSrc => fireSrc.gameObject.CompareTag (Tags.Ground));
         }
-        
+
         private static int GetPlayerRoundId (GameObject playerObj) {
             var playerId = playerObj.GetComponent<PlayerId> ().Id;
             return PlayerManager.Instance.GetPlayerRoundId (playerId);

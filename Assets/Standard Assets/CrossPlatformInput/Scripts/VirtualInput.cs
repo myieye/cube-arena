@@ -33,12 +33,12 @@ namespace UnityStandardAssets.CrossPlatformInput
         public void RegisterVirtualAxis(CrossPlatformInputManager.VirtualAxis axis)
         {
             // check if we already have an axis with that name and log and error if we do
-            if (m_VirtualAxes.ContainsKey(axis.name))
+            /*if (m_VirtualAxes.ContainsKey(axis.name))
             {
                 Debug.LogError("There is already a virtual axis named " + axis.name + " registered.");
             }
-            else
-            {
+            else*/
+            if (!m_VirtualAxes.ContainsKey(axis.name)) {
                 // add any new axes
                 m_VirtualAxes.Add(axis.name, axis);
 
@@ -54,12 +54,12 @@ namespace UnityStandardAssets.CrossPlatformInput
         public void RegisterVirtualButton(CrossPlatformInputManager.VirtualButton button)
         {
             // check if already have a buttin with that name and log an error if we do
-            if (m_VirtualButtons.ContainsKey(button.name))
+            /*if (m_VirtualButtons.ContainsKey(button.name))
             {
                 Debug.LogError("There is already a virtual button named " + button.name + " registered.");
             }
-            else
-            {
+            else*/
+            if (!m_VirtualButtons.ContainsKey(button.name)) {
                 // add any new buttons
                 m_VirtualButtons.Add(button.name, button);
 
@@ -114,7 +114,6 @@ namespace UnityStandardAssets.CrossPlatformInput
         {
             virtualMousePosition = new Vector3(virtualMousePosition.x, virtualMousePosition.y, f);
         }
-
 
         public abstract float GetAxis(string name, bool raw);
         

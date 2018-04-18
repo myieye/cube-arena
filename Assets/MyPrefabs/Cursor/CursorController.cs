@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.AR;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Logging;
-using CubeArena.Assets.MyScripts.UI.Mode;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -29,7 +29,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private Vector3 screenCenter;
 		private Vector2 currTouchOffset = Vector2.zero;
 		private Vector3 currPointerOffset = Vector3.zero;
-		private Settings settings;
 		private bool _arActive;
 		private Vector2 lastTouch;
 		public LayerMask raycastLayerMask;
@@ -47,7 +46,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 		private bool ARActive {
 			get {
-				return !settings.AREnabled || _arActive;
+				return !Settings.Instance.AREnabled || _arActive;
 			}
 		}
 
@@ -55,7 +54,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			cursorRenderer = GetComponent<Renderer> ();
 			cursorRb = GetComponent<Rigidbody> ();
 			screenCenter = Camera.main.ViewportToScreenPoint (new Vector3 (0.5f, 0.5f, 0));
-			settings = FindObjectOfType<Settings> ();
 		}
 
 		public void Refresh () {
@@ -159,7 +157,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			return (to - from) * Time.deltaTime * speed;
 		}
 
-		public bool IsMoving (float minMagnitude = 0) {
+		public bool IsMoving (float minMagnitude = 5) {
 			return cursorRb.velocity.magnitude > minMagnitude;
 		}
 

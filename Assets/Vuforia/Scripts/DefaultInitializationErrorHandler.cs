@@ -1,4 +1,3 @@
-#if !UNITY_STANDALONE && !UNITY_ANDROID
 /*==============================================================================
 Copyright (c) 2017 PTC Inc. All Rights Reserved.
 
@@ -8,26 +7,27 @@ Confidential and Proprietary - Protected under copyright and other laws.
 ==============================================================================*/
 
 using UnityEngine;
+#if !UNITY_STANDALONE && !UNITY_EDITOR
 using Vuforia;
+#endif
 
 /// <summary>
 ///     A custom handler that registers for Vuforia initialization errors
 /// </summary>
-public class DefaultInitializationErrorHandler : MonoBehaviour
-{
+public class DefaultInitializationErrorHandler : MonoBehaviour {
+
+#if !UNITY_STANDALONE && !UNITY_EDITOR
     #region Vuforia_lifecycle_events
 
-    public void OnVuforiaInitializationError(VuforiaUnity.InitError initError)
-    {
-        if (initError != VuforiaUnity.InitError.INIT_SUCCESS)
-        {
-            SetErrorCode(initError);
-            SetErrorOccurred(true);
+    public void OnVuforiaInitializationError (VuforiaUnity.InitError initError) {
+        if (initError != VuforiaUnity.InitError.INIT_SUCCESS) {
+            SetErrorCode (initError);
+            SetErrorOccurred (true);
         }
     }
 
     #endregion // Vuforia_lifecycle_events
-
+#endif
     #region PRIVATE_MEMBER_VARIABLES
 
     string mErrorText = "";
@@ -45,61 +45,54 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
 
     #endregion // PRIVATE_MEMBER_VARIABLES
 
+#if !UNITY_STANDALONE && !UNITY_EDITOR
     #region UNTIY_MONOBEHAVIOUR_METHODS
 
-    void Awake()
-    {
+    void Awake () {
         // Check for an initialization error on start.
-        VuforiaRuntime.Instance.RegisterVuforiaInitErrorCallback(OnVuforiaInitializationError);
+        VuforiaRuntime.Instance.RegisterVuforiaInitErrorCallback (OnVuforiaInitializationError);
     }
 
-    void Start()
-    {
-        SetupGUIStyles();
+    void Start () {
+        SetupGUIStyles ();
     }
 
-    void OnGUI()
-    {
+    void OnGUI () {
         // On error, create a full screen window.
         if (mErrorOccurred)
-            GUI.Window(0, new Rect(0, 0, Screen.width, Screen.height), DrawWindowContent, "");
+            GUI.Window (0, new Rect (0, 0, Screen.width, Screen.height), DrawWindowContent, "");
     }
 
     /// <summary>
     ///     When this game object is destroyed, it unregisters itself as event handler
     /// </summary>
-    void OnDestroy()
-    {
-        VuforiaRuntime.Instance.UnregisterVuforiaInitErrorCallback(OnVuforiaInitializationError);
+    void OnDestroy () {
+        VuforiaRuntime.Instance.UnregisterVuforiaInitErrorCallback (OnVuforiaInitializationError);
     }
 
     #endregion // UNTIY_MONOBEHAVIOUR_METHODS
 
     #region PRIVATE_METHODS
 
-    void DrawWindowContent(int id)
-    {
-        var headerRect = new Rect(0, 0, Screen.width, Screen.height / 8);
-        var bodyRect = new Rect(0, Screen.height / 8, Screen.width, Screen.height / 8 * 6);
-        var footerRect = new Rect(0, Screen.height - Screen.height / 8, Screen.width, Screen.height / 8);
+    void DrawWindowContent (int id) {
+        var headerRect = new Rect (0, 0, Screen.width, Screen.height / 8);
+        var bodyRect = new Rect (0, Screen.height / 8, Screen.width, Screen.height / 8 * 6);
+        var footerRect = new Rect (0, Screen.height - Screen.height / 8, Screen.width, Screen.height / 8);
 
-        GUI.Label(headerRect, headerLabel, headerStyle);
-        GUI.Label(bodyRect, mErrorText, bodyStyle);
+        GUI.Label (headerRect, headerLabel, headerStyle);
+        GUI.Label (bodyRect, mErrorText, bodyStyle);
 
-        if (GUI.Button(footerRect, "Close", footerStyle))
-        {
+        if (GUI.Button (footerRect, "Close", footerStyle)) {
 #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-    #else
-            Application.Quit();
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit ();
 #endif
         }
     }
 
-    void SetErrorCode(VuforiaUnity.InitError errorCode)
-    {
-        switch (errorCode)
-        {
+    void SetErrorCode (VuforiaUnity.InitError errorCode) {
+        switch (errorCode) {
             case VuforiaUnity.InitError.INIT_EXTERNAL_DEVICE_NOT_DETECTED:
                 mErrorText =
                     "Failed to initialize Vuforia because this " +
@@ -116,7 +109,7 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
                     "Vuforia App key is invalid. " +
                     "Please get a valid key by logging into your account at " +
                     "developer.vuforia.com and creating a new project. \n\n" +
-                    getKeyInfo();
+                    getKeyInfo ();
                 break;
             case VuforiaUnity.InitError.INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT:
                 mErrorText = "Unable to contact server. Please try again later.";
@@ -128,19 +121,19 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
                 mErrorText =
                     "This App license key has been cancelled and may no longer be used. " +
                     "Please get a new license key. \n\n" +
-                    getKeyInfo();
+                    getKeyInfo ();
                 break;
             case VuforiaUnity.InitError.INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH:
                 mErrorText =
                     "Vuforia App key is not valid for this product. Please get a valid key " +
                     "by logging into your account at developer.vuforia.com and choosing the " +
                     "right product type during project creation. \n\n" +
-                    getKeyInfo() + " \n\n" +
+                    getKeyInfo () + " \n\n" +
                     "Note that Universal Windows Platform (UWP) apps require " +
                     "a license key created on or after August 9th, 2016.";
                 break;
             case VuforiaUnity.InitError.INIT_NO_CAMERA_ACCESS:
-                mErrorText = 
+                mErrorText =
                     "User denied Camera access to this app.\n" +
                     "To restore, enable Camera access in Settings:\n" +
                     "Settings > Privacy > Camera > " + Application.productName + "\n" +
@@ -156,84 +149,80 @@ public class DefaultInitializationErrorHandler : MonoBehaviour
         }
 
         // Prepend the error code in red
-        mErrorText = "<color=red>" + errorCode.ToString().Replace("_", " ") + "</color>\n\n" + mErrorText;
+        mErrorText = "<color=red>" + errorCode.ToString ().Replace ("_", " ") + "</color>\n\n" + mErrorText;
 
         // Remove rich text tags for console logging
-        var errorTextConsole = mErrorText.Replace("<color=red>", "").Replace("</color>", "");
+        var errorTextConsole = mErrorText.Replace ("<color=red>", "").Replace ("</color>", "");
 
-        Debug.LogError("Vuforia initialization failed: " + errorCode + "\n\n" + errorTextConsole);
+        Debug.LogError ("Vuforia initialization failed: " + errorCode + "\n\n" + errorTextConsole);
     }
 
-    void SetErrorOccurred(bool errorOccurred)
-    {
+    void SetErrorOccurred (bool errorOccurred) {
         mErrorOccurred = errorOccurred;
     }
 
-    string getKeyInfo()
-    {
+    string getKeyInfo () {
         string key = VuforiaConfiguration.Instance.Vuforia.LicenseKey;
         string keyInfo;
         if (key.Length > 10)
             keyInfo =
-                "Your current key is <color=red>" + key.Length + "</color> characters in length. " +
-                "It begins with <color=red>" + key.Substring(0, 5) + "</color> " +
-                "and ends with <color=red>" + key.Substring(key.Length - 5, 5) + "</color>.";
+            "Your current key is <color=red>" + key.Length + "</color> characters in length. " +
+            "It begins with <color=red>" + key.Substring (0, 5) + "</color> " +
+            "and ends with <color=red>" + key.Substring (key.Length - 5, 5) + "</color>.";
         else
             keyInfo =
-                "Your current key is <color=red>" + key.Length + "</color> characters in length. \n" +
-                "The key is: <color=red>" + key + "</color>.";
+            "Your current key is <color=red>" + key.Length + "</color> characters in length. \n" +
+            "The key is: <color=red>" + key + "</color>.";
         return keyInfo;
     }
 
-    void SetupGUIStyles()
-    {
+    void SetupGUIStyles () {
         // Called from Start() to determine physical size of device for text sizing
         var shortSidePixels = Screen.width < Screen.height ? Screen.width : Screen.height;
         var shortSideInches = shortSidePixels / Screen.dpi;
         var physicalSizeMultiplier = shortSideInches > 4.0f ? 2 : 1;
 
         // Create 1x1 pixel background textures for body, header, and footer
-        bodyTexture = CreateSinglePixelTexture(Color.white);
-        headerTexture = CreateSinglePixelTexture(new Color(
-            Mathf.InverseLerp(0, 255, 220),
-            Mathf.InverseLerp(0, 255, 220),
-            Mathf.InverseLerp(0, 255, 220))); // RGB(220)
-        footerTexture = CreateSinglePixelTexture(new Color(
-            Mathf.InverseLerp(0, 255, 35),
-            Mathf.InverseLerp(0, 255, 178),
-            Mathf.InverseLerp(0, 255, 0))); // RGB(35,178,0)
+        bodyTexture = CreateSinglePixelTexture (Color.white);
+        headerTexture = CreateSinglePixelTexture (new Color (
+            Mathf.InverseLerp (0, 255, 220),
+            Mathf.InverseLerp (0, 255, 220),
+            Mathf.InverseLerp (0, 255, 220))); // RGB(220)
+        footerTexture = CreateSinglePixelTexture (new Color (
+            Mathf.InverseLerp (0, 255, 35),
+            Mathf.InverseLerp (0, 255, 178),
+            Mathf.InverseLerp (0, 255, 0))); // RGB(35,178,0)
 
         // Create body style and set values
-        bodyStyle = new GUIStyle();
+        bodyStyle = new GUIStyle ();
         bodyStyle.normal.background = bodyTexture;
-        bodyStyle.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        bodyStyle.font = Resources.GetBuiltinResource<Font> ("Arial.ttf");
         bodyStyle.fontSize = (int) (18 * physicalSizeMultiplier * Screen.dpi / 160);
         bodyStyle.normal.textColor = Color.black;
         bodyStyle.wordWrap = true;
         bodyStyle.alignment = TextAnchor.MiddleCenter;
-        bodyStyle.padding = new RectOffset(40, 40, 0, 0);
+        bodyStyle.padding = new RectOffset (40, 40, 0, 0);
 
         // Duplicate body style and change necessary values
-        headerStyle = new GUIStyle(bodyStyle);
+        headerStyle = new GUIStyle (bodyStyle);
         headerStyle.normal.background = headerTexture;
         headerStyle.fontSize = (int) (24 * physicalSizeMultiplier * Screen.dpi / 160);
 
         // Duplicate body style and change necessary values
-        footerStyle = new GUIStyle(bodyStyle);
+        footerStyle = new GUIStyle (bodyStyle);
         footerStyle.normal.background = footerTexture;
         footerStyle.normal.textColor = Color.white;
         footerStyle.fontSize = (int) (28 * physicalSizeMultiplier * Screen.dpi / 160);
     }
 
-    Texture2D CreateSinglePixelTexture(Color color)
-    {
+    Texture2D CreateSinglePixelTexture (Color color) {
         // Called by SetupGUIStyles() to create 1x1 texture
-        var texture = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-        texture.SetPixel(0, 0, color);
-        texture.Apply();
+        var texture = new Texture2D (1, 1, TextureFormat.ARGB32, false);
+        texture.SetPixel (0, 0, color);
+        texture.Apply ();
         return texture;
     }
 
     #endregion // PRIVATE_METHODS
-}
 #endif
+}

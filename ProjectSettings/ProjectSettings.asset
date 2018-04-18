@@ -265,7 +265,7 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_Enabled: 0
   - m_BuildTarget: Android
-    m_Enabled: 0
+    m_Enabled: 1
   - m_BuildTarget: iOS
     m_Enabled: 0
   openGLRequireES31: 0
@@ -582,7 +582,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: CubeArena
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: CubeArena
   metroCommandLineArgsFile: 
   metroTileShowName: 0
   metroMediumTileShowName: 0

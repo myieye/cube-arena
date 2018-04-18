@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Interaction;
 using UnityEngine;
 
@@ -9,9 +9,10 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
 
 		void Start () {
 			#if (UNITY_WSA || UNITY_EDITOR)
-			var settings = FindObjectOfType<Settings>();
-			gameObject.AddComponent<SelectAndAxesGestures>().sensitivity = settings.AxisSensitivity;
-			gameObject.AddComponent<SelectAxesAndCursorPointerGestures>().sensitivity = settings.AxisSensitivity;
+			gameObject.AddComponent<SelectAndAxesGestures>().sensitivity =
+				Settings.Instance.AxisSensitivity;
+			gameObject.AddComponent<SelectAxesAndCursorPointerGestures>().sensitivity =
+				Settings.Instance.AxisSensitivity;
 			#endif
 		}
 	}

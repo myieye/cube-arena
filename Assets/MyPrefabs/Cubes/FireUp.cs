@@ -12,7 +12,7 @@ namespace CubeArena.Assets.MyPrefabs.Cubes
 		void Start () {
 			boxCollider = transform.parent.GetComponentInChildren<BoxCollider>();
 		}
-		
+
 		void Update () {
 			// Keep at vertical offset and pointed up
 			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);

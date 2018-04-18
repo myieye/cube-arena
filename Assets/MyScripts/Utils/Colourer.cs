@@ -9,16 +9,15 @@ namespace CubeArena.Assets.MyScripts.Utils
 
 		[SyncVar/*(hook="SetColor")*/]
 		public Color color;
-		protected Renderer[] renderers;
+		protected Renderer rend;
 
 		public virtual void Start () {
-			renderers = GetComponentsInChildren<Renderer>();
+			rend = GetComponent<Renderer>();
 			SetColor(color);
 		}
 
 		protected void SetColor(Color color) {
-			foreach (var rend in renderers)
-				rend.material.color = color;
+			rend.material.color = color;
 		}
 	}
 }

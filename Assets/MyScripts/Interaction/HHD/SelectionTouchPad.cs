@@ -1,5 +1,5 @@
 using System;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

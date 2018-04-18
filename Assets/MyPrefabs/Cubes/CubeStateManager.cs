@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Networking;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 
 namespace CubeArena.Assets.MyPrefabs.Cubes
 {
@@ -11,23 +12,31 @@ namespace CubeArena.Assets.MyPrefabs.Cubes
 	public class CubeStateManager : NetworkBehaviour {
 
 		public CubeState State { get; private set; }
-		private CubeColourer colourer;
 		public bool IsRotating { get; private set; }
+		private CubeColourer colourer;
+		private CubeState prevState;
 
 		void Start() {
 			State = CubeState.None;
 			colourer = GetComponentInParent<CubeColourer>();
 		}
 
+		void Update() {
+			if (Settings.Instance.LogCubeStateChanges && prevState != State) {
+				Debug.Log("Cube State: " + State);
+				prevState = State;
+			}
+		}
+
 		public void Hover() {
-			if (!InStates(CubeState.Drag, CubeState.Select, CubeState.Disallow)) {
+			if (InState(CubeState.None)) {
 				State = CubeState.Hover;
 				ColourCube();
 			}
 		}
 
 		public void Unhover() {
-			if (!InStates(CubeState.Drag, CubeState.Select, CubeState.Disallow)) {
+			if (InState(CubeState.Hover)) {
 				State = CubeState.None;
 				ColourCube();
 			}

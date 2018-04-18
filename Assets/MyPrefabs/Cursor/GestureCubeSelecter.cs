@@ -1,7 +1,7 @@
-using CubeArena.Assets.MyScripts.Constants;
-using CubeArena.Assets.MyScripts.Helpers;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Interaction;
-using CubeArena.Assets.MyScripts.UI.Mode;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
@@ -16,24 +16,16 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
         }
 
         protected override bool IsDeselecting () {
-            //if (UIModeManager.InMode (UIMode.HHD3_Gestures)) {
-            if (!selecting && tapDetecter.Tapped &&
-                !stateManager.InStates (InteractionState.Moving, InteractionState.Disallowed)) {
-                return true;
-            } else {
-                return false;
-            }
-            /*} else {
+            if (!UIModeManager.InMode (UIMode.HHD3_Gestures)) {
                 return base.IsDeselecting ();
-            }*/
+            } else {
+                return !selecting && tapDetecter.Tapped &&
+                    !stateManager.InStates (InteractionState.Moving, InteractionState.Disallowed);
+            }
         }
 
         protected override bool IsSelecting (out GameObject cube) {
-            if (base.IsSelecting (out cube)) {
-                return true;
-            } else {
-                return false;
-            }
+            return base.IsSelecting(out cube);
         }
     }
 }

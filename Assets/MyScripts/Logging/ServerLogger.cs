@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Data;
-using CubeArena.Assets.MyScripts.Data.Models;
+using CubeArena.Assets.MyScripts.Logging.DAL;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Network;
-using CubeArena.Assets.MyScripts.Rounds;
+using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;

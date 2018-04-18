@@ -1,13 +1,15 @@
 using System;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
-using CubeArena.Assets.MyScripts.Agents;
-using CubeArena.Assets.MyScripts.Constants;
-using CubeArena.Assets.MyScripts.Data.Models;
+using CubeArena.Assets.MyScripts.GameObjects.Agents;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Logging.Models;
 using CubeArena.Assets.MyScripts.Network;
-using CubeArena.Assets.MyScripts.Rounds;
-using CubeArena.Assets.MyScripts.UI.Mode;
+using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -41,20 +43,21 @@ namespace CubeArena.Assets.MyScripts.Logging {
         }
         private RoundManager RoundManager {
             get {
-                return FindObjectOfType<RoundManager>();
+                return FindObjectOfType<RoundManager> ();
             }
         }
         private Vector3 StartPosition {
             get {
-                return logger.GetComponent<StartPositionTracker>().StartPosition;
+                return logger.GetComponent<StartPositionTracker> ().StartPosition;
             }
         }
 
         public static Measure Instance { get; private set; }
-        
+
         void Start () {
             if (Instance) {
-                Destroy(this);
+                Destroy (this);
+                return;
             } else {
                 Instance = this;
             }
@@ -147,27 +150,27 @@ namespace CubeArena.Assets.MyScripts.Logging {
         public void UpdateInteractionArea (Vector3? interactionPoint) {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
-            int area = Calc.CalcArea(interactionPoint, StartPosition);
+            int area = Calc.CalcArea (interactionPoint, StartPosition);
             if (interactionArea.HasValue && interactionArea.Value != area) {
                 //Debug.Log("Entered area: " + area);
-                SaveCurrentAreaInteraction();
+                SaveCurrentAreaInteraction ();
             } else if (!interactionArea.HasValue) {
                 areaInteractionStart = DateTime.Now;
             }
             interactionArea = area;
         }
 
-        private void SaveCurrentAreaInteraction() {
-            AreaInteraction areaInteraction = Calc.CalcAreaInteraction(
+        private void SaveCurrentAreaInteraction () {
+            AreaInteraction areaInteraction = Calc.CalcAreaInteraction (
                 areaInteractionStart, DateTime.Now, interactionArea.Value);
-            logger.CmdLogAreaInteraction(areaInteraction);
+            logger.CmdLogAreaInteraction (areaInteraction);
             areaInteractionStart = DateTime.Now;
         }
 
         public void FlushMeasurements () {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
-            SaveCurrentAreaInteraction();
+            SaveCurrentAreaInteraction ();
         }
     }
 }

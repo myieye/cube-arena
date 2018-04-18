@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Constants;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
-using CubeArena.Assets.MyScripts.UI.Mode;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 

@@ -42,6 +42,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 					activeInput = s_TouchInput;
 					break;
 			}
+
+			Debug.Log("Active Input Method: " + activeInput);
 		}
 
 		public static bool AxisExists(string name)
