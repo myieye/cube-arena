@@ -16,6 +16,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract
 		
 		protected virtual void Update () {
 			if (!isLocalPlayer) return;
+			if (stateManager.IsSpraying()) return;
 
 			CheckStartRotating();
 			CheckEndRotating();
@@ -23,6 +24,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract
 
 		protected virtual void FixedUpdate() {
 			if (!isLocalPlayer) return;
+			if (stateManager.IsSpraying()) return;
 			
 			if (Rotating()) {
 				Rotate();

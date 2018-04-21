@@ -28,7 +28,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		public void RegisterConnectedDevice (ConnectedDevice connectedDevice) {
 			var key = GenerateConnectionKey (connectedDevice.Connection, connectedDevice.ControllerId);
 			if (!ConnectedDevices.ContainsKey (key)) {
-				DataService.Instance.SaveDeviceIfNewModel(connectedDevice);
+				DataService.Instance.SaveDeviceIfNewModel (connectedDevice);
 				//var netPlayer = PlayerManager.Instance.AddPlayer (device.Connection, playerControllerId);
 				ConnectedDevices[key] = connectedDevice;
 				if (!DevicesByType.ContainsKey (connectedDevice.Type)) {
@@ -45,13 +45,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 
 		[Server]
 		public List<List<DeviceConfig>> GenerateDeviceRoundConfigs (int numPlayers) {
-			Debug.Log(String.Format("Generating: {0}:{1}:{2}", numPlayers, ConnectedDevices.Count, DevicesByType.Count));
+
 			var modes = UIModeManager.GetUIModes ();
 			var numRounds = modes.Count;
 			var config = new List<List<DeviceConfig>> ();
 
+			int tries = 0;
 			bool valid = false;
 			while (!valid) {
+				tries++;
 				config.Clear ();
 				for (var i = 0; i < numRounds; i++) {
 					config.Add (new List<DeviceConfig> ());
@@ -67,14 +69,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 					PrintDeviceRoundConfig (config, valid);
 				}
 			}
+			
+			if (Settings.Instance.LogDeviceRoundConfig) {
+				Debug.Log (String.Format ("Generated device-round config: {0}:{1}:{2}",
+					numPlayers, ConnectedDevices.Count, DevicesByType.Count));
+				Debug.Log ("Num tries: " + tries);
+			}
 			return config;
 		}
 
-		public DeviceTypeMessage BuildDeviceTypeMessage () {
-			return new DeviceTypeMessage {
-				Type = SystemInfo.deviceType,
-					Model = SystemInfo.deviceModel
-			};
+		public bool EnoughDevicesAvailable (int numPlayers) {
+			var enough = DevicesByType.Count == 2 &&
+				DevicesByType.All (pair => pair.Value.Count >= numPlayers / 2);
+			return Settings.Instance.OverrideAvailableDevices || enough;
 		}
 
 		private bool AddPlayerDeviceConfig (List<List<DeviceConfig>> config) {
@@ -115,10 +122,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		}
 
 		private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceType deviceType) {
-			Debug.Log("GetDevice: " + deviceType);
-			Debug.Log("Device Types: " + DevicesByType.Count + " " +
-				(DevicesByType.Any() ? DevicesByType.First().Key.ToString() : "null"));
-			return DevicesByType[deviceType].FirstOrDefault (d => !round.Exists (dc => dc.Device.Equals (d)));
+			if (!DevicesByType.ContainsKey (deviceType) && Settings.Instance.OverrideAvailableDevices) {
+				return ConnectedDevices.First ().Value;
+			} else {
+				return DevicesByType[deviceType].FirstOrDefault (d => !round.Exists (dc => dc.Device.Equals (d)));
+			}
 		}
 
 		private T RemoveFirst<T> (List<T> list) {

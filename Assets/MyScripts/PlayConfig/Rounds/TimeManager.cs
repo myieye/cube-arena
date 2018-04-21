@@ -15,13 +15,18 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private const string TickClock_Method = "TickClock";
 		private RoundOverListener roundOverListener;
 
-		public void StartRound (float roundLength, RoundOverListener roundOverListener) {
+		public void StartRound (float roundLength, float roundDelay, RoundOverListener roundOverListener) {
 			if (isServer) {
 				this.roundOverListener = roundOverListener;
 				roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
 				CancelInvoke (TickClock_Method);
-				InvokeRepeating (TickClock_Method, 0, 1);
+				StartCoroutine (StartTickingAfter (roundDelay));
 			}
+		}
+
+		private IEnumerator StartTickingAfter (float delay) {
+			yield return new WaitForSeconds (delay);
+			InvokeRepeating (TickClock_Method, 0, 1);
 		}
 
 		private void TickClock () {

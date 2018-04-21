@@ -19,15 +19,19 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		void Update () {
+			Debug.DrawRay(destination, Vector3.up, Color.blue, Mathf.Infinity);
+
 			if (isServer && Arrived ()) {
 				destination = enemyManager.GetRandomPosition ();
 			}
+
 			animator.SetBool ("Moving", IsMoving ());
 		}
 
-		void OnNewDestination (Vector3 _destination) {
-			if (agent != null)
-				agent.SetDestination (destination);
+		void OnNewDestination (Vector3 newDestination) {
+			if (agent != null) {
+				agent.SetDestination (newDestination);
+			}
 		}
 
 		bool IsMoving () {
@@ -35,9 +39,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		bool Arrived () {
-			return (!agent.pathPending) &&
-			(agent.remainingDistance <= agent.stoppingDistance) &&
-			(!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
+			return //(!agent.pathPending) &&
+			(agent.remainingDistance <= agent.stoppingDistance) /*&&
+			(!agent.hasPath || agent.velocity.sqrMagnitude == 0f)*/;
 		}
 	}
 }

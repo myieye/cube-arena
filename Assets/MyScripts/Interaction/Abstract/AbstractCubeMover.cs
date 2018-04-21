@@ -17,6 +17,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract
 		
 		protected virtual void Update () {
 			if (!isLocalPlayer) return;
+			if (stateManager.IsSpraying()) return;
 
 			var starting = CheckStartMoving();
 			if (!starting) {
@@ -27,6 +28,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract
 
 		protected virtual void FixedUpdate() {
 			if (!isLocalPlayer) return;
+			if (stateManager.IsSpraying()) return;
 			
 			if (stateManager.IsMoving()) {
 				Move();

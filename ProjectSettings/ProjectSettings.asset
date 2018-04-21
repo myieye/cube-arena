@@ -268,6 +268,8 @@ PlayerSettings:
     m_Enabled: 1
   - m_BuildTarget: iOS
     m_Enabled: 0
+  - m_BuildTarget: Metro
+    m_Enabled: 1
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   m_TemplateCustomTags: {}
@@ -575,11 +577,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: CubeArena
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: My Company
+  metroCertificateIssuer: My Company
+  metroCertificateNotAfter: 80140f5d46f6d401
   metroApplicationDescription: CubeArena
   wsaImages: {}
   metroTileShortName: CubeArena
@@ -604,10 +606,10 @@ PlayerSettings:
       EnterpriseAuthentication: False
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
-      InternetClient: False
+      InternetClient: True
       InternetClientServer: False
       Location: False
-      Microphone: False
+      Microphone: True
       MusicLibrary: False
       Objects3D: False
       PhoneCall: False
@@ -620,7 +622,7 @@ PlayerSettings:
       UserAccountInformation: False
       VideosLibrary: False
       VoipCall: False
-      WebCam: False
+      WebCam: True
   metroFTAName: 
   metroFTAFileTypes: []
   metroProtocolName: 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
@@ -32,9 +32,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override void Rotate () {
-			Debug.Log ("Rotate");
 			if (selectedRigidbody != null) {
-				Debug.Log ("Rotating");
 				selectedRigidbody.AddTorque (CalculateRotationTorque (), ForceMode.VelocityChange);
 			}
 		}
@@ -45,19 +43,16 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override void StartRotate () {
-			Debug.Log ("CubeRotater.StartRotate");
 			SelectCube (stateManager.SelectedCube.Cube);
 		}
 
 		private void SelectCube (GameObject cube) {
 			selectedRigidbody = cube.GetComponent<Rigidbody> ();
-			selectedRigidbody.maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 			rotationWaitTime = 0;
 		}
 
 		protected override bool IsEndingRotate () {
-			return
-			rotationWaitTime > Settings.Instance.RotationTimeout &&
+			return rotationWaitTime > Settings.Instance.RotationTimeout &&
 				selectedRigidbody.angularVelocity.magnitude < Settings.Instance.MinRotationVelocity;
 		}
 

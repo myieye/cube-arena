@@ -119,9 +119,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 					cube.GetComponent<Collider> ().isTrigger = false;
 					cubeRb.constraints = RigidbodyConstraints.None;
 					cubeRb.useGravity = true;
-					//cubeRb.mass = 100;
 					cubeRb.velocity = Vector3.zero;
-					Debug.Log ("DeselectingCube:");
 					cubeRb = null;
 					ResetOffset ();
 					cubeNavObstacle.enabled = true;
@@ -139,8 +137,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		bool StuckInDisallow () {
-			return
-			stateManager.InState (InteractionState.Disallowed) &&
+			return stateManager.InState (InteractionState.Disallowed) &&
 				cubeRb.velocity.magnitude < 2 &&
 				overlapManager.HasOverlapWith (cursorCtrl.GetAlignedWith ());
 		}
@@ -154,9 +151,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		public virtual void OnCubeDeselected (GameObject cube) {
-			Debug.Log ("RaycastCubeMover.OnCubeDeselected");
 			if (cubeRb != null) {
-				Debug.Log ("Deselecintg...");
 				CmdDeselectMovingCube (cube);
 			}
 		}

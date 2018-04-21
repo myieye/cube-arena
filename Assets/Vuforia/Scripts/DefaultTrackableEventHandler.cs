@@ -13,9 +13,8 @@ using Vuforia;
 /// <summary>
 ///     A custom handler that implements the ITrackableEventHandler interface.
 /// </summary>
-[RequireComponent(typeof(TrackableBehaviour))]
-public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandler
-{
+[RequireComponent (typeof (TrackableBehaviour))]
+public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandler {
     #region PRIVATE_MEMBER_VARIABLES
 
     protected TrackableBehaviour mTrackableBehaviour;
@@ -24,11 +23,10 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
 
     #region UNTIY_MONOBEHAVIOUR_METHODS
 
-    protected virtual void Start()
-    {
-        mTrackableBehaviour = GetComponent<TrackableBehaviour>();
+    protected virtual void Start () {
+        mTrackableBehaviour = GetComponent<TrackableBehaviour> ();
         if (mTrackableBehaviour)
-            mTrackableBehaviour.RegisterTrackableEventHandler(this);
+            mTrackableBehaviour.RegisterTrackableEventHandler (this);
     }
 
     #endregion // UNTIY_MONOBEHAVIOUR_METHODS
@@ -39,25 +37,19 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
     ///     Implementation of the ITrackableEventHandler function called when the
     ///     tracking state changes.
     /// </summary>
-    public void OnTrackableStateChanged(
+    public void OnTrackableStateChanged (
         TrackableBehaviour.Status previousStatus,
-        TrackableBehaviour.Status newStatus)
-    {
+        TrackableBehaviour.Status newStatus) {
         if (newStatus == TrackableBehaviour.Status.DETECTED ||
             newStatus == TrackableBehaviour.Status.TRACKED ||
-            newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
-        {
-            Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
-            OnTrackingFound();
-        }
-        else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
-                 newStatus == TrackableBehaviour.Status.NOT_FOUND)
-        {
-            Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
-            OnTrackingLost();
-        }
-        else
-        {
+            newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED) {
+            Debug.Log ("Trackable " + mTrackableBehaviour.TrackableName + " found");
+            OnTrackingFound ();
+        } else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
+            newStatus == TrackableBehaviour.Status.NOT_FOUND) {
+            Debug.Log ("Trackable " + mTrackableBehaviour.TrackableName + " lost");
+            OnTrackingLost ();
+        } else {
             // For combo of previousStatus=UNKNOWN + newStatus=UNKNOWN|NOT_FOUND
             // Vuforia is starting, but tracking has not been lost or found yet
             // Call OnTrackingLost() to hide the augmentations
@@ -69,12 +61,11 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
 
     #region PRIVATE_METHODS
 
-    protected virtual void OnTrackingFound()
-    {
-        Debug.Log("base.OnTrackingFound");
-        var rendererComponents = GetComponentsInChildren<Renderer>(true);
-        var colliderComponents = GetComponentsInChildren<Collider>(true);
-        var canvasComponents = GetComponentsInChildren<Canvas>(true);
+    protected virtual void OnTrackingFound () {
+        Debug.Log ("base.OnTrackingFound");
+        var rendererComponents = GetComponentsInChildren<Renderer> (true);
+        var colliderComponents = GetComponentsInChildren<Collider> (true);
+        var canvasComponents = GetComponentsInChildren<Canvas> (true);
 
         // Enable rendering:
         foreach (var component in rendererComponents)
@@ -89,12 +80,11 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
             component.enabled = true;
     }
 
-    protected virtual void OnTrackingLost()
-    {
-        Debug.Log("base.OnTrackingLost");
-        var rendererComponents = GetComponentsInChildren<Renderer>(true);
-        var colliderComponents = GetComponentsInChildren<Collider>(true);
-        var canvasComponents = GetComponentsInChildren<Canvas>(true);
+    protected virtual void OnTrackingLost () {
+        Debug.Log ("base.OnTrackingLost");
+        var rendererComponents = GetComponentsInChildren<Renderer> (true);
+        var colliderComponents = GetComponentsInChildren<Collider> (true);
+        var canvasComponents = GetComponentsInChildren<Canvas> (true);
 
         // Disable rendering:
         foreach (var component in rendererComponents)
@@ -111,4 +101,10 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
 
     #endregion // PRIVATE_METHODS
 }
+
+#else
+
+using UnityEngine;
+public class DefaultTrackableEventHandler : MonoBehaviour { }
+
 #endif

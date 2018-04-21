@@ -11,6 +11,8 @@ TagManager:
   - Fire
   - Ground
   - 2DTranslationPlane
+  - Controls
+  - Slower
   layers:
   - Default
   - TransparentFX

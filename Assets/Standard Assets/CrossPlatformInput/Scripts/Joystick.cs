@@ -43,13 +43,11 @@ namespace UnityStandardAssets.CrossPlatformInput
 			if (m_UseX)
 			{
 				m_HorizontalVirtualAxis.Update(-delta.x);
-				Debug.Log("X-Axis.Update");
 			}
 
 			if (m_UseY)
 			{
 				m_VerticalVirtualAxis.Update(delta.y);
-				Debug.Log("Y-Axis.Update");
 			}
 		}
 

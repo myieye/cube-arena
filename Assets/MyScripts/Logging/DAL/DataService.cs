@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Logging.DAL.Mock;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Logging.DAL.SQLite;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
@@ -13,7 +14,11 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
 		private CubeArenaMeasurementsDb db;
 		private DataService () {
-			db = new CubeArenaMeasurementsDb ();
+			if (Settings.Instance.DbActive) {
+				db = new CubeArenaMeasurementsSQLiteDb ();
+			} else {
+				db = new CubeArenaMeasurementsMockDb ();
+			}
 		}
 
 		private static DataService instance;
@@ -48,15 +53,6 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			Log (SaveToDb (db.InsertSelection, selection));
 		}
 
-		public void SaveDeviceIfNewModel (Device device) {
-			var d = db.GetDeviceByModel (device.Model);
-			if (d == null) {
-				Log (SaveToDb (db.InsertDevice, device));
-			} else {
-				device.Id = d.Id;
-			}
-		}
-
 		public void SavePlacement (Placement placement) {
 			Log (SaveToDb (db.InsertPlacement, placement));
 		}
@@ -68,19 +64,25 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			}
 		}
 
-		private T SaveToDb<T> (Func<T, T> saveFunc, T entity) {
-			if (Settings.Instance.LogMeasurementsToDb) {
-				entity = saveFunc (entity);
+		public void SaveAreaInteraction (AreaInteraction areaInteraction) {
+			Log (SaveToDb (db.InsertAreaInteraction, areaInteraction));
+		}
+
+		public void SaveDeviceIfNewModel (Device device) {
+			var d = db.GetDeviceByModel (device.Model);
+			if (d == null) {
+				Log (SaveToDb (db.InsertDevice, device));
+			} else {
+				device.Id = d.Id;
 			}
-			return entity;
+		}
+
+		private T SaveToDb<T> (Func<T, T> saveFunc, T entity) {
+			return saveFunc (entity);
 		}
 
 		public int GetNextPlayerId () {
 			return db.GetNextPlayerId ();
-		}
-
-		public void SaveAreaInteraction (AreaInteraction areaInteraction) {
-			Log (db.InsertAreaInteraction (areaInteraction));
 		}
 
 		public List<int> CreatePlayerRoundIds (List<NetworkPlayer> players, int roundNum) {

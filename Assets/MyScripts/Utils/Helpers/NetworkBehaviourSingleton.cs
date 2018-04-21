@@ -1,21 +1,31 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
     public abstract class NetworkBehaviourSingleton : NetworkBehaviour {
 
-        private static NetworkBehaviourSingleton _instance;
+        private static List<NetworkBehaviourSingleton> _instances;
 
         public static T Instance<T> () where T : NetworkBehaviourSingleton {
-            return _instance as T;
+            return _instances.First (i => i.GetType () == typeof (T)) as T;
         }
 
         public virtual void Awake () {
-            if (_instance) {
+            if (_instances == null) {
+                _instances = new List<NetworkBehaviourSingleton> ();
+            }
+
+            if (GetInstance (this)) {
                 Destroy (gameObject);
             } else {
-                _instance = this;
+                _instances.Add (this);
             }
+        }
+
+        private static NetworkBehaviourSingleton GetInstance (NetworkBehaviourSingleton obj) {
+            return _instances.FirstOrDefault (i => i.GetType () == obj.GetType ());
         }
     }
 }

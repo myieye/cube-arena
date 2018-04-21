@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
@@ -10,7 +11,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 #endif
     }
 
-    static class UIModeMethods {
+    static class UIModeHelpers {
 
         public static string GetFriendlyString (this UIMode uiMode) {
             switch (uiMode) {

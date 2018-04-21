@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CubeArena.Assets.MyScripts.GameObjects.Fire;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -12,9 +13,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 		public int level;
 		private EnemyManager enemyManager;
+		//private float killHeight;
 
 		void Start () {
 			enemyManager = FindObjectOfType<EnemyManager> ();
+			//killHeight = transform.localScale.y * GetComponent<BoxCollider> ().bounds.min.y;
 		}
 
 		void OnCollisionEnter (Collision col) {
@@ -38,10 +41,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private bool IsDetchCollision (Collision col) {
-			return
-			col.gameObject.CompareTag (Tags.Cube) &&
-				col.gameObject.GetComponentInChildren<DynamicFireSource> ().burning;
-			//return col.gameObject.transform.position.y > transform.position.y;
+			return col.gameObject.CompareTag (Tags.Cube) &&
+				col.gameObject.GetComponentInChildren<DynamicFireSource> ().burning/* &&
+				col.gameObject.transform.position.y > killHeight*/;
 		}
 	}
 }

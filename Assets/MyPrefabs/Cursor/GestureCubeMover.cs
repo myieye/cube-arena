@@ -18,9 +18,13 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		[SerializeField]
 		private float speed;
 		private TapDetecter tapDetecter;
-		private GameObject translationPlane;
 		private MoveState moveState;
 		private Vector2? prevYPoint;
+		private GameObject TranslationPlane {
+			get {
+				return GameObject.Find (Names.TwoDTranslationPlane);
+			}
+		}
 
 		private bool InGestureMode {
 			get {
@@ -31,7 +35,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected override void Start () {
 			base.Start ();
 			tapDetecter = FindObjectOfType<TapDetecter> ();
-			translationPlane = GameObject.FindWithTag (Tags.TwoDTranslationPlane);
 			moveState = MoveState.None;
 			prevYPoint = null;
 		}
@@ -124,10 +127,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 			if (moveState.Equals (MoveState.XZ)) {
 				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
-				translationPlane.transform.position = Vector3.up * cubeRb.transform.position.y;
+				TranslationPlane.transform.position = Vector3.up * cubeRb.transform.position.y;
 			} else {
 				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCastMask;
-				translationPlane.transform.position = Vector3.zero;
+				TranslationPlane.transform.position = Vector3.zero;
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;
 				}

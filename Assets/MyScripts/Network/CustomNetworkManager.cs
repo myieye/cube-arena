@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
@@ -27,9 +28,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId, NetworkReader msgReader) {
 			DeviceTypeMessage msg = new DeviceTypeMessage ();
 			msg.Deserialize (msgReader);
-			Debug.Log("Device Connected: " + msg.Model);
+			Debug.Log ("Device Connected: " + msg.Model);
 			DeviceManager.RegisterConnectedDevice (
-				new ConnectedDevice(conn, playerControllerId, msg.Type, msg.Model));
+				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
@@ -44,8 +45,12 @@ namespace CubeArena.Assets.MyScripts.Network {
 			if (!clientLoadedScene) {
 				// Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
 				ClientScene.Ready (conn);
-				var msg = DeviceManager.BuildDeviceTypeMessage();
+				var msg = new DeviceTypeMessage {
+					Type = SystemInfo.deviceType,
+						Model = SystemInfo.deviceModel
+				};
 				ClientScene.AddPlayer (client.connection, 0, msg);
+				UIModeManager.Instance<UIModeManager>().OnClientConnect();
 			}
 		}
 	}

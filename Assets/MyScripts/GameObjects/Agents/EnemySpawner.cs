@@ -9,8 +9,8 @@ using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class EnemySpawner : MonoBehaviour {
-
-		public Collider area;
+		[SerializeField]
+		private Collider area;
 		private ARManager arManager;
 		private float radius;
 		private List<GameObject> enemySpawnList = new List<GameObject> ();
@@ -71,7 +71,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private void EnableEnemy (GameObject enemy) {
 			enemy.GetComponent<Enemy> ().enabled = true;
 			enemy.GetComponent<RandomAgentNavigation> ().enabled = true;
-			Destroy (enemy.GetComponent<OverlapManager> ());
 			foreach (var c in enemy.GetComponentsInChildren<Collider> ())
 				c.isTrigger = false;
 			foreach (var r in enemy.GetComponentsInChildren<Renderer> ())

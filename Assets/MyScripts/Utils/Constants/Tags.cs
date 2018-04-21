@@ -8,6 +8,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
         public const string Cube = "Cube";
         public const string Fire = "Fire";
         public const string Ground = "Ground";
-        public static string TwoDTranslationPlane = "2DTranslationPlane";
+        public const string Slower = "Slower";
     }
 }

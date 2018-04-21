@@ -12,6 +12,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 	public class CursorController : NetworkBehaviour, ARObject {
 
 		public enum CursorMode { Camera, Mouse, Touch, Pointer }
+		public Vector3? Position {
+			get {
+				return successfulRaycast ? (Vector3?) transform.position : null;
+			}
+		}
 
 		[SerializeField]
 		private float speed;
@@ -36,7 +41,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private bool InTouchMode {
 			get {
-				return CursorMode.Touch.Equals (UIModeManager.Instance.CurrentCursorMode);
+				return CursorMode.Touch.Equals (UIModeManager.Instance<UIModeManager>().CurrentCursorMode);
 			}
 		}
 		private bool ShowCursor {
@@ -118,7 +123,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private Vector3? GetRaycastOrigin () {
-			switch (UIModeManager.Instance.CurrentCursorMode) {
+			switch (UIModeManager.Instance<UIModeManager>().CurrentCursorMode) {
 				case CursorMode.Camera:
 					return screenCenter;
 				case CursorMode.Mouse:

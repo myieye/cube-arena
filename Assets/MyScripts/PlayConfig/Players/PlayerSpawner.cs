@@ -38,13 +38,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 		private void SpawnPlayer (NetworkPlayer netPlayer) {
 			var startPos = GetStartPosition ();
-			var color = materials[netPlayer.PlayerNum - 1].color;
-			netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer, color);
+			netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer, netPlayer.Color);
 			netPlayer.StartPosition = startPos;
-			SpawnCubesForPlayer (startPos, netPlayer, color);
+			SpawnCubesForPlayer (startPos, netPlayer, netPlayer.Color);
 		}
 
-		GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer, Color color) {
+		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer, Color color) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
 			if (Settings.Instance.AREnabled) {
 				arManager.AddARObjectToWorld (player.GetComponent<ARObject> ());
@@ -57,16 +56,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			return player;
 		}
 
-		void SpawnCubesForPlayer (Transform startPos, NetworkPlayer netPlayer, Color color) {
+		private void SpawnCubesForPlayer (Transform startPos, NetworkPlayer netPlayer, Color color) {
 			cubeStartPoints.transform.rotation = startPos.rotation;
 			cubeStartPoints.transform.position = startPos.position;
-
 			var i = 1;
 			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				if (Settings.Instance.AREnabled) {
 					arManager.AddGameObjectToWorld (cube);
 				}
+				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = color;
 				cube.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;
 				cube.name += i++;

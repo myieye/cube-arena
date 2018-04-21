@@ -18,7 +18,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		public void RefreshSelectedUIMode () {
-			dropdown.value = ((int) UIModeManager.Instance.CurrentUIMode) - 1;
+			dropdown.value = ((int) UIModeManager.Instance<UIModeManager>().CurrentUIMode) - 1;
 		}
 	}
 }

@@ -32,6 +32,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 		}
 
 		void Update () {
+			if (stateManager.IsSpraying()) return;
+			
 			GameObject cube;
 			if (overlapManager.GetLocalClosest(out cube)) {
 				stateManager.StartHover(cube);

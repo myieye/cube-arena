@@ -1,3 +1,5 @@
+#if !UNITY_STANDALONE && !UNITY_EDITOR
+
 /*==============================================================================
 Copyright (c) 2017 PTC Inc. All Rights Reserved.
 
@@ -7,16 +9,13 @@ Confidential and Proprietary - Protected under copyright and other laws.
 ==============================================================================*/
 
 using UnityEngine;
-#if !UNITY_STANDALONE && !UNITY_EDITOR
 using Vuforia;
-#endif
 
 /// <summary>
 ///     A custom handler that registers for Vuforia initialization errors
 /// </summary>
 public class DefaultInitializationErrorHandler : MonoBehaviour {
-
-#if !UNITY_STANDALONE && !UNITY_EDITOR
+    
     #region Vuforia_lifecycle_events
 
     public void OnVuforiaInitializationError (VuforiaUnity.InitError initError) {
@@ -27,7 +26,6 @@ public class DefaultInitializationErrorHandler : MonoBehaviour {
     }
 
     #endregion // Vuforia_lifecycle_events
-#endif
     #region PRIVATE_MEMBER_VARIABLES
 
     string mErrorText = "";
@@ -45,7 +43,6 @@ public class DefaultInitializationErrorHandler : MonoBehaviour {
 
     #endregion // PRIVATE_MEMBER_VARIABLES
 
-#if !UNITY_STANDALONE && !UNITY_EDITOR
     #region UNTIY_MONOBEHAVIOUR_METHODS
 
     void Awake () {
@@ -224,5 +221,14 @@ public class DefaultInitializationErrorHandler : MonoBehaviour {
     }
 
     #endregion // PRIVATE_METHODS
-#endif
 }
+
+#else
+
+using UnityEngine;
+
+public class DefaultInitializationErrorHandler : MonoBehaviour {
+
+}
+
+#endif

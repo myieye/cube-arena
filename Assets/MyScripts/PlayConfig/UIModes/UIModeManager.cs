@@ -6,14 +6,16 @@ using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.HMD;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
-	public class UIModeManager : NetworkBehaviour {
+	public class UIModeManager : NetworkBehaviourSingleton {
 
 		public RaycastCubeMover RaycastCubeMover {
 			get {
@@ -28,12 +30,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 #if (UNITY_WSA || UNITY_EDITOR)
 		public SelectAndAxesGestures SelectAndAxesGestures {
 			get {
-				return FindObjectOfType<SelectAndAxesGestures> ();
+				return GameObjectUtil.FindObjectOfExactType<SelectAndAxesGestures> ();
 			}
 		}
 		public SelectAxesAndCursorPointerGestures SelectAxesAndCursorPointerGestures {
 			get {
-				return FindObjectOfType<SelectAxesAndCursorPointerGestures> ();
+				return GameObjectUtil.FindObjectOfExactType<SelectAxesAndCursorPointerGestures> ();
 			}
 		}
 #endif
@@ -45,89 +47,116 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		[SerializeField]
 		private GameObject touchpad;
 		[SerializeField]
-		private GameObject twoDTranslationPlane;
-		[SerializeField]
 		private UIModeList uiModeList;
+		[SerializeField]
+		private GameObject controls;
+		private GameObject Controls {
+			get {
+				if (!controls) {
+					controls = GameObject.Find (Names.Controls);
+				}
+				return controls;
+			}
+		}
+
+		[SerializeField]
+		private GameObject twoDTranslationPlane;
+		private GameObject TwoDTranslationPlane {
+			get {
+				if (!twoDTranslationPlane) {
+					twoDTranslationPlane = GameObject.Find (Names.TwoDTranslationPlane);
+				}
+				return twoDTranslationPlane;
+			}
+		}
+
+		[SerializeField]
+		private UnityEngine.UI.Text passToPlayerText;
+		private UnityEngine.UI.Text PassToPlayerText {
+			get {
+				if (!passToPlayerText) {
+					passToPlayerText = GameObject.Find (Names.PassToPlayerText)
+						.GetComponent<UnityEngine.UI.Text> ();
+				}
+				return passToPlayerText;
+			}
+		}
 
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
-		public static UIModeManager Instance { get; private set; }
-
-		[SerializeField]
-		private UIMode defaultUIMode;
 		private UIMode[] modes = (UIMode[]) Enum.GetValues (typeof (UIMode));
 
-		void Awake () {
-			if (Instance) {
-				Destroy (this);
-				return;
-			}
-
-			Instance = this;
-		}
-
 		void Start () {
-			SetUIMode (defaultUIMode);
+			Controls.SetActive (true);
+			SetUIMode (Settings.Instance.DefaultUIMode);
 		}
 
-		public override void OnStartLocalPlayer () {
-			base.OnStartLocalPlayer ();
+		public void OnClientConnect () {
 			NetworkManager.singleton.client.RegisterHandler (
-				MessageIds.SetUIMode,
-				netMsg => SetUIMode (netMsg.ReadMessage<UIModeMessage> ().UIMode));
+				MessageIds.SetUIMode, OnUIModeMessage);
+		}
+
+		private void OnUIModeMessage (NetworkMessage netMsg) {
+			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
+			var mode = Settings.Instance.ForceTestUIMode ?
+				Settings.Instance.TestUIMode : modeMsg.UIMode;
+			PassToPlayerText.enabled = true;
+			PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
+			StartCoroutine (ClearPassToPlayerText ());
+			SetUIMode (mode);
+		}
+
+		IEnumerator ClearPassToPlayerText () {
+			yield return new WaitForSeconds (Settings.Instance.PassToPlayerTime);
+			PassToPlayerText.text = "";
+			PassToPlayerText.enabled = false;
 		}
 
 		public void OnUIModeChanged (int uiMode) {
-			SetUIMode (modes[uiMode]);
+			SetUIMode (modes[uiMode], force : false);
 		}
 
-		private void SetUIMode (UIMode mode) {
+		private void SetUIMode (UIMode mode, bool force = true) {
+			if (mode == CurrentUIMode && !force) {
+				return;
+			}
+			if (Settings.Instance.LogUIMode) {
+				Debug.Log ("SetUIMode: " + mode);
+			}
 			CurrentUIMode = mode;
 			uiModeList.RefreshSelectedUIMode ();
 			DisableAll ();
+			CrossPlatformInputManager.SwitchActiveInputMethod (
+				CrossPlatformInputManager.ActiveInputMethod.Touch);
 			switch (mode) {
 				case UIMode.Mouse:
-					CurrentCursorMode = CursorController.CursorMode.Mouse;
 					CrossPlatformInputManager.SwitchActiveInputMethod (
 						CrossPlatformInputManager.ActiveInputMethod.Hardware);
-					//RaycastCubeMover.enabled = false;
-					//GestureCubeMover.enabled = true;
+					CurrentCursorMode = CursorController.CursorMode.Mouse;
 					break;
 				case UIMode.HHD1_Camera:
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Touch);
 					joystick.SetActive (true);
 					selectButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Camera;
 					break;
 				case UIMode.HHD2_TouchAndDrag:
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Touch);
 					joystick.SetActive (true);
 					touchpad.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
 					break;
 				case UIMode.HHD3_Gestures:
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Touch);
 					touchpad.SetActive (true);
-					twoDTranslationPlane.SetActive (true);
+					TwoDTranslationPlane.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
 					break;
 #if (UNITY_WSA || UNITY_EDITOR)
 				case UIMode.HMD4_GazeAndClicker:
 					SelectAndAxesGestures.enabled = true;
 					CurrentCursorMode = CursorController.CursorMode.Camera;
-					// TODO ... wrong input method?
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Touch);
 					break;
 				case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
 					SelectAxesAndCursorPointerGestures.enabled = true;
 					CurrentCursorMode = CursorController.CursorMode.Pointer;
-					// TODO ... wrong input method?
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Touch);
 					break;
 #endif
 			}
@@ -135,31 +164,41 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
 			foreach (var player in players) {
-				NetworkServer.SendToClientOfPlayer (player.PlayerGameObject,
-					MessageIds.SetUIMode, new UIModeMessage { UIMode = player.DeviceConfig.UIMode });
+				var msg = new UIModeMessage {
+					UIMode = player.DeviceConfig.UIMode,
+						PlayerNum = player.PlayerNum
+				};
+				NetworkServer.SendToClient (player.DeviceConfig.Device.Connection.connectionId,
+					MessageIds.SetUIMode, msg);
 			}
 		}
 
 		private void DisableAll () {
-			if (joystick)
+			if (joystick) {
 				joystick.SetActive (false);
-			if (selectButton)
+			}
+			if (selectButton) {
 				selectButton.SetActive (false);
-			if (touchpad)
+			}
+			if (touchpad) {
 				touchpad.SetActive (false);
-			if (twoDTranslationPlane)
-				twoDTranslationPlane.SetActive (false);
+			}
+			if (TwoDTranslationPlane) {
+				TwoDTranslationPlane.SetActive (false);
+			}
 
 #if (UNITY_WSA || UNITY_EDITOR)
-			if (SelectAndAxesGestures)
+			if (SelectAndAxesGestures) {
 				SelectAndAxesGestures.enabled = false;
-			if (SelectAxesAndCursorPointerGestures)
+			}
+			if (SelectAxesAndCursorPointerGestures) {
 				SelectAxesAndCursorPointerGestures.enabled = false;
+			}
 #endif
 		}
 
 		public static bool InMode (UIMode mode) {
-			return Instance.CurrentUIMode.Equals (mode);
+			return Instance<UIModeManager> ().CurrentUIMode.Equals (mode);
 		}
 
 		public static List<UIMode> GetUIModes () {

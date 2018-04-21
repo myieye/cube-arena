@@ -7,7 +7,7 @@ namespace CubeArena.Assets.MyScripts.Utils
 {
 	public class Colourer : NetworkBehaviour {
 
-		[SyncVar/*(hook="SetColor")*/]
+		[SyncVar]
 		public Color color;
 		protected Renderer rend;
 

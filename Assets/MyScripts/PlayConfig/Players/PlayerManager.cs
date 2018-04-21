@@ -18,7 +18,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 return numPlayers;
             }
         }
-
         [SerializeField]
         private int numPlayers;
         private List<int> playerRoundIds;
@@ -39,6 +38,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             for (int i = 0; i < NumPlayers; i++) {
                 players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
+                    Color = PlayerSpawner.Instance.materials[i].color,
                         PlayerNum = i + 1
                 });
             }
@@ -59,6 +59,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         public int GetPlayerRoundId (int playerId) {
             return playerRoundIds != null ?
                 playerRoundIds[players.FindIndex (p => p.PlayerId == playerId)] : -1;
+        }
+
+        public Color GetPlayerColor(PlayerId id) {
+            return players.Find(p => p.PlayerId == id.Id).Color;
         }
 
         internal void SpawnPlayers () {
