@@ -3,7 +3,8 @@ using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD {
-	public class LoadHMDControlls : MonoBehaviour {
+	public class LoadHMDControlls : MonoBehaviour
+  {
 
 		void Awake () {
 			#if (UNITY_WSA || UNITY_EDITOR)

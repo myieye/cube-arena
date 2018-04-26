@@ -1,4 +1,4 @@
-#if !UNITY_STANDALONE && !UNITY_EDITOR
+#if !UNITY_STANDALONE
 /*===============================================================================
 Copyright (c) 2017 PTC Inc. All Rights Reserved.
 

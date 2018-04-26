@@ -28,13 +28,22 @@ namespace CubeArena.Assets.MyScripts.Network {
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId, NetworkReader msgReader) {
 			DeviceTypeMessage msg = new DeviceTypeMessage ();
 			msg.Deserialize (msgReader);
-			Debug.Log ("Device Connected: " + msg.Model);
+			if (Settings.Instance.LogDeviceConnections) {
+				Debug.Log (string.Format("Device Connected: {0} ({1})", msg.Model, msg.Type));
+			}
 			DeviceManager.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
+
+			if (Settings.Instance.AutoStartGame) {
+				FindObjectOfType<RoundManager> ().TriggerNewRound();
+			}
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
-			Debug.LogWarning ("OnServerAddPlayer called without device type");
+			Debug.LogWarning ("OnServerAddPlayer called without device info");
+			if (DeviceManager.HasConnectedDevice(conn, playerControllerId)) {
+				Debug.LogError("...with unregistered device!");
+			}
 		}
 
 		/*

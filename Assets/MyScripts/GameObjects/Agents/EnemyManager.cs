@@ -3,38 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
-	public class EnemyManager : MonoBehaviour {
+	public class EnemyManager : MonoBehaviourSingleton<EnemyManager> {
 
-		public int playersPerEnemy;
-		public GameObject[] enemyPrefabs;
+		[SerializeField]
+		private int playersPerEnemy;
+		[SerializeField]
+		private GameObject[] enemyPrefabs;
 		
-		private EnemySpawner enemySpawner;
 		private int enemyCount;
-		private PlayerManager playerManager;
 
 		private int MaxLevel { get { return enemyPrefabs.Length - 1; } }
-
-		void Start () {
-			enemySpawner = FindObjectOfType<EnemySpawner>();
-			playerManager = FindObjectOfType<PlayerManager>();
-		}
 
 		public void InitEnemies () {
 			enemyCount = 0;
 			SpawnEnemies ();
 		}
 
+		public void ClearEnemies () {
+			foreach (var enemy in FindObjectsOfType<Enemy> ()) {
+				NetworkServer.Destroy (enemy.gameObject);
+			}
+			EnemySpawner.Instance.StopSpawning ();
+			enemyCount = 0;
+		}
+
 		public void OnEnemyKilled (Enemy enemy) {
 			var newEnemy = enemyPrefabs[Mathf.Min (enemy.level, MaxLevel)];
-			enemySpawner.SpawnEnemy (newEnemy);
+			EnemySpawner.Instance.SpawnEnemy (newEnemy);
 		}
 
 		private void SpawnEnemies () {
-			while (enemyCount * playersPerEnemy < playerManager.NumPlayers) {
-				enemySpawner.SpawnEnemy (enemyPrefabs[0]);
+			while (enemyCount * playersPerEnemy < PlayerManager.Instance.NumPlayers) {
+				EnemySpawner.Instance.SpawnEnemy (enemyPrefabs[0]);
 				enemyCount++;
 			}
 		}

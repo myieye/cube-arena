@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
+using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -20,13 +21,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				this.roundOverListener = roundOverListener;
 				roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
 				CancelInvoke (TickClock_Method);
-				StartCoroutine (StartTickingAfter (roundDelay));
+				StartCoroutine (DelayUtil.Do(roundDelay,
+					() => InvokeRepeating (TickClock_Method, 1, 1)));
 			}
-		}
-
-		private IEnumerator StartTickingAfter (float delay) {
-			yield return new WaitForSeconds (delay);
-			InvokeRepeating (TickClock_Method, 0, 1);
 		}
 
 		private void TickClock () {

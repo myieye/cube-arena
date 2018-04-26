@@ -1,0 +1,1 @@
+tracker image size before HoloLens: 25

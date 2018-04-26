@@ -12,11 +12,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class Enemy : NetworkBehaviour {
 
 		public int level;
-		private EnemyManager enemyManager;
 		//private float killHeight;
 
 		void Start () {
-			enemyManager = FindObjectOfType<EnemyManager> ();
 			//killHeight = transform.localScale.y * GetComponent<BoxCollider> ().bounds.min.y;
 		}
 
@@ -25,7 +23,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 			if (IsDetchCollision (col)) {
 				RpcDie (col.gameObject);
-				enemyManager.OnEnemyKilled (this);
+				EnemyManager.Instance.OnEnemyKilled (this);
 				Measure.Instance.MadeKill (col.gameObject, this);
 			}
 		}

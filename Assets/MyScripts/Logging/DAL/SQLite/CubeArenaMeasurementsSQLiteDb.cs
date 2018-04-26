@@ -113,7 +113,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
         }
 
         public Device InsertDevice (Device device) {
-            return Insert (device);
+            return Insert (device, typeof(Device));
         }
 
         private void PrintTable<T> () where T : new () {
@@ -123,8 +123,12 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             }
         }
 
-        private T Insert<T> (T entity) where T : BaseEntity {
-            entity.Id = conn.Insert (entity);
+        private T Insert<T> (T entity, Type type = null) where T : BaseEntity {
+            if (type == null) {
+                entity.Id = conn.Insert (entity);
+            } else {
+                entity.Id = conn.Insert (entity, type);
+            }
             return entity;
         }
     }

@@ -4,128 +4,182 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace CubeArena.Assets.MyScripts.Interaction.HMD
-{
-    public class SelectAndAxesGestures : MonoBehaviour {
+namespace CubeArena.Assets.MyScripts.Interaction.HMD {
+    public class SelectAndAxesGestures : MonoBehaviour, IInputHandler, INavigationHandler {
 
         public float sensitivity = 100f;
-        protected GestureRecognizer SelectAxesRecognizer { get; private set; }
+        //protected GestureRecognizer SelectAxesRecognizer { get; private set; }
         private List<InteractionSourceKind> activeSelectSources;
         private List<InteractionSourceKind> activeAxisSources;
         private GestureRecognizer _activeGestureRecognizer;
         protected GestureRecognizer ActiveGestureRecognizer {
             get {
                 return _activeGestureRecognizer;
-            } set {
+            }
+            set {
                 if (_activeGestureRecognizer == value) return;
-                
+
                 if (_activeGestureRecognizer != null) {
-                    _activeGestureRecognizer.CancelGestures();
-                    _activeGestureRecognizer.StopCapturingGestures();
+                    _activeGestureRecognizer.CancelGestures ();
+                    _activeGestureRecognizer.StopCapturingGestures ();
                 }
                 if (value != null) {
-                    value.StartCapturingGestures();
+                    value.StartCapturingGestures ();
                 }
                 _activeGestureRecognizer = value;
             }
         }
 
-        protected virtual void Awake() {
-            SelectAxesRecognizer = new GestureRecognizer();
-            ActiveGestureRecognizer = SelectAxesRecognizer;
+        protected virtual void Awake () {
+            //SelectAxesRecognizer = new GestureRecognizer ();
         }
 
-        protected virtual void Start() {
-            AddAxisGestures(SelectAxesRecognizer);
-            AddSelectGestures(SelectAxesRecognizer);
-            SetActiveSelectSources(InteractionSourceKind.Controller);
-            SetActiveAxisSources(InteractionSourceKind.Controller);
-            ActiveGestureRecognizer = SelectAxesRecognizer;
+        protected virtual void OnEnable () {
+            //SelectAxesRecognizer.SetRecognizableGestures (GestureSettings.None);
+
+            //AddAxisGestures (SelectAxesRecognizer);
+            //AddSelectGestures (SelectAxesRecognizer);
+
+            SetActiveSelectSources (InteractionSourceKind.Other);
+            SetActiveAxisSources (InteractionSourceKind.Other);
+
+            //ActiveGestureRecognizer = SelectAxesRecognizer;
         }
 
-        void OnDisable() {
-            ActiveGestureRecognizer = null;
+        void OnDisable () {
+            //ActiveGestureRecognizer = null;
             //ResetControls();
         }
 
-        void OnDestroy() {
-            SelectAxesRecognizer.Dispose();
-        }
-    
-        protected void AddAxisGestures(GestureRecognizer gestureRecognizer) {
-            AddRecognizableGestures(gestureRecognizer,
-                GestureSettings.NavigationX | GestureSettings.NavigationZ);
-            gestureRecognizer.NavigationUpdated += OnNavigationUpdated;
-            gestureRecognizer.NavigationCompleted += obj => ResetAxes();
-            gestureRecognizer.NavigationCanceled += obj => ResetAxes();
+        void OnDestroy () {
+            //SelectAxesRecognizer.Dispose ();
         }
 
-        protected void AddSelectGestures(GestureRecognizer gestureRecognizer) {
-            AddRecognizableGestures(gestureRecognizer, GestureSettings.Hold);
+        /*
+        protected void AddAxisGestures (GestureRecognizer gestureRecognizer) {
+            AddRecognizableGestures (gestureRecognizer,
+                GestureSettings.NavigationX | GestureSettings.NavigationZ);
+            gestureRecognizer.NavigationUpdated += OnNavigationUpdated;
+            gestureRecognizer.NavigationCompleted += obj => ResetAxes ();
+            gestureRecognizer.NavigationCanceled += obj => ResetAxes ();
+        }
+
+        protected void AddSelectGestures (GestureRecognizer gestureRecognizer) {
+            AddRecognizableGestures (gestureRecognizer, GestureSettings.Hold);
             gestureRecognizer.HoldStarted += OnHoldStarted;
             gestureRecognizer.HoldCompleted += OnHoldCompleted;
             gestureRecognizer.HoldCanceled += OnHoldCanceled;
-        }
+        }*/
 
-        private void OnNavigationUpdated(NavigationUpdatedEventArgs obj) {
-            if (IsActiveAxisSource(obj.source)) {
+        /*
+        private void OnNavigationUpdated (NavigationUpdatedEventArgs obj) {
+            if (IsActiveAxisSourceKind (obj.source.kind)) {
                 var horizontal = obj.normalizedOffset.x * sensitivity;
-                var vertical = obj.normalizedOffset.z * sensitivity;
-                CrossPlatformInputManager.SetAxis(Axes.Horizontal, horizontal);
-                CrossPlatformInputManager.SetAxis(Axes.Vertical, vertical);
+                var vertical = obj.normalizedOffset.y * sensitivity;
+                CrossPlatformInputManager.SetAxis (Axes.Horizontal, horizontal);
+                CrossPlatformInputManager.SetAxis (Axes.Vertical, vertical);
             }
         }
 
-        private void OnHoldStarted(HoldStartedEventArgs obj) {
-            if (IsActiveSelectionSource(obj.source)) {
-                CrossPlatformInputManager.SetButtonDown(Buttons.Select);
+        private void OnHoldStarted (HoldStartedEventArgs obj) {
+            if (IsActiveSelectionSourceKind (obj.source.kind)) {
+                CrossPlatformInputManager.SetButtonDown (Buttons.Select);
             }
         }
 
-        private void OnHoldCompleted(HoldCompletedEventArgs obj) {
-            if (IsActiveSelectionSource(obj.source)) {
-                CrossPlatformInputManager.SetButtonUp(Buttons.Select);
+        private void OnHoldCompleted (HoldCompletedEventArgs obj) {
+            if (IsActiveSelectionSourceKind (obj.source.kind)) {
+                CrossPlatformInputManager.SetButtonUp (Buttons.Select);
             }
         }
 
-        private void OnHoldCanceled(HoldCanceledEventArgs obj) {
-            if (IsActiveSelectionSource(obj.source)) {
-                CrossPlatformInputManager.SetButtonUp(Buttons.Select);
+        private void OnHoldCanceled (HoldCanceledEventArgs obj) {
+            if (IsActiveSelectionSourceKind (obj.source.kind)) {
+                CrossPlatformInputManager.SetButtonUp (Buttons.Select);
+            }
+        }
+         */
+
+        public void OnInputDown (InputEventData eventData) {
+            var kind = GetKindFromInputEvent (eventData);
+            if (IsActiveSelectionSourceKind (kind)) {
+                CrossPlatformInputManager.SetButtonDown (Buttons.Select);
             }
         }
 
-        private void ResetAxes() {
-            CrossPlatformInputManager.SetAxis(Axes.Horizontal, 0);
-            CrossPlatformInputManager.SetAxis(Axes.Vertical, 0);
+        public void OnInputUp (InputEventData eventData) {
+            var kind = GetKindFromInputEvent (eventData);
+            if (IsActiveSelectionSourceKind (kind)) {
+                CrossPlatformInputManager.SetButtonUp (Buttons.Select);
+            }
         }
 
-        private void ResetControls() {
-            ResetAxes();
-            CrossPlatformInputManager.SetButtonUp(Buttons.Select);
-        }
-        protected void AddRecognizableGestures(GestureRecognizer gestureRecognizer, GestureSettings newRgs) {
-            var rgs = gestureRecognizer.GetRecognizableGestures();
-            gestureRecognizer.SetRecognizableGestures(rgs | newRgs);
+        void INavigationHandler.OnNavigationStarted (NavigationEventData eventData) {
+            // Nothing to do
         }
 
-        protected void SetActiveSelectSources(params InteractionSourceKind[] sources) {
-            activeSelectSources = new List<InteractionSourceKind>(sources);
+        void INavigationHandler.OnNavigationUpdated (NavigationEventData eventData) {
+            if (IsActiveAxisSourceKind (GetKindFromInputEvent(eventData))) {
+                var horizontal = eventData.NormalizedOffset.x * sensitivity;
+                var vertical = eventData.NormalizedOffset.y * sensitivity;
+                CrossPlatformInputManager.SetAxis (Axes.Horizontal, horizontal);
+                CrossPlatformInputManager.SetAxis (Axes.Vertical, vertical);
+            }
         }
 
-        protected void SetActiveAxisSources(params InteractionSourceKind[] sources) {
-            activeAxisSources = new List<InteractionSourceKind>(sources);
+        void INavigationHandler.OnNavigationCompleted (NavigationEventData eventData) {
+            ResetAxes ();
         }
 
-        private bool IsActiveSelectionSource(InteractionSource source) {
-            return activeSelectSources.Contains(source.kind);
+        void INavigationHandler.OnNavigationCanceled (NavigationEventData eventData) {
+            ResetAxes ();
         }
 
-        private bool IsActiveAxisSource(InteractionSource source) {
-            return activeAxisSources.Contains(source.kind);
+        private void ResetAxes () {
+            CrossPlatformInputManager.SetAxis (Axes.Horizontal, 0);
+            CrossPlatformInputManager.SetAxis (Axes.Vertical, 0);
+        }
+
+        private void ResetControls () {
+            ResetAxes ();
+            CrossPlatformInputManager.SetButtonUp (Buttons.Select);
+        }
+
+        /* 
+        protected void AddRecognizableGestures (GestureRecognizer gestureRecognizer, GestureSettings newRgs) {
+            var rgs = gestureRecognizer.GetRecognizableGestures ();
+            gestureRecognizer.SetRecognizableGestures (rgs | newRgs);
+        }
+        */
+
+        protected void SetActiveSelectSources (params InteractionSourceKind[] sources) {
+            activeSelectSources = new List<InteractionSourceKind> (sources);
+        }
+
+        protected void SetActiveAxisSources (params InteractionSourceKind[] sources) {
+            activeAxisSources = new List<InteractionSourceKind> (sources);
+        }
+
+        private bool IsActiveSelectionSourceKind (InteractionSourceKind kind) {
+            return activeSelectSources.Contains (kind);
+        }
+
+        private bool IsActiveAxisSourceKind (InteractionSourceKind kind) {
+            return activeAxisSources.Contains (kind);
+        }
+
+        private InteractionSourceKind GetKindFromInputEvent (InputEventData eventData) {
+            InteractionSourceInfo kind;
+            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
+                return (InteractionSourceKind) kind;
+            } else {
+                throw new Exception ("Couldn't get source kind");
+            }
         }
     }
 }

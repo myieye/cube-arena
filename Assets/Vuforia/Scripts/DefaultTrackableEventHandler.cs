@@ -1,4 +1,4 @@
-#if !UNITY_STANDALONE && !UNITY_EDITOR
+#if !UNITY_STANDALONE// && !UNITY_EDITOR
 /*==============================================================================
 Copyright (c) 2017 PTC Inc. All Rights Reserved.
 
@@ -7,6 +7,7 @@ All Rights Reserved.
 Confidential and Proprietary - Protected under copyright and other laws.
 ==============================================================================*/
 
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using Vuforia;
 

@@ -14,15 +14,18 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		public bool EndlessRounds;
 
 		[Header ("Debugging")]
+		public bool AutoStartGame;
 		public bool DebugCursor;
 		public bool LogInteractionStateChanges;
 		public bool LogCubeStateChanges;
 		public bool LogDeviceRoundConfig;
 		public bool LogUIMode;
 		public bool LogDeviceInfo;
+		public bool LogDeviceConnections;
 		[Header ("UI Modes")]
 		public bool ForceTestUIMode;
 		public UIMode TestUIMode;
+		public bool ForceDefaultUIMode;
 		public UIMode DefaultHHDUIMode;
 		public UIMode DefaultHMDUIMode;
 		public UIMode DefaultUIMode {
@@ -61,9 +64,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 			Instance = this;
 
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_STANDALONE
 			AREnabled = false;
-#else
+#elif !UNITY_EDITOR
 			DbActive = false;
 #endif
 		}

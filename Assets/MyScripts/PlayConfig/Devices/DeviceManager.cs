@@ -38,6 +38,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			}
 		}
 
+		public bool HasConnectedDevice (NetworkConnection conn, short controllerId) {
+			var key = GenerateConnectionKey (conn, controllerId);
+			return ConnectedDevices.ContainsKey (key);
+		}
+
 		[Server]
 		private string GenerateConnectionKey (NetworkConnection conn, short playerControllerId) {
 			return string.Format ("{0}:{1}:{2}", conn.connectionId, conn.address, playerControllerId);
@@ -69,7 +74,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 					PrintDeviceRoundConfig (config, valid);
 				}
 			}
-			
+
 			if (Settings.Instance.LogDeviceRoundConfig) {
 				Debug.Log (String.Format ("Generated device-round config: {0}:{1}:{2}",
 					numPlayers, ConnectedDevices.Count, DevicesByType.Count));
@@ -79,9 +84,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		}
 
 		public bool EnoughDevicesAvailable (int numPlayers) {
-			var enough = DevicesByType.Count == 2 &&
+			return DevicesByType.Count == 2 &&
 				DevicesByType.All (pair => pair.Value.Count >= numPlayers / 2);
-			return Settings.Instance.OverrideAvailableDevices || enough;
 		}
 
 		private bool AddPlayerDeviceConfig (List<List<DeviceConfig>> config) {

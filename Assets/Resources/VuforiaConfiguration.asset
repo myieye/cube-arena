@@ -18,17 +18,17 @@ MonoBehaviour:
     cameraDeviceModeSetting: -1
     maxSimultaneousImageTargets: 1
     maxSimultaneousObjectTargets: 1
-    useDelayedLoadingObjectTargets: 0
+    useDelayedLoadingObjectTargets: 1
     cameraDirection: 0
     mirrorVideoBackground: 0
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
-    eyewearType: 0
+    eyewearType: 1
     stereoFramework: 0
-    seeThroughConfiguration: 0
-    viewerName: 
-    viewerManufacturer: 
+    seeThroughConfiguration: 1
+    viewerName: Generic Cardboard
+    viewerManufacturer: Vuforia
     useCustomViewer: 0
     customViewer:
       Version: 0
@@ -45,12 +45,8 @@ MonoBehaviour:
   databaseLoad:
     dataSetsToLoad:
     - target_images
-    - VuforiaMars_Images
-    - VuforiaMars_VuMark
     dataSetsToActivate:
     - target_images
-    - VuforiaMars_Images
-    - VuforiaMars_VuMark
   videoBackground:
     clippingMode: 0
     numDivisions: 2

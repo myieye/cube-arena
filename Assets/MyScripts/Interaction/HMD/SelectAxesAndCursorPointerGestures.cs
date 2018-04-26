@@ -30,12 +30,13 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD
             pointerRecognizer = new GestureRecognizer();
         }
 
-        protected override void Start() {
-            base.Start();
-            SetActiveAxisSources(InteractionSourceKind.Controller);
+        protected override void OnEnable() {
+            base.OnEnable();
+            
+            SetActiveAxisSources(InteractionSourceKind.Other);
             SetActiveSelectSources(InteractionSourceKind.Hand);
             SetActivePointerSources(InteractionSourceKind.Hand);
-
+      
             pointerRecognizer.SetRecognizableGestures(GestureSettings.ManipulationTranslate);
             pointerRecognizer.ManipulationStarted += OnManipulationStarted;
             pointerRecognizer.ManipulationUpdated += OnManipulationUpdated;
@@ -48,7 +49,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD
                 if (StateManager.IsMoving() && ActiveGestureRecognizer != pointerRecognizer) {
                     ActiveGestureRecognizer = pointerRecognizer;
                 } else if (ActiveGestureRecognizer == pointerRecognizer && !StateManager.IsMoving()) {
-                    ActiveGestureRecognizer = SelectAxesRecognizer;
+                    //ActiveGestureRecognizer = SelectAxesRecognizer;
                 }
             }
         }

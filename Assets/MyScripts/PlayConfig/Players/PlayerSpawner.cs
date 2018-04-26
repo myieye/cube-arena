@@ -17,15 +17,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		public GameObject cubePrefab;
 		public GameObject playerPrefab;
 		public Material[] materials;
-
-		private ARManager arManager;
 		private NetworkStartPosition[] spawnPoints;
 		private int nextSpawnPoint;
 
 		void Start () {
-			if (Settings.Instance.AREnabled) {
-				arManager = FindObjectOfType<ARManager> ();
-			}
 			spawnPoints = FindObjectsOfType<NetworkStartPosition>();
 			nextSpawnPoint = 0;
 		}
@@ -38,7 +33,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 		private void SpawnPlayer (NetworkPlayer netPlayer) {
 			var startPos = GetStartPosition ();
-			netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer, netPlayer.Color);
+			if (!netPlayer.PlayerGameObject) {
+				netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer, netPlayer.Color);
+			}
 			netPlayer.StartPosition = startPos;
 			SpawnCubesForPlayer (startPos, netPlayer, netPlayer.Color);
 		}
@@ -46,7 +43,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer, Color color) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
 			if (Settings.Instance.AREnabled) {
-				arManager.AddARObjectToWorld (player.GetComponent<ARObject> ());
+				ARManager.Instance.RegisterARObject (player.GetComponent<ARObject> ());
 			}
 			color = Highlight.ReduceTransparency (color, Highlight.CursorTransparency);
 			player.GetComponent<Colourer> ().color = color;
@@ -63,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				if (Settings.Instance.AREnabled) {
-					arManager.AddGameObjectToWorld (cube);
+					ARManager.Instance.AddGameObjectToWorld (cube);
 				}
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = color;

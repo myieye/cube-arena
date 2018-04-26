@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class RandomAgentNavigation : NetworkBehaviour {
 
-		public EnemySpawner enemyManager;
+		public EnemySpawner enemySpawner;
 		private NavMeshAgent agent;
 		private Animator animator;
 		[SyncVar (hook = "OnNewDestination")]
@@ -22,7 +22,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			Debug.DrawRay(destination, Vector3.up, Color.blue, Mathf.Infinity);
 
 			if (isServer && Arrived ()) {
-				destination = enemyManager.GetRandomPosition ();
+				destination = enemySpawner.GetRandomPosition ();
 			}
 
 			animator.SetBool ("Moving", IsMoving ());

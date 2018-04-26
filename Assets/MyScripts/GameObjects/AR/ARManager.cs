@@ -1,44 +1,78 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
+using Vuforia;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 	public class ARManager:
-#if !UNITY_STANDALONE && !UNITY_EDITOR
+#if !UNITY_STANDALONE// && !UNITY_EDITOR
 		DefaultTrackableEventHandler
 #else
 	DummyTrackableEventHandler
 #endif
 	{
+		[SerializeField]
+		private VuforiaBehaviour vuforiaBehaviour;
+		[SerializeField]
+		private GameObject world;
+		private GameObject World {
+			get {
+				if (!world) {
+					world = GameObject.Find ("World");
+				}
+				return world;
+			}
+		}
+		private bool worldEnabled;
+		private List<Renderer> rendererComponents;
+		private List<ParticleSystem> particleSystemComponents;
+		private List<ARObject> arObjects;
+		public static ARManager Instance { get; private set; }
 
-		public GameObject world;
-		bool worldEnabled;
-		List<Renderer> rendererComponents;
-		List<ParticleSystem> particleSystemComponents;
-		List<ARObject> arObjects;
-
-		protected override void Start () {
-			base.Start ();
+		public void Awake () {
+			if (Instance) {
+				Destroy (Instance);
+			}
+			Instance = this;
 			rendererComponents = new List<Renderer> ();
 			particleSystemComponents = new List<ParticleSystem> ();
 			arObjects = new List<ARObject> ();
-			//colliderComponents = new List<Collider>();
-			//canvasComponents = new List<Canvas>();
-			AddGameObjectComponents (gameObject);
+		}
+
+		protected override void Start () {
+			base.Start ();
+			AddWorldComponents ();
 			RefreshWorld ();
+			if (Settings.Instance.AREnabled) {
+				VuforiaRuntime.Instance.InitVuforia ();
+				VuforiaBehaviour.Instance.enabled = true;
+			}
+		}
+
+		private void AddWorldComponents () {
+			AddGameObjectComponents (World);
+			foreach (var arObj in arObjects) {
+				RemoveGameObjectComponents (arObj.gameObject);
+			}
 		}
 
 		public void AddGameObjectToWorld (GameObject obj) {
-			obj.transform.parent = world.transform;
+			obj.transform.parent = World.transform;
 			AddGameObjectComponents (obj);
 			RefreshWorld ();
 		}
 
-		public void AddARObjectToWorld (ARObject arObj) {
+		public void RegisterARObject (ARObject arObj) {
 			arObjects.Add (arObj);
 			RemoveGameObjectComponents (arObj.gameObject);
+			RefreshWorld ();
+		}
+
+		public void UnregisterARObject (ARObject arObj) {
+			arObjects.Remove (arObj);
 		}
 
 		protected override void OnTrackingFound () {
@@ -77,8 +111,13 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			}
 
 			// Set Custom ARObjects:
-			foreach (var arObj in arObjects) {
-				arObj.SetArActive (!Settings.Instance.AREnabled || worldEnabled);
+			for (var i = 0; i < arObjects.Count; i++) {
+				var arObj = arObjects[i];
+				if (arObj == null || arObj.gameObject == null) {
+					arObjects.RemoveAt (i--);
+				} else {
+					arObj.SetArActive (!Settings.Instance.AREnabled || worldEnabled);
+				}
 			}
 		}
 

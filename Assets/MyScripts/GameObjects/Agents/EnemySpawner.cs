@@ -1,46 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
+using Random = UnityEngine.Random;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
-	public class EnemySpawner : MonoBehaviour {
+	public class EnemySpawner : MonoBehaviourSingleton<EnemySpawner> {
+
 		[SerializeField]
 		private Collider area;
-		private ARManager arManager;
 		private float radius;
 		private List<GameObject> enemySpawnList = new List<GameObject> ();
 		private List<OverlapManager> enemyOverlapDetecters = new List<OverlapManager> ();
+		private object enemyLock = new object ();
 
-		void Awake () {
+		public override void Awake () {
+			base.Awake ();
 			radius = area.bounds.center.x - area.bounds.min.x;
 			var seed = System.Guid.NewGuid ().GetHashCode ();
 			Random.InitState (seed);
 		}
 
-		void Start () {
-			if (Settings.Instance.AREnabled) {
-				arManager = FindObjectOfType<ARManager> ();
+		void Update () {
+			lock (enemyLock) {
+				for (var i = 0; i < enemySpawnList.Count; i++) {
+					var enemy = enemySpawnList[i];
+
+					if (!enemy) {
+						enemySpawnList.Remove (enemy);
+						enemyOverlapDetecters.Remove (enemyOverlapDetecters[i]);
+						i--;
+						continue;
+					}
+
+					if (!enemyOverlapDetecters[i].HasOverlap ()) {
+						EnableEnemy (enemy);
+						if (Settings.Instance.AREnabled) {
+							ARManager.Instance.AddGameObjectToWorld (enemy);
+						}
+						NetworkServer.Spawn (enemy);
+						i--;
+					} else {
+						enemy.transform.position = GetRandomPosition ();
+					}
+				}
 			}
 		}
 
-		void Update () {
-			for (var i = 0; i < enemySpawnList.Count; i++) {
-				var enemy = enemySpawnList[i];
-				if (!enemyOverlapDetecters[i].HasOverlap ()) {
-					EnableEnemy (enemy);
-					if (Settings.Instance.AREnabled) {
-						arManager.AddGameObjectToWorld (enemy);
-					}
-					NetworkServer.Spawn (enemy);
-					i--;
-				} else {
-					enemy.transform.position = GetRandomPosition ();
-				}
+		public void StopSpawning () {
+			lock (enemyLock) {
+				enemySpawnList.Clear ();
+				enemyOverlapDetecters.Clear ();
 			}
 		}
 
@@ -58,7 +74,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private void DisableEnemy (GameObject enemy) {
 			enemy.GetComponent<Enemy> ().enabled = false;
 			var nav = enemy.GetComponent<RandomAgentNavigation> ();
-			nav.enemyManager = this;
+			nav.enemySpawner = this;
 			nav.enabled = false;
 			foreach (var c in enemy.GetComponentsInChildren<Collider> ())
 				c.isTrigger = true;

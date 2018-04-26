@@ -9,6 +9,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HHD {
 
         void Awake() {
             toggleText = GetComponentInChildren<Text>();
+            toggleText.text = Utils.Constants.Text.Move;
         }
 
         public override void ToggleState() {

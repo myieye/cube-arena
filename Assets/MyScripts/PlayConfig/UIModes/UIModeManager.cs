@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.HMD;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
@@ -47,6 +48,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		[SerializeField]
 		private GameObject touchpad;
 		[SerializeField]
+		private GameObject sprayMoveButton;
+		[SerializeField]
 		private UIModeList uiModeList;
 		[SerializeField]
 		private GameObject controls;
@@ -60,11 +63,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		[SerializeField]
-		private GameObject twoDTranslationPlane;
-		private GameObject TwoDTranslationPlane {
+		private UIModeARObject twoDTranslationPlane;
+		private UIModeARObject TwoDTranslationPlane {
 			get {
 				if (!twoDTranslationPlane) {
-					twoDTranslationPlane = GameObject.Find (Names.TwoDTranslationPlane);
+					twoDTranslationPlane =
+						GameObject.Find (Names.TwoDTranslationPlane)
+						.GetComponent<UIModeARObject> ();
 				}
 				return twoDTranslationPlane;
 			}
@@ -98,18 +103,21 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
-			var mode = Settings.Instance.ForceTestUIMode ?
-				Settings.Instance.TestUIMode : modeMsg.UIMode;
+			UIMode mode;
+			if (Settings.Instance.ForceTestUIMode) {
+				mode = Settings.Instance.TestUIMode;
+			} else if (Settings.Instance.ForceDefaultUIMode) {
+				mode = Settings.Instance.DefaultUIMode;
+			} else {
+				mode = modeMsg.UIMode;
+			}
 			PassToPlayerText.enabled = true;
 			PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
-			StartCoroutine (ClearPassToPlayerText ());
+			StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, () => {
+				PassToPlayerText.text = "";
+				PassToPlayerText.enabled = false;
+			}));
 			SetUIMode (mode);
-		}
-
-		IEnumerator ClearPassToPlayerText () {
-			yield return new WaitForSeconds (Settings.Instance.PassToPlayerTime);
-			PassToPlayerText.text = "";
-			PassToPlayerText.enabled = false;
 		}
 
 		public void OnUIModeChanged (int uiMode) {
@@ -128,26 +136,35 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			DisableAll ();
 			CrossPlatformInputManager.SwitchActiveInputMethod (
 				CrossPlatformInputManager.ActiveInputMethod.Touch);
+			TwoDTranslationPlane.OnUIModeChanged(CurrentUIMode);
+
 			switch (mode) {
 				case UIMode.Mouse:
 					CrossPlatformInputManager.SwitchActiveInputMethod (
 						CrossPlatformInputManager.ActiveInputMethod.Hardware);
 					CurrentCursorMode = CursorController.CursorMode.Mouse;
+					sprayMoveButton.SetActive (true);
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD1_Camera:
 					joystick.SetActive (true);
 					selectButton.SetActive (true);
+					sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Camera;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
 					break;
 				case UIMode.HHD2_TouchAndDrag:
 					joystick.SetActive (true);
 					touchpad.SetActive (true);
+					sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD3_Gestures:
 					touchpad.SetActive (true);
-					TwoDTranslationPlane.SetActive (true);
+					sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #if (UNITY_WSA || UNITY_EDITOR)
 				case UIMode.HMD4_GazeAndClicker:
@@ -183,8 +200,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (touchpad) {
 				touchpad.SetActive (false);
 			}
-			if (TwoDTranslationPlane) {
-				TwoDTranslationPlane.SetActive (false);
+			if (sprayMoveButton) {
+				sprayMoveButton.SetActive (false);
 			}
 
 #if (UNITY_WSA || UNITY_EDITOR)

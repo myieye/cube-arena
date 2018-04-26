@@ -7,6 +7,7 @@ using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,54 +22,43 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public GameObject practiceModeIndicator;
 
 		private TimeManager timeManager;
-		private EnemyManager enemyManager;
 		private int numRounds;
 		private int currRound;
-		// Flag for reacting to Scene Loads triggered by RoundManager
-		//	Currently RoundManager is the only class that causes Scene changes
-		private bool startingRound = false;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 
 		void Start () {
 			if (isServer) {
-				SceneManager.sceneLoaded += OnSceneLoaded;
-				timeManager = FindObjectOfType<TimeManager> ();
-				enemyManager = FindObjectOfType<EnemyManager> ();
+				Init ();
 			}
-		}
-
-		public override void OnStartClient () {
-			base.OnStartClient ();
-			numRounds = Enum.GetValues (typeof (UIMode)).Length;
 		}
 
 		[Server]
-		public void OnSceneLoaded (Scene current, LoadSceneMode mode) {
-			if (startingRound) {
-				// Set flag to ignore future OnSceneLoaded events
-				startingRound = false;
-				StartNewRound ();
-			}
+		private void Init () {
+			timeManager = FindObjectOfType<TimeManager> ();
+			numRounds = Enum.GetValues (typeof (UIMode)).Length;
+			Reset ();
 		}
 
 		[Server]
 		public void TriggerNewRound () {
-			if (InLastRound()) {
-				Reset();
+			if (InLastRound ()) {
+				Reset ();
 			}
 
 			if (!DeviceManager.Instance<DeviceManager> ()
 				.EnoughDevicesAvailable (PlayerManager.Instance.NumPlayers)) {
 				Debug.LogError ("Not enough devices!");
-				return;
+				if (!Settings.Instance.OverrideAvailableDevices) {
+					return;
+				}
 			}
 
-			// Set flag to react to next OnSceneLoaded event
-			startingRound = true;
 			// Reload the scene
-			UnityEngine.Networking.NetworkManager.singleton.ServerChangeScene (SceneManager.GetActiveScene ().name);
+			//UnityEngine.Networking.NetworkManager.singleton.ServerChangeScene (SceneManager.GetActiveScene ().name);
+			StartNewRound ();
 		}
 
+		[Server]
 		public void OnRoundOver () {
 			if (Settings.Instance.EndlessRounds) return;
 
@@ -80,12 +70,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
+		[Server]
 		private void StartNewRound () {
-			// Toggle practice mode
-			if (InPracticeMode = !InPracticeMode) {
-				// If entering practice mode, the next round is starting
-				currRound++;
+			UpdateModeAndRoundNumber ();
 
+			if (!InFirstRound ()) {
+				ResetGameObjects ();
+			}
+
+			practiceModeIndicator.SetActive (InPracticeMode);
+
+			if (InPracticeMode) {
 				if (InFirstRound ()) {
 					var numPlayers = PlayerManager.Instance.GenerateNewPlayers ();
 					deviceRoundConfigs = DeviceManager.Instance<DeviceManager> ()
@@ -96,23 +91,39 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				var players = PlayerManager.Instance.ConfigurePlayersForRound (
 					currRound, deviceRoundConfigs[currRound - 1]);
 				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
-
-			}
-
-			if (InPracticeMode) {
+				
 				timeManager.StartRound (practiceRoundLength, Settings.Instance.PassToPlayerTime, this);
+				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
 			} else {
 				timeManager.StartRound (roundLength, 0, this);
+				SpawnGameObjects ();
 			}
-			
-			practiceModeIndicator.SetActive (InPracticeMode);
-			enemyManager.InitEnemies ();
+		}
+
+		[Server]
+		private void UpdateModeAndRoundNumber () {
+			// Toggle practice mode
+			InPracticeMode = !InPracticeMode;
+			// If entering practice mode, a new round is starting
+			if (InPracticeMode) {
+				currRound++;
+			}
+		}
+
+		[Server]
+		private void SpawnGameObjects () {
+			EnemyManager.Instance.InitEnemies ();
 			PlayerManager.Instance.SpawnPlayers ();
 		}
 
-		private void Reset() {
+		[Server]
+		private void ResetGameObjects () {
+			EnemyManager.Instance.ClearEnemies ();
+			PlayerManager.Instance.ResetPlayers ();
+		}
+
+		private void Reset () {
 			InPracticeMode = false;
-			startingRound = false;
 			currRound = 0;
 		}
 

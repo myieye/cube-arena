@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -56,7 +57,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private void CmdSpray (Vector3 position) {
 			lastSpray = DateTime.Now;
 			currAmount -= Cost;
-			NetworkServer.Spawn (GenerateSpray (position));
+			var spray = GenerateSpray (position);
+			if (Settings.Instance.AREnabled) {
+				ARManager.Instance.AddGameObjectToWorld(spray);
+			}
+			NetworkServer.Spawn (spray);
 		}
 
 		private GameObject GenerateSpray (Vector3 position) {
