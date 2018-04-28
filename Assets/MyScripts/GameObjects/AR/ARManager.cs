@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
+#if !UNITY_STANDALONE
 using Vuforia;
+#endif
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 	public class ARManager:
@@ -14,8 +16,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 	DummyTrackableEventHandler
 #endif
 	{
+
+#if !UNITY_STANDALONE
 		[SerializeField]
 		private VuforiaBehaviour vuforiaBehaviour;
+#endif
 		[SerializeField]
 		private GameObject world;
 		private GameObject World {
@@ -46,10 +51,13 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			base.Start ();
 			AddWorldComponents ();
 			RefreshWorld ();
+
+#if !UNITY_STANDALONE
 			if (Settings.Instance.AREnabled) {
 				VuforiaRuntime.Instance.InitVuforia ();
 				VuforiaBehaviour.Instance.enabled = true;
 			}
+#endif
 		}
 
 		private void AddWorldComponents () {

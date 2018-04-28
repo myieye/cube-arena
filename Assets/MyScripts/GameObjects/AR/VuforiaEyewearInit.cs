@@ -1,12 +1,17 @@
 using UnityEngine;
+
+#if !UNITY_STANDALONE
 using Vuforia;
+#endif
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
     public class VuforiaEyewearInit : MonoBehaviour {
 
         void Awake () {
+#if !UNITY_STANDALONE
             VuforiaARController.Instance.RegisterVuforiaInitializedCallback (OnVuforiaStarted);
+#endif
         }
 
         void OnVuforiaStarted () {
