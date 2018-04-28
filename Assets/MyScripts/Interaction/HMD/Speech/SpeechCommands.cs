@@ -16,7 +16,7 @@ public class SpeechCommands : MonoBehaviour {
 		red.a = 0.4f;
 
 		Instantiate (marker, Vector3.zero, Quaternion.identity)
-			.GetComponent<Material> ().color = blue;
+			.GetComponent<Renderer> ().material.color = blue;
 
 		var world = GameObject.Find ("ARWorld_Stones");
 		var camera = Camera.main.gameObject;
@@ -34,7 +34,7 @@ public class SpeechCommands : MonoBehaviour {
 		camera.transform.rotation = newCameraRot;
 
 		Instantiate (marker, Vector3.zero, Quaternion.identity)
-			.GetComponent<Material> ().color = red;
+            .GetComponent<Renderer>().material.color = red;
 	}
 
 	public void DrawMarkerAtZero () {
