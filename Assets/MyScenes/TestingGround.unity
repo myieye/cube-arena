@@ -1600,7 +1600,7 @@ Prefab:
     - target: {fileID: 114423619657431572, guid: 21692c54e44861141b493a43ff3d9050,
         type: 2}
       propertyPath: mWorldCenterMode
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 20069438404047812, guid: 21692c54e44861141b493a43ff3d9050,
         type: 2}
@@ -8228,6 +8228,16 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -9302,7 +9312,7 @@ Prefab:
     - target: {fileID: 114708646396671696, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000012009196210, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}

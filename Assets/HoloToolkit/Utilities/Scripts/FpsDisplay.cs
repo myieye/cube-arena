@@ -12,10 +12,11 @@ namespace HoloToolkit.Unity
     //[RequireComponent(typeof(TextMesh))]
     public class FpsDisplay : MonoBehaviour
     {
+        /*
         [Tooltip("Reference to TextMesh component where the FPS should be displayed.")]
         [SerializeField]
         private TextMesh textMesh;
-
+ */
         [Tooltip("Reference to uGUI text component where the FPS should be displayed.")]
         [SerializeField]
         private Text uGUIText;
@@ -45,7 +46,7 @@ namespace HoloToolkit.Unity
 
         private void Update()
         {
-            if (fpsBuffer == null || fpsBuffer.Length != frameRange || textMesh == null)
+            if (fpsBuffer == null || fpsBuffer.Length != frameRange/* || textMesh == null*/)
             {
                 InitBuffer();
             }
@@ -58,10 +59,11 @@ namespace HoloToolkit.Unity
 
         private void InitBuffer()
         {
+            /*
             if (textMesh == null)
             {
                 textMesh = GetComponent<TextMesh>();
-            }
+            } */
 
             if (uGUIText == null)
             {
@@ -81,10 +83,11 @@ namespace HoloToolkit.Unity
         {
             string displayString = StringsFrom00To99[Mathf.Clamp(fps, 0, 99)];
 
+            /*
             if (textMesh != null)
             {
                 textMesh.text = displayString;
-            }
+            } */
 
             if (uGUIText != null)
             {

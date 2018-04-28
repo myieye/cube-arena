@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
@@ -17,23 +18,32 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
         private Dictionary<GestureFunction, InteractionSourceKind> functionToEnabledKind;
 
         protected virtual void OnEnable () {
-            detectedKinds = new Dictionary<InteractionSourceKind, bool> ();
+      InitDetectedKinds ();
             functionToEnabledKind = new Dictionary<GestureFunction, InteractionSourceKind> ();
             SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Controller);
             SetEnabledFunctionKind (GestureFunction.Axis, InteractionSourceKind.Controller);
         }
 
+    private void InitDetectedKinds ()
+    {
+      detectedKinds = new Dictionary<InteractionSourceKind, bool>();
+      foreach (var kind in Enum.GetValues(typeof (InteractionSourceKind)).Cast<InteractionSourceKind> ())
+      {
+        detectedKinds.Add(kind, false);
+      }
+    }
+
         public void OnInputDown (InputEventData eventData) {
             var kind = GetAndSaveInteractionSourceKind (eventData);
-            if (IsEnabledFunctionKind (kind, GestureFunction.Point)) {
+            if (IsEnabledFunctionKind (kind, GestureFunction.Select)) {
                 CrossPlatformInputManager.SetButtonDown (Buttons.Select);
             }
         }
 
         public void OnInputUp (InputEventData eventData) {
-            var kind = GetInteractionSourceKind (eventData, GestureFunction.Point);
+            var kind = GetInteractionSourceKind (eventData, GestureFunction.Select);
             ClearDetectedSourceKind(kind);
-            if (IsEnabledFunctionKind (kind, GestureFunction.Point)) {
+            if (IsEnabledFunctionKind (kind, GestureFunction.Select)) {
                 CrossPlatformInputManager.SetButtonUp (Buttons.Select);
             }
         }
@@ -71,9 +81,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
         }
 
         protected void SetEnabledFunctionKind (GestureFunction gestureFunction, InteractionSourceKind kind) {
-            if (!detectedKinds.ContainsKey(kind)) {
-                detectedKinds.Add(kind, false);
-            }
             if (!functionToEnabledKind.ContainsKey(gestureFunction)) {
                 functionToEnabledKind.Add(gestureFunction, kind);
             } else {

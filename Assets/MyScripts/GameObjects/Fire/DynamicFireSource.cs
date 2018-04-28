@@ -32,7 +32,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Fire {
 		}
 
 		public bool HasSource () {
-			return fireChecker.Source != null;
+			return fireChecker && fireChecker.Source != null;
 		}
 	}
 }
