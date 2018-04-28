@@ -1600,7 +1600,7 @@ Prefab:
     - target: {fileID: 114423619657431572, guid: 21692c54e44861141b493a43ff3d9050,
         type: 2}
       propertyPath: mWorldCenterMode
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20069438404047812, guid: 21692c54e44861141b493a43ff3d9050,
         type: 2}
@@ -8936,7 +8936,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 671963291}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21badba6870d129489396f89b2f53d5d, type: 3}
   m_Name: 
@@ -9334,7 +9334,7 @@ Prefab:
     - target: {fileID: 114708646396671696, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000012009196210, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}
@@ -11262,7 +11262,6 @@ MonoBehaviour:
     KeyCode: 0
   - Keyword: New Round
     KeyCode: 0
-  recognitionConfidenceLevel: 1
 --- !u!1 &1524675350
 GameObject:
   m_ObjectHideFlags: 0
