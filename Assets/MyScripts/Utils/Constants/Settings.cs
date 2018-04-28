@@ -64,9 +64,13 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 			Instance = this;
 
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_EDITOR
 			AREnabled = false;
-#elif !UNITY_EDITOR
+#else
+			AREnabled = true;
+#endif
+
+#if !UNITY_EDITOR
 			DbActive = false;
 #endif
 		}

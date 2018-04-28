@@ -1,4 +1,6 @@
-﻿namespace UnityGLTF.Cache
+﻿#if !UNITY_ANDROID
+
+namespace UnityGLTF.Cache
 {
     public class MaterialCacheData
     {
@@ -12,3 +14,5 @@
         }
     }
 }
+
+#endif

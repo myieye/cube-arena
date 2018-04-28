@@ -58,9 +58,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			lastSpray = DateTime.Now;
 			currAmount -= Cost;
 			var spray = GenerateSpray (position);
-			if (Settings.Instance.AREnabled) {
-				ARManager.Instance.AddGameObjectToWorld(spray);
-			}
 			NetworkServer.Spawn (spray);
 		}
 

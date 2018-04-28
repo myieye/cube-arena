@@ -41,9 +41,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 					if (!enemyOverlapDetecters[i].HasOverlap ()) {
 						EnableEnemy (enemy);
-						if (Settings.Instance.AREnabled) {
-							ARManager.Instance.AddGameObjectToWorld (enemy);
-						}
 						NetworkServer.Spawn (enemy);
 						i--;
 					} else {
@@ -72,6 +69,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private void DisableEnemy (GameObject enemy) {
+			enemy.GetComponent<ARObject> ().enabled = false;
 			enemy.GetComponent<Enemy> ().enabled = false;
 			var nav = enemy.GetComponent<RandomAgentNavigation> ();
 			nav.enemySpawner = this;
@@ -85,6 +83,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private void EnableEnemy (GameObject enemy) {
+			enemy.GetComponent<ARObject> ().enabled = true;
 			enemy.GetComponent<Enemy> ().enabled = true;
 			enemy.GetComponent<RandomAgentNavigation> ().enabled = true;
 			foreach (var c in enemy.GetComponentsInChildren<Collider> ())

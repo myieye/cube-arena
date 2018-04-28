@@ -29,7 +29,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 		private bool worldEnabled;
 		private List<Renderer> rendererComponents;
 		private List<ParticleSystem> particleSystemComponents;
-		private List<ARObject> arObjects;
+		private List<CustomARObject> customObjects;
 		public static ARManager Instance { get; private set; }
 
 		public void Awake () {
@@ -39,7 +39,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			Instance = this;
 			rendererComponents = new List<Renderer> ();
 			particleSystemComponents = new List<ParticleSystem> ();
-			arObjects = new List<ARObject> ();
+			customObjects = new List<CustomARObject> ();
 		}
 
 		protected override void Start () {
@@ -54,25 +54,21 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
 		private void AddWorldComponents () {
 			AddGameObjectComponents (World);
-			foreach (var arObj in arObjects) {
+			foreach (var arObj in customObjects) {
 				RemoveGameObjectComponents (arObj.gameObject);
 			}
 		}
 
-		public void AddGameObjectToWorld (GameObject obj) {
-			obj.transform.parent = World.transform;
-			AddGameObjectComponents (obj);
+		public void RegisterARObject (ARObject arObj) {
+			arObj.gameObject.transform.parent = World.transform;
+			AddGameObjectComponents (arObj.gameObject);
 			RefreshWorld ();
 		}
 
-		public void RegisterARObject (ARObject arObj) {
-			arObjects.Add (arObj);
+		public void RegisterCustomARObject (CustomARObject arObj) {
+			customObjects.Add (arObj);
 			RemoveGameObjectComponents (arObj.gameObject);
 			RefreshWorld ();
-		}
-
-		public void UnregisterARObject (ARObject arObj) {
-			arObjects.Remove (arObj);
 		}
 
 		protected override void OnTrackingFound () {
@@ -111,12 +107,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			}
 
 			// Set Custom ARObjects:
-			for (var i = 0; i < arObjects.Count; i++) {
-				var arObj = arObjects[i];
+			for (var i = 0; i < customObjects.Count; i++) {
+				var arObj = customObjects[i];
 				if (arObj == null || arObj.gameObject == null) {
-					arObjects.RemoveAt (i--);
+					customObjects.RemoveAt (i--);
 				} else {
-					arObj.SetArActive (!Settings.Instance.AREnabled || worldEnabled);
+					arObj.ARActive = worldEnabled;
 				}
 			}
 		}

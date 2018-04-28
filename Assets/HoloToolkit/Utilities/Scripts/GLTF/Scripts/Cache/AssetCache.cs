@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !UNITY_ANDROID
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,3 +69,5 @@ namespace UnityGLTF.Cache
         }
     }
 }
+
+#endif

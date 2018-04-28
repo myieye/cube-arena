@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -39,7 +40,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected override bool IsStartingRotate () {
 			return stateManager.HasSelection () && HasRotationInput () &&
-				!stateManager.IsMoving () && !CrossPlatformInputManager.GetButton (Buttons.Select);
+				!stateManager.IsMoving () && (!CrossPlatformInputManager.GetButton (Buttons.Select) ||
+                UIModeManager.InMode(UIMode.HMD4_GazeAndClicker));
 		}
 
 		protected override void StartRotate () {

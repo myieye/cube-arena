@@ -1,14 +1,14 @@
 using CubeArena.Assets.MyScripts.Logging.DAL.SQLite;
-using UnityEngine;
+using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 
 namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
     public class Device : BaseEntity
     {
-        public DeviceType _type;
+        public DeviceTypeSpec _type;
         public string _model;
 
         [NotNull]
-        public DeviceType Type	
+        public DeviceTypeSpec Type	
         {
             get { return _type;}
             set { _type = value;}

@@ -36,7 +36,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		private bool CheckEndingSelect (GameObject justSelected) {
 			if (stateManager.HasSelection () && IsDeselecting () && !stateManager.IsSelected (justSelected)) {
 				stateManager.Deselect ();
-				return true;
+        stateManager.UnlockRotation();
+                return true;
 			}
 			return false;
 		}

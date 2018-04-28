@@ -3,7 +3,7 @@ using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD {
-    public class TestHoloLensInput : MonoBehaviour, IInputHandler, IInputClickHandler, ISourceRotationHandler, INavigationHandler {
+    public class TestHoloLensInput : MonoBehaviour {//, IInputHandler, IInputClickHandler, ISourceRotationHandler, INavigationHandler {
 
         private InputManager instance;
         private List<InputSourceInfo> sources;
@@ -23,6 +23,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
             }
         }
 
+        /*
         void IInputHandler.OnInputDown (InputEventData eventData) {
             Debug.Log ("IInputHandler.OnInputDown");
         }
@@ -54,5 +55,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
         void INavigationHandler.OnNavigationCanceled (NavigationEventData eventData) {
             Debug.Log ("OnNavigationStarted");
         }
+        */
     }
 }

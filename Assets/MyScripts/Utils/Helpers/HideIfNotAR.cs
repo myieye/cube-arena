@@ -5,10 +5,10 @@ using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
-	public class HideIfNotAR : MonoBehaviour, ARObject {
+	public class HideIfNotAR : CustomARObject {
 
-		void Start () {
-			ARManager.Instance.RegisterARObject (this);
+		public override void Start () {
+			base.Start();
 			GetComponent<Renderer> ().enabled = !Settings.Instance.AREnabled;
 		}
 

@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cubes;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
-	public class PositionIndicator : MonoBehaviour {
+	public class PositionIndicator : CustomARObject {
 
 		[SerializeField]
 		private float minSize;
@@ -18,14 +19,15 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 		private CubeStateManager cubeState;
 		private Renderer rend;
 
-		void Start () {
+		public override void Start () {
+			base.Start ();
 			boxCollider = transform.parent.GetComponentInChildren<BoxCollider> ();
 			cubeState = GetComponentInParent<CubeStateManager> ();
 			rend = GetComponent<Renderer> ();
 		}
 
 		void Update () {
-			if (cubeState.InStates (CubeState.Drag, CubeState.Disallow)) {
+			if (ShouldBeShown()) {
 				Show ();
 			} else {
 				Hide ();
@@ -34,7 +36,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 
 		private void Show () {
 			rend.enabled = true;
-
 			var ray = new Ray (boxCollider.bounds.center, Vector3.down);
 			RaycastHit hitInfo;
 			if (Physics.Raycast (ray, out hitInfo, Mathf.Infinity, Layers.CubesAndTerrainMask)) {
@@ -46,6 +47,10 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 
 		private void Hide () {
 			rend.enabled = false;
+		}
+
+		private bool ShouldBeShown() {
+			return ARActive && cubeState.InStates (CubeState.Drag, CubeState.Disallow);
 		}
 
 		private Vector3 CalcScale (float dist) {

@@ -42,9 +42,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer, Color color) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
-			if (Settings.Instance.AREnabled) {
-				ARManager.Instance.RegisterARObject (player.GetComponent<ARObject> ());
-			}
 			color = Highlight.ReduceTransparency (color, Highlight.CursorTransparency);
 			player.GetComponent<Colourer> ().color = color;
 			player.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;
@@ -59,9 +56,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			var i = 1;
 			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
-				if (Settings.Instance.AREnabled) {
-					ARManager.Instance.AddGameObjectToWorld (cube);
-				}
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = color;
 				cube.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;

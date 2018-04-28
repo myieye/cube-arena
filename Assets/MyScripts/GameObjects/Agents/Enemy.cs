@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.GameObjects.Fire;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -9,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
+	
 	public class Enemy : NetworkBehaviour {
 
 		public int level;
@@ -40,8 +42,10 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 		private bool IsDetchCollision (Collision col) {
 			return col.gameObject.CompareTag (Tags.Cube) &&
-				col.gameObject.GetComponentInChildren<DynamicFireSource> ().burning/* &&
-				col.gameObject.transform.position.y > killHeight*/;
+				col.gameObject.GetComponentInChildren<DynamicFireSource> ().burning
+			/* &&
+							col.gameObject.transform.position.y > killHeight*/
+			;
 		}
 	}
 }

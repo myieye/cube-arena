@@ -14,11 +14,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		void Awake () {
 			dropdown = GetComponent<Dropdown> ();
 			dropdown.options = (
-				from mode in Enum.GetValues (typeof (UIMode)).Cast<UIMode> () select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
+				from mode in UIModeHelpers.UIModesForCurrentDevice
+				select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
 		}
 
 		public void RefreshSelectedUIMode () {
-			dropdown.value = ((int) UIModeManager.Instance<UIModeManager>().CurrentUIMode) - 1;
+			var currMode = UIModeManager.Instance<UIModeManager> ().CurrentUIMode;
+			dropdown.value = UIModeHelpers.UIModesForCurrentDevice.IndexOf(currMode);
 		}
 	}
 }

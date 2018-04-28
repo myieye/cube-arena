@@ -1,91 +1,65 @@
 ﻿#if (UNITY_WSA || UNITY_EDITOR)
 
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cursor;
+using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.Networking;
 
-namespace CubeArena.Assets.MyScripts.Interaction.HMD
-{
-    public class SelectAxesAndCursorPointerGestures : SelectAndAxesGestures {
+namespace CubeArena.Assets.MyScripts.Interaction.HMD {
+    public class SelectAxesAndCursorPointerGestures : SelectAndAxesGestures, IManipulationHandler {
 
-        private GestureRecognizer pointerRecognizer;
-        private CursorController cursorCtrl;
-        private List<InteractionSourceKind> activePointerSources;
+        private CursorController _cursorCtrl;
+        private CursorController CursorController {
+            get {
+                if (!_cursorCtrl) {
+                    _cursorCtrl = FindObjectsOfType <CursorController> ()
+                        .First(cc => cc.GetComponent<NetworkIdentity> ().hasAuthority);
+                }
+                return _cursorCtrl;
+            }
+        }
         private InteractionStateManager _stateManager;
         private InteractionStateManager StateManager {
             get {
                 if (!_stateManager) {
-                    _stateManager = FindObjectOfType<InteractionStateManager>();
+                    _stateManager = FindObjectOfType<InteractionStateManager> ();
                 }
                 return _stateManager;
             }
         }
 
-        protected override void Awake() {
-            base.Awake();
-            cursorCtrl = GetComponentInParent<CursorController>();
-            pointerRecognizer = new GestureRecognizer();
+        protected override void OnEnable () {
+            base.OnEnable ();
+            SetEnabledFunctionKind (GestureFunction.Axis, InteractionSourceKind.Controller);
+            SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Hand);
+            SetEnabledFunctionKind (GestureFunction.Point, InteractionSourceKind.Hand);
         }
 
-        protected override void OnEnable() {
-            base.OnEnable();
-            
-            SetActiveAxisSources(InteractionSourceKind.Other);
-            SetActiveSelectSources(InteractionSourceKind.Hand);
-            SetActivePointerSources(InteractionSourceKind.Hand);
-      
-            pointerRecognizer.SetRecognizableGestures(GestureSettings.ManipulationTranslate);
-            pointerRecognizer.ManipulationStarted += OnManipulationStarted;
-            pointerRecognizer.ManipulationUpdated += OnManipulationUpdated;
-            pointerRecognizer.ManipulationCompleted += OnManipulationCompleted;
-            pointerRecognizer.ManipulationCanceled += OnManipulationCanceled;
+        void IManipulationHandler.OnManipulationStarted (ManipulationEventData eventData) {
+            // Nothing to do
         }
 
-        void Update() {
-            if (StateManager) {
-                if (StateManager.IsMoving() && ActiveGestureRecognizer != pointerRecognizer) {
-                    ActiveGestureRecognizer = pointerRecognizer;
-                } else if (ActiveGestureRecognizer == pointerRecognizer && !StateManager.IsMoving()) {
-                    //ActiveGestureRecognizer = SelectAxesRecognizer;
-                }
+        void IManipulationHandler.OnManipulationUpdated (ManipulationEventData eventData) {
+            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
+                CursorController.SetPointerOffset (eventData.CumulativeDelta);
             }
         }
 
-        void OnDestroy() {
-            pointerRecognizer.Dispose();
-        }
-
-        private void OnManipulationStarted(ManipulationStartedEventArgs obj) {
-            Debug.Log("ManipulationRecognizer_ManipulationStarted");
-        }
-
-        private void OnManipulationUpdated(ManipulationUpdatedEventArgs obj) {
-            if (IsActivePointerSource(obj.source)) {
-                cursorCtrl.SetPointerOffset(obj.cumulativeDelta);
+        void IManipulationHandler.OnManipulationCompleted (ManipulationEventData eventData) {
+            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
+                CursorController.SetPointerOffset (Vector3.zero);
             }
         }
 
-        private void OnManipulationCompleted(ManipulationCompletedEventArgs obj) {
-            if (IsActivePointerSource(obj.source)) {
-                cursorCtrl.SetPointerOffset(Vector3.zero);
+        void IManipulationHandler.OnManipulationCanceled (ManipulationEventData eventData) {
+            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
+                CursorController.SetPointerOffset (Vector3.zero);
             }
-        }
-
-        private void OnManipulationCanceled(ManipulationCanceledEventArgs obj) {
-            if (IsActivePointerSource(obj.source)) {
-                cursorCtrl.SetPointerOffset(Vector3.zero);
-            }
-        }
-
-        protected void SetActivePointerSources(params InteractionSourceKind[] sources) {
-            activePointerSources = new List<InteractionSourceKind>(sources);
-        }
-
-        private bool IsActivePointerSource(InteractionSource source) {
-            return activePointerSources.Contains(source.kind);
         }
     }
 }

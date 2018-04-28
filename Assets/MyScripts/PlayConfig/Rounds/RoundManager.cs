@@ -35,7 +35,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		[Server]
 		private void Init () {
 			timeManager = FindObjectOfType<TimeManager> ();
-			numRounds = Enum.GetValues (typeof (UIMode)).Length;
+			numRounds = UIModeHelpers.UIModes.Count;
 			Reset ();
 		}
 

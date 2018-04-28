@@ -9,7 +9,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
-	public class CursorController : NetworkBehaviour, ARObject {
+	[RequireComponent(typeof(CustomARObject))]
+	public class CursorController : NetworkBehaviour {
 
 		public enum CursorMode { Camera, Mouse, Touch, Pointer }
 		public Vector3? Position {
@@ -35,10 +36,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private Vector3 screenCenter;
 		private Vector2 currTouchOffset = Vector2.zero;
 		private Vector3 currPointerOffset = Vector3.zero;
-		private bool _arActive;
 		private Vector2 lastTouch;
 		public LayerMask raycastLayerMask;
 		private bool touchOffsetActive;
+		private CustomARObject arObj;
 
 		private bool InTouchMode {
 			get {
@@ -50,16 +51,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				return Settings.Instance.DebugCursor || !InTouchMode;
 			}
 		}
-		private bool ARActive {
-			get {
-				return !Settings.Instance.AREnabled || _arActive;
-			}
-		}
 
 		void Start () {
 			cursorRenderer = GetComponent<Renderer> ();
 			cursorRb = GetComponent<Rigidbody> ();
 			screenCenter = Camera.main.ViewportToScreenPoint (new Vector3 (0.5f, 0.5f, 0));
+			arObj = GetComponent<CustomARObject> ();
 		}
 
 		public void Refresh () {
@@ -177,11 +174,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private void ShowHideCursor () {
-			cursorRenderer.enabled = ShowCursor && ARActive && currRaycastSuccess;
-		}
-
-		public void SetArActive (bool arActive) {
-			this._arActive = arActive;
+			cursorRenderer.enabled = ShowCursor && arObj.ARActive && currRaycastSuccess;
 		}
 
 		public void SetPointerOffset (Vector3 pointerOffset) {

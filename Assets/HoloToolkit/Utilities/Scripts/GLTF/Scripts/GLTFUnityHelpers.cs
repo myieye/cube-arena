@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if !UNITY_ANDROID
+using UnityEngine;
 
 namespace UnityGLTF
 {
@@ -196,3 +197,4 @@ namespace UnityGLTF
         }
     }
 }
+#endif

@@ -9,7 +9,7 @@ namespace HoloToolkit.Unity
     /// <summary>
     /// Simple Behaviour which calculates the average frames per second over a number of frames and shows the FPS in a referenced Text control.
     /// </summary>
-    [RequireComponent(typeof(TextMesh))]
+    //[RequireComponent(typeof(TextMesh))]
     public class FpsDisplay : MonoBehaviour
     {
         [Tooltip("Reference to TextMesh component where the FPS should be displayed.")]

@@ -51,7 +51,7 @@ namespace HoloToolkit.Unity.InputModule
 
         protected virtual void Start()
         {
-            if (PersistentKeywords)
+            if (PersistentKeywords && gameObject.transform.parent == null)
             {
                 gameObject.DontDestroyOnLoad();
             }

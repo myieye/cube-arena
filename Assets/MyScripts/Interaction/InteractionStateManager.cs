@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cubes;
@@ -17,6 +18,7 @@ namespace CubeArena.Assets.MyScripts.Interaction {
 		public CubeStatePair SelectedCube { get; private set; }
 		private List<OnCubeDeselectedListener> onCubeDeselectedListeners;
 		private InteractionState prevState = InteractionState.Idle;
+    private bool rotationIsLocked = false;
 
 		public void Awake () {
 			onCubeDeselectedListeners = new List<OnCubeDeselectedListener> ();
@@ -39,7 +41,7 @@ namespace CubeArena.Assets.MyScripts.Interaction {
 			onCubeDeselectedListeners.Add (onCubeDeselectedListener);
 		}
 
-		public void StartHover (GameObject cube) {
+    public void StartHover (GameObject cube) {
 			if (!IsHovered (cube)) {
 				EndHover ();
 				HoveredCube = new CubeStatePair (cube);
@@ -77,6 +79,8 @@ namespace CubeArena.Assets.MyScripts.Interaction {
 		}
 
 		public void Deselect (bool reselecting = false) {
+      if (rotationIsLocked) return;
+
 			FinishAnyMeasurements ();
 			if (SelectedCube != null) {
 				if (!reselecting) {
@@ -127,9 +131,19 @@ namespace CubeArena.Assets.MyScripts.Interaction {
 			SelectedCube.StateManager.CmdEndRotation ();
 			Measure.Instance.EndRotation (SelectedCube.Cube);
 			State = InteractionState.Selected;
-		}
+    }
 
-		public void StartDisallow () {
+    internal void LockRotation()
+    {
+      rotationIsLocked = true;
+    }
+
+    public void UnlockRotation()
+    {
+      rotationIsLocked = false;
+    }
+
+    public void StartDisallow () {
 			if (InState (InteractionState.Moving)) {
 				SelectedCube.StateManager.Disallow ();
 				State = InteractionState.Disallowed;

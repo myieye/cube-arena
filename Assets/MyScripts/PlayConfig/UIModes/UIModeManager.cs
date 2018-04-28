@@ -89,7 +89,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
-		private UIMode[] modes = (UIMode[]) Enum.GetValues (typeof (UIMode));
 
 		void Start () {
 			Controls.SetActive (true);
@@ -121,7 +120,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		public void OnUIModeChanged (int uiMode) {
-			SetUIMode (modes[uiMode], force : false);
+			SetUIMode (UIModeHelpers.UIModesForCurrentDevice[uiMode], force : false);
 		}
 
 		private void SetUIMode (UIMode mode, bool force = true) {
@@ -136,7 +135,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			DisableAll ();
 			CrossPlatformInputManager.SwitchActiveInputMethod (
 				CrossPlatformInputManager.ActiveInputMethod.Touch);
-			TwoDTranslationPlane.OnUIModeChanged(CurrentUIMode);
+			TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
 
 			switch (mode) {
 				case UIMode.Mouse:
@@ -216,10 +215,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public static bool InMode (UIMode mode) {
 			return Instance<UIModeManager> ().CurrentUIMode.Equals (mode);
-		}
-
-		public static List<UIMode> GetUIModes () {
-			return Enum.GetValues (typeof (UIMode)).Cast<UIMode> ().ToList ();
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 		void Awake () {
 			Camera activeCamera;
 			Camera inactiveCamera;
-#if UNITY_EDITOR || (!UNITY_WSA)
+#if UNITY_EDITOR || !UNITY_WSA
 			if (Settings.Instance.AREnabled) {
 				activeCamera = arCamera;
 				inactiveCamera = nonArCamera;
@@ -26,12 +26,18 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 			activeCamera = arCamera;
 			inactiveCamera = nonArCamera;
 #endif
-			activeCamera.gameObject.SetActive(true);
-			inactiveCamera.gameObject.SetActive(false);
+			activeCamera.gameObject.SetActive (true);
+			inactiveCamera.gameObject.SetActive (false);
 
-			foreach (var canvas in FindObjectsOfType<Canvas> ()) {
+			foreach (var canvas in Resources.FindObjectsOfTypeAll<Canvas> ()) {
+#if UNITY_WSA && !UNITY_EDITOR
+				canvas.renderMode = RenderMode.ScreenSpaceCamera;
 				canvas.worldCamera = activeCamera;
+#else
+				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+#endif
 			}
+
 		}
 	}
 }

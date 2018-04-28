@@ -16,7 +16,7 @@ MonoBehaviour:
     ufoLicenseKey: QVh5MXhqZi8vLy8vQUFBQUtOdUorcWJvMWt1SHM5T3VSVTVyUlpKVkMveEdUb1J0UGRodk9zQjJYRmlnRzVmQUxhMVVsbk90YWg2Smt4aVpteHZYSkNLN2VTWHZNWnFvNGN5TWFoVjFFRVUxYWRjdzJUcDdPSW5QdDl3VkR3cTBvMzg1bFE2d1ZDSTd3emlnQjdFUWVKQkNFTWdhUEJWZGh4K29KR1BPNjhZbE1laG1hRk5oWlMvM3pYZkpybThQV0kxeWRlbVQzVE9TTTBmaUVjOFJMdEVYUFdEYXJYbS9lak82MVc4dzEzZmxpcFRrMjYzZHpKSlIwcU4xMUZxN1Mxa0FXZVM0bUZTNDJBNlVIODdwQXUxelNQR1JaRUdZZUp4UVhCVW9XeXlNK04yUkdRekEwL0syaytCeHArcy80ZFlYRFlMLzZRWUlWVFRXVHRTb08zTjhaWDJEcG84M2FtMTFLNFNvWWFGeEFKN2RKWE1tZHJGekRGOGM=
     delayedInitialization: 1
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 1
+    maxSimultaneousImageTargets: 4
     maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 1
     cameraDirection: 0
@@ -25,10 +25,10 @@ MonoBehaviour:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
     eyewearType: 1
-    stereoFramework: 0
+    stereoFramework: 1
     seeThroughConfiguration: 1
-    viewerName: Generic Cardboard
-    viewerManufacturer: Vuforia
+    viewerName: VR Goggles
+    viewerManufacturer: Merge
     useCustomViewer: 0
     customViewer:
       Version: 0

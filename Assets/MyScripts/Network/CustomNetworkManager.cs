@@ -55,7 +55,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 				// Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
 				ClientScene.Ready (conn);
 				var msg = new DeviceTypeMessage {
-					Type = SystemInfo.deviceType,
+					Type = DeviceTypeManager.DeviceType,
 						Model = SystemInfo.deviceModel
 				};
 				ClientScene.AddPlayer (client.connection, 0, msg);

@@ -1,4 +1,6 @@
-﻿using GLTF.Schema;
+﻿#if !UNITY_ANDROID
+
+using GLTF.Schema;
 using UnityEngine;
 
 namespace UnityGLTF.Extensions
@@ -200,3 +202,5 @@ textureObj.wrapMode == TextureWrapMode.Clamp && root.Samplers[i].WrapS == GLTFSe
         }
     }
 }
+
+#endif

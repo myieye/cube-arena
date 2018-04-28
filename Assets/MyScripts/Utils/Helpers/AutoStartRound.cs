@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 	public class AutoStartRound : MonoBehaviour {
 
-#if !UNITY_EDITOR && !UNITY_STANDALONE
+#if !UNITY_EDITOR && UNITY_WSA
 		private float delay = 5;
 
 		void Update () {

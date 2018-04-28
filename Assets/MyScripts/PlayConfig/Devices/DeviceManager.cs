@@ -16,12 +16,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 	public class DeviceManager : NetworkBehaviourSingleton {
 
 		public Dictionary<string, ConnectedDevice> ConnectedDevices { get; private set; }
-		public Dictionary<DeviceType, List<ConnectedDevice>> DevicesByType { get; private set; }
+		public Dictionary<DeviceTypeSpec, List<ConnectedDevice>> DevicesByType { get; private set; }
 
 		[Server]
 		void Start () {
 			ConnectedDevices = new Dictionary<string, ConnectedDevice> ();
-			DevicesByType = new Dictionary<DeviceType, List<ConnectedDevice>> ();
+			DevicesByType = new Dictionary<DeviceTypeSpec, List<ConnectedDevice>> ();
 		}
 
 		[Server]
@@ -50,9 +50,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 
 		[Server]
 		public List<List<DeviceConfig>> GenerateDeviceRoundConfigs (int numPlayers) {
-
-			var modes = UIModeManager.GetUIModes ();
-			var numRounds = modes.Count;
+			var numRounds = UIModeHelpers.UIModes.Count;
 			var config = new List<List<DeviceConfig>> ();
 
 			int tries = 0;
@@ -104,7 +102,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		}
 
 		private List<UIMode> GeneratePlayerModeConfig () {
-			var modes = UIModeManager.GetUIModes ();
+			var modes = new List<UIMode> (UIModeHelpers.UIModes);
 			return modes.OrderBy (m => UnityEngine.Random.value).ToList ();
 		}
 
@@ -125,12 +123,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			Debug.Log (output.ToString ());
 		}
 
-		private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceType deviceType) {
-			if (!DevicesByType.ContainsKey (deviceType) && Settings.Instance.OverrideAvailableDevices) {
-				return ConnectedDevices.First ().Value;
-			} else {
-				return DevicesByType[deviceType].FirstOrDefault (d => !round.Exists (dc => dc.Device.Equals (d)));
+		private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceTypeSpec deviceType) {
+			ConnectedDevice device = null;
+			if (DevicesByType.ContainsKey (deviceType)) {
+				device = DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused(d, round));
+			} 
+			if (device == null && Settings.Instance.OverrideAvailableDevices) {
+				device = ConnectedDevices.First (d => DeviceIsUnused(d.Value, round)).Value;
 			}
+			return device;
+		}
+
+		private bool DeviceIsUnused(ConnectedDevice device, List<DeviceConfig> round) {
+			return !round.Exists (dc => dc.Device.Equals (device));
 		}
 
 		private T RemoveFirst<T> (List<T> list) {

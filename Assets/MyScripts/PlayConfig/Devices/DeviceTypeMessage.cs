@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
     public class DeviceTypeMessage : MessageBase {
-        public DeviceType Type;
+        public DeviceTypeSpec Type;
         public string Model;
     }
 }

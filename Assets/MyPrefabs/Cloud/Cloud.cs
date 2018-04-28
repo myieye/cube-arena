@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyPrefabs.Cloud {
 
-	[RequireComponent(typeof(Renderer))]
+	[RequireComponent(typeof(Renderer), typeof(ARObject))]
 	public class Cloud : NetworkBehaviour {
 
 		[SerializeField]

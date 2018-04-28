@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 64950385422235428}
   - component: {fileID: 114462704141305304}
   - component: {fileID: 114329840223434536}
+  - component: {fileID: 114179868910915594}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Slower
@@ -115,6 +116,17 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: d75090a6aa124b747a842bf2b5ae80cd, type: 3}
+--- !u!114 &114179868910915594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1321071089660636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4a898da6766ee489779fe1694e1aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114329840223434536
 MonoBehaviour:
   m_ObjectHideFlags: 1
