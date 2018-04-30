@@ -47,11 +47,11 @@ GameObject:
   - component: {fileID: 114288766872020012}
   - component: {fileID: 54618727065633808}
   - component: {fileID: 114525807228677854}
-  - component: {fileID: 114860822420370596}
+  - component: {fileID: 114017443435701234}
   - component: {fileID: 208097920480794762}
   - component: {fileID: 114990484945501140}
   m_Layer: 11
-  m_Name: Cube
+  m_Name: Cube 1
   m_TagString: Cube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,6 +284,27 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114017443435701234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1185236769734356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 15
+  m_InterpolateMovement: 1
 --- !u!114 &114036797535019638
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,45 +380,24 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 163
-    i1: 223
-    i2: 182
-    i3: 8
-    i4: 137
-    i5: 123
-    i6: 79
-    i7: 180
-    i8: 235
-    i9: 138
-    i10: 45
-    i11: 142
-    i12: 148
-    i13: 54
-    i14: 87
-    i15: 22
+    i0: 117
+    i1: 193
+    i2: 225
+    i3: 138
+    i4: 13
+    i5: 72
+    i6: 96
+    i7: 244
+    i8: 203
+    i9: 1
+    i10: 41
+    i11: 230
+    i12: 52
+    i13: 211
+    i14: 119
+    i15: 192
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114860822420370596
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 15
-  m_InterpolateMovement: 1
 --- !u!114 &114870904069057950
 MonoBehaviour:
   m_ObjectHideFlags: 1
