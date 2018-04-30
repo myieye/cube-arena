@@ -7,9 +7,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         public int Id { get; [Server] set; }
 
         void Start() {
-            if (!hasAuthority && !isServer) {
-                Destroy(this);
-            }
+            //Destroy (this);
         }
     }
 }

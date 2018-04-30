@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 114288766872020012}
   - component: {fileID: 54618727065633808}
   - component: {fileID: 114525807228677854}
-  - component: {fileID: 114877214229569186}
+  - component: {fileID: 114486031638773996}
   - component: {fileID: 208097920480794762}
   - component: {fileID: 114990484945501140}
   m_Layer: 11
@@ -320,6 +320,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98306178ad41c884689dd52a90dc4c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114486031638773996
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1185236769734356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interpolationRate: 0
+  origin: {fileID: 0}
+  positionThreshold: 1
+  rotationThreshold: 5
+  velocityThreshold: 1
+  angularVelocityThreshold: 1
+  interpolationSpeed: 0.4
 --- !u!114 &114524380145941894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -393,26 +411,6 @@ MonoBehaviour:
   - UI
   - Fire
   touchedObjects: []
---- !u!114 &114877214229569186
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2575089fd9ab2eb42aa908ded276fb6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
-  m_TransformSyncMode: 3
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
 --- !u!114 &114886604295704510
 MonoBehaviour:
   m_ObjectHideFlags: 1

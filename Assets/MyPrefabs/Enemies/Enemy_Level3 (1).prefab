@@ -18,10 +18,10 @@ GameObject:
   - component: {fileID: 114780654394647630}
   - component: {fileID: 114420335421783920}
   - component: {fileID: 114832729715987862}
+  - component: {fileID: 114680455043204928}
   - component: {fileID: 114449438029070584}
-  - component: {fileID: 114185703342800034}
   m_Layer: 2
-  m_Name: Enemy_Level3
+  m_Name: Enemy_Level3 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1994,21 +1994,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0097265, y: 0.5853892, z: 0.6560031}
   m_Center: {x: -0.5123401, y: 0.009431123, z: 0.02562279}
---- !u!114 &114185703342800034
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationRate: 0
-  relativeTo: {fileID: 0}
-  positionThreshold: 1
-  rotationThreshold: 10
 --- !u!114 &114420335421783920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2059,6 +2044,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b4a898da6766ee489779fe1694e1aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114680455043204928
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114780654394647630
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2085,22 +2091,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 189
-    i1: 13
-    i2: 227
-    i3: 221
-    i4: 71
-    i5: 182
-    i6: 9
-    i7: 228
-    i8: 10
-    i9: 190
-    i10: 125
+    i0: 8
+    i1: 217
+    i2: 228
+    i3: 135
+    i4: 191
+    i5: 15
+    i6: 154
+    i7: 196
+    i8: 105
+    i9: 2
+    i10: 235
     i11: 245
-    i12: 101
-    i13: 38
-    i14: 176
-    i15: 61
+    i12: 124
+    i13: 170
+    i14: 136
+    i15: 230
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114837529259234632

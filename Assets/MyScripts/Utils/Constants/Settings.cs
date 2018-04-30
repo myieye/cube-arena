@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
@@ -32,10 +33,15 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 			get {
 				if (ForceTestUIMode) {
 					return TestUIMode;
-				} else if (SystemInfo.deviceType == DeviceType.Handheld) {
-					return DefaultHHDUIMode;
 				} else {
-					return DefaultHMDUIMode;
+					switch (DeviceTypeManager.DeviceType) {
+						case DeviceTypeSpec.Android:
+							return DefaultHHDUIMode;
+						case DeviceTypeSpec.HoloLens:
+							return DefaultHMDUIMode;
+						default:
+							return UIMode.Mouse;
+					}
 				}
 			}
 		}

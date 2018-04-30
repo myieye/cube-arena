@@ -9,6 +9,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
         private static List<NetworkBehaviourSingleton> _instances;
 
         public static T Instance<T> () where T : NetworkBehaviourSingleton {
+            if (_instances == null) return null;
             return _instances.First (i => i.GetType () == typeof (T)) as T;
         }
 

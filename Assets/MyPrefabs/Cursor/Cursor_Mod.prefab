@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23596713286297402}
   - component: {fileID: 54475806859779810}
   - component: {fileID: 114637218967109976}
-  - component: {fileID: 114540670245877228}
+  - component: {fileID: 114310889932926614}
   - component: {fileID: 114429402525392466}
   - component: {fileID: 114587656176561424}
   - component: {fileID: 114009427241836548}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114383090961952712}
   - component: {fileID: 114664024161728946}
   m_Layer: 2
-  m_Name: Cursor
+  m_Name: Cursor_Mod
   m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,6 +327,21 @@ MonoBehaviour:
   ignoreList:
   - UI
   touchedObjects: []
+--- !u!114 &114310889932926614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interpolationRate: 0
+  relativeTo: {fileID: 0}
+  positionThreshold: 1
+  rotationThreshold: 10
 --- !u!114 &114383090961952712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -390,27 +405,6 @@ MonoBehaviour:
   ZWrite: 1
   AWrite: 1
   blend: 1
---- !u!114 &114540670245877228
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114587656176561424
 MonoBehaviour:
   m_ObjectHideFlags: 1
