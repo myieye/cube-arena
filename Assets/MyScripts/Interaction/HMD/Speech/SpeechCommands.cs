@@ -56,4 +56,13 @@ public class SpeechCommands : MonoBehaviour {
 	public void SetUIMode(int uiMode) {
 		UIModeManager.Instance<UIModeManager> ().OnUIModeChanged(uiMode);
 	}
+
+	public void PrintCameraPosition() {
+		Debug.Log("Camera Pos: " + Camera.main.transform.position);
+	}
+
+	public void PrintWorldPosition() {
+		var world = GameObject.Find ("ARWorld_Stones");
+		Debug.Log("World Pos: " + world.transform.position);
+	}
 }
