@@ -1749,7 +1749,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1929885666459128, guid: bb5629b3da4a94041980063474294c1e, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
         type: 2}
@@ -9479,7 +9479,7 @@ Prefab:
     - target: {fileID: 114708646396671696, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000012009196210, guid: 3eddd1c29199313478dd3f912bfab2ab,
         type: 2}
@@ -11155,7 +11155,7 @@ Prefab:
     - target: {fileID: 114672781033768744, guid: e728d26456b6064469213a7f8ba31d85,
         type: 2}
       propertyPath: mExtendedTracking
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114672781033768744, guid: e728d26456b6064469213a7f8ba31d85,
         type: 2}
