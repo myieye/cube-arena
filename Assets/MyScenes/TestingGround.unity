@@ -8398,6 +8398,31 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -11395,7 +11420,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1489046008}
-          m_MethodName: PrintWorldPosition
+          m_MethodName: PrintWorldInfo
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -11605,7 +11630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98b12ab870f241443ba6f19d85f158a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeStartPoints: {fileID: 1264262505288726, guid: d4405d14f2fd1b441bae0ff549695fb4,
+  cubeStartPoints: {fileID: 1264262505288726, guid: 327d29fee47aead468ca992a01ebb34d,
     type: 2}
   cubePrefab: {fileID: 1185236769734356, guid: a3dfb608897b4fb4eb8a2d8e94365716, type: 2}
   playerPrefab: {fileID: 1596389934492644, guid: 5e43870cca8059e4d8e29cbd089cd19f,

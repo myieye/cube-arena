@@ -35,7 +35,7 @@ public class SpeechCommands : MonoBehaviour {
 		camera.transform.rotation = newCameraRot;
 
 		Instantiate (marker, Vector3.zero, Quaternion.identity)
-            .GetComponent<Renderer>().material.color = red;
+			.GetComponent<Renderer> ().material.color = red;
 	}
 
 	public void DrawMarkerAtZero () {
@@ -54,16 +54,21 @@ public class SpeechCommands : MonoBehaviour {
 		FindObjectOfType<NetworkManager> ().StartClient ();
 	}
 
-	public void SetUIMode(int uiMode) {
-		UIModeManager.Instance<UIModeManager> ().OnUIModeChanged(uiMode);
+	public void SetUIMode (int uiMode) {
+		UIModeManager.Instance<UIModeManager> ().OnUIModeChanged (uiMode);
 	}
 
-	public void PrintCameraPosition() {
-		Debug.Log("Camera Pos: " + Camera.main.transform.position);
+	public void PrintCameraPosition () {
+		Debug.Log ("Camera Pos: " + Camera.main.transform.position);
 	}
 
-	public void PrintWorldPosition() {
-		var world = GameObject.Find ("ARWorld_Stones");
-		Debug.Log("World Pos: " + world.transform.position);
+	public void PrintWorldInfo () {
+		var world = GameObject.Find (Names.ARWorld);
+		var ground = GameObject.Find (Names.Ground);
+		var groundColl = ground.GetComponent<Collider> ();
+		var radius = groundColl.bounds.center.x - groundColl.bounds.min.x;
+		Debug.Log ("World Pos: " + world.transform.position +
+			". Ground Pos: " + ground.transform.position +
+			". Ground radius: " + radius);
 	}
 }

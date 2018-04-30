@@ -90,13 +90,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
 
-		void Awake () {
-			base.Awake ();
-			//SetUIMode (Settings.Instance.DefaultUIMode);
-		}
-
 		void Start () {
-			Controls.SetActive (true);
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
 		}
 
@@ -133,60 +127,60 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		private void SetUIMode (UIMode mode, bool force = true) {
-			lock (this) {
-				if (mode == CurrentUIMode && !force) {
-					return;
-				}
-				if (Settings.Instance.LogUIMode) {
-					Debug.Log ("SetUIMode: " + mode);
-				}
-				CurrentUIMode = mode;
-				uiModeList.RefreshSelectedUIMode ();
-				DisableAll ();
-				CrossPlatformInputManager.SwitchActiveInputMethod (
-					CrossPlatformInputManager.ActiveInputMethod.Touch);
-				TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
+			Controls.SetActive (true);
 
-				Debug.Log ("Switching Mode:" + mode);
-				switch (mode) {
-					case UIMode.Mouse:
-						CrossPlatformInputManager.SwitchActiveInputMethod (
-							CrossPlatformInputManager.ActiveInputMethod.Hardware);
-						CurrentCursorMode = CursorController.CursorMode.Mouse;
-						sprayMoveButton.SetActive (true);
-						sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
-						break;
-					case UIMode.HHD1_Camera:
-						joystick.SetActive (true);
-						selectButton.SetActive (true);
-						sprayMoveButton.SetActive (true);
-						CurrentCursorMode = CursorController.CursorMode.Camera;
-						sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
-						break;
-					case UIMode.HHD2_TouchAndDrag:
-						joystick.SetActive (true);
-						touchpad.SetActive (true);
-						sprayMoveButton.SetActive (true);
-						CurrentCursorMode = CursorController.CursorMode.Touch;
-						sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
-						break;
-					case UIMode.HHD3_Gestures:
-						touchpad.SetActive (true);
-						sprayMoveButton.SetActive (true);
-						CurrentCursorMode = CursorController.CursorMode.Touch;
-						sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
-						break;
+			if (mode == CurrentUIMode && !force) {
+				return;
+			}
+			if (Settings.Instance.LogUIMode) {
+				Debug.Log ("SetUIMode: " + mode);
+			}
+			CurrentUIMode = mode;
+			uiModeList.RefreshSelectedUIMode ();
+			DisableAll ();
+			CrossPlatformInputManager.SwitchActiveInputMethod (
+				CrossPlatformInputManager.ActiveInputMethod.Touch);
+			TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
+
+			Debug.Log ("Switching Mode:" + mode);
+			switch (mode) {
+				case UIMode.Mouse:
+					CrossPlatformInputManager.SwitchActiveInputMethod (
+						CrossPlatformInputManager.ActiveInputMethod.Hardware);
+					CurrentCursorMode = CursorController.CursorMode.Mouse;
+					sprayMoveButton.SetActive (true);
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
+					break;
+				case UIMode.HHD1_Camera:
+					joystick.SetActive (true);
+					selectButton.SetActive (true);
+					sprayMoveButton.SetActive (true);
+					CurrentCursorMode = CursorController.CursorMode.Camera;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
+					break;
+				case UIMode.HHD2_TouchAndDrag:
+					joystick.SetActive (true);
+					touchpad.SetActive (true);
+					sprayMoveButton.SetActive (true);
+					CurrentCursorMode = CursorController.CursorMode.Touch;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
+					break;
+				case UIMode.HHD3_Gestures:
+					touchpad.SetActive (true);
+					sprayMoveButton.SetActive (true);
+					CurrentCursorMode = CursorController.CursorMode.Touch;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
+					break;
 #if (UNITY_WSA || UNITY_EDITOR)
-					case UIMode.HMD4_GazeAndClicker:
-						SelectAndAxesGestures.enabled = true;
-						CurrentCursorMode = CursorController.CursorMode.Camera;
-						break;
-					case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
-						SelectAxesAndCursorPointerGestures.enabled = true;
-						CurrentCursorMode = CursorController.CursorMode.Pointer;
-						break;
+				case UIMode.HMD4_GazeAndClicker:
+					SelectAndAxesGestures.enabled = true;
+					CurrentCursorMode = CursorController.CursorMode.Camera;
+					break;
+				case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
+					SelectAxesAndCursorPointerGestures.enabled = true;
+					CurrentCursorMode = CursorController.CursorMode.Pointer;
+					break;
 #endif
-				}
 			}
 		}
 
