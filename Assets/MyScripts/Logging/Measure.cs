@@ -58,10 +58,9 @@ namespace CubeArena.Assets.MyScripts.Logging {
             if (Instance) {
                 Destroy (this);
                 return;
-            } else {
+            } else if (isLocalPlayer) {
                 Instance = this;
             }
-
             interactionArea = -1;
         }
 

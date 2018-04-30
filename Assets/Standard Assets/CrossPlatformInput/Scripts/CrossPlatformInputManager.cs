@@ -43,7 +43,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 					break;
 			}
 			
-			//Debug.Log("Active Input Method: " + activeInput);
+			Debug.Log("Active Input Method: " + activeInput);
 		}
 
 		public static bool AxisExists(string name)

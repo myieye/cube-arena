@@ -13,12 +13,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
     static class UIModeHelpers {
 
-        static UIModeHelpers() {
+        static UIModeHelpers () {
             UIModes = Enum.GetValues (typeof (UIMode)).Cast<UIMode> ().ToList ();
             UIModesForCurrentDevice = UIModes
-#if !UNITY_EDITOR
+                //#if !UNITY_EDITOR
                 .Where (mode => mode.GetDeviceType ().Equals (DeviceTypeManager.DeviceType))
-#endif
+                //#endif
                 .ToList ();
         }
 
@@ -31,6 +31,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
                     .Replace ("__", ", ")
                     .Replace ("_", " ")
                     .Replace ("And", " + ");
+            }
+        }
+
+        internal static UIMode DeviceUIModeOrFirst (UIMode uiMode) {
+            if (UIModesForCurrentDevice.Contains(uiMode)) {
+                return uiMode;
+            } else {
+                return UIModesForCurrentDevice.First();
             }
         }
 

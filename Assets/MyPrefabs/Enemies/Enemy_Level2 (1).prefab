@@ -13,15 +13,15 @@ GameObject:
   - component: {fileID: 65917771840306762}
   - component: {fileID: 136917956573300838}
   - component: {fileID: 114837529259234632}
-  - component: {fileID: 114581935171879490}
+  - component: {fileID: 114041639205958556}
   - component: {fileID: 114538347110860040}
   - component: {fileID: 114780654394647630}
   - component: {fileID: 114420335421783920}
   - component: {fileID: 114832729715987862}
+  - component: {fileID: 114680455043204928}
   - component: {fileID: 114449438029070584}
-  - component: {fileID: 114185703342800034}
   m_Layer: 2
-  m_Name: Enemy_Level3
+  m_Name: Enemy_Level2 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -850,8 +850,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: -1.88, y: 0, z: 9.1}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: -0.5855424, y: -4.1917292e-16, z: 18.877869}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 470372}
   - {fileID: 459818}
@@ -1629,7 +1629,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 97e5db5a0e4821a46b0efc57d7308489, type: 2}
+  - {fileID: 2100000, guid: 6c7601037374e0d4aaeb4f27e01bccb1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1994,7 +1994,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0097265, y: 0.5853892, z: 0.6560031}
   m_Center: {x: -0.5123401, y: 0.009431123, z: 0.02562279}
---- !u!114 &114185703342800034
+--- !u!114 &114041639205958556
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2002,13 +2002,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b4a898da6766ee489779fe1694e1aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interpolationRate: 0
-  relativeTo: {fileID: 0}
-  positionThreshold: 1
-  rotationThreshold: 10
 --- !u!114 &114420335421783920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2048,7 +2044,7 @@ MonoBehaviour:
   ignoreList:
   - UI
   touchedObjects: []
---- !u!114 &114581935171879490
+--- !u!114 &114680455043204928
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2056,9 +2052,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b4a898da6766ee489779fe1694e1aec, type: 3}
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114780654394647630
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2085,22 +2091,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 189
-    i1: 13
-    i2: 227
-    i3: 221
-    i4: 71
-    i5: 182
-    i6: 9
-    i7: 228
-    i8: 10
-    i9: 190
-    i10: 125
-    i11: 245
-    i12: 101
-    i13: 38
-    i14: 176
-    i15: 61
+    i0: 161
+    i1: 164
+    i2: 106
+    i3: 97
+    i4: 82
+    i5: 13
+    i6: 255
+    i7: 244
+    i8: 250
+    i9: 151
+    i10: 229
+    i11: 191
+    i12: 150
+    i13: 160
+    i14: 118
+    i15: 84
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114837529259234632
@@ -2114,7 +2120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9025a4551ccedbc4cb26cc2cf1ccdac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 3
+  level: 2
 --- !u!136 &136917956573300838
 CapsuleCollider:
   m_ObjectHideFlags: 1

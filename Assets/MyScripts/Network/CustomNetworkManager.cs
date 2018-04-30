@@ -29,23 +29,24 @@ namespace CubeArena.Assets.MyScripts.Network {
 			DeviceTypeMessage msg = new DeviceTypeMessage ();
 			msg.Deserialize (msgReader);
 			if (Settings.Instance.LogDeviceConnections) {
-				Debug.Log (string.Format("Device Connected: {0} ({1})", msg.Model, msg.Type));
+				Debug.Log (string.Format ("Device Connected: {0} ({1})", msg.Model, msg.Type));
 			}
 			DeviceManager.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
 
 			if (Settings.Instance.AutoStartGame) {
-				FindObjectOfType<RoundManager> ().TriggerNewRound();
+				FindObjectOfType<RoundManager> ().TriggerNewRound ();
 			}
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
 			Debug.LogWarning ("OnServerAddPlayer called without device info");
-			if (DeviceManager.HasConnectedDevice(conn, playerControllerId)) {
-				Debug.LogError("...with unregistered device!");
+			if (DeviceManager.HasConnectedDevice (conn, playerControllerId)) {
+				Debug.LogError ("...with unregistered device!");
 			}
 		}
 
+		private bool clientIsConnecting = false;
 		/*
 			Copied from NetworkManager.
 			Added extra message.
@@ -59,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 						Model = SystemInfo.deviceModel
 				};
 				ClientScene.AddPlayer (client.connection, 0, msg);
-				UIModeManager.Instance<UIModeManager>().OnClientConnect();
+				//UIModeManager.Instance<UIModeMAnager> ().uiModeManager.OnClientConnect ();
 			}
 		}
 	}

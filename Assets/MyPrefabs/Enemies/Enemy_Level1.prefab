@@ -18,8 +18,8 @@ GameObject:
   - component: {fileID: 114780654394647630}
   - component: {fileID: 114420335421783920}
   - component: {fileID: 114832729715987862}
-  - component: {fileID: 114680455043204928}
   - component: {fileID: 114449438029070584}
+  - component: {fileID: 114186592241242102}
   m_Layer: 2
   m_Name: Enemy_Level1
   m_TagString: Untagged
@@ -1994,6 +1994,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0097265, y: 0.5853892, z: 0.6560031}
   m_Center: {x: -0.5123401, y: 0.009431123, z: 0.02562279}
+--- !u!114 &114186592241242102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interpolationRate: 0
+  relativeTo: {fileID: 0}
+  positionThreshold: 1
+  rotationThreshold: 10
 --- !u!114 &114215491181903306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2044,27 +2059,6 @@ MonoBehaviour:
   ignoreList:
   - UI
   touchedObjects: []
---- !u!114 &114680455043204928
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114780654394647630
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -18,7 +19,7 @@ public class SpeechCommands : MonoBehaviour {
 		Instantiate (marker, Vector3.zero, Quaternion.identity)
 			.GetComponent<Renderer> ().material.color = blue;
 
-		var world = GameObject.Find ("ARWorld_Stones");
+		var world = GameObject.Find (Names.ARWorld);
 		var camera = Camera.main.gameObject;
 
 		var newCameraPos = world.transform.position * -1;
