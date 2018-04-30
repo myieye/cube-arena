@@ -21,7 +21,7 @@ namespace HoloToolkit.Unity {
             }
         }
 
-#if UNITY_WSA
+#if UNITY_WSA && !UNITY_EDITOR
         private void Start () {
             FocusManager.AssertIsInitialized ();
             Debug.Assert (Canvas != null);
