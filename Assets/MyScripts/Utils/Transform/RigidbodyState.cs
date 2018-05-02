@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CubeArena.Assets.MyScripts.Network {
+namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
     public struct RigidbodyState {
         public Vector3 position;
         public Vector3 velocity;

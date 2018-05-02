@@ -135,18 +135,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (Settings.Instance.LogUIMode) {
 				Debug.Log ("SetUIMode: " + mode);
 			}
+
 			CurrentUIMode = mode;
 			uiModeList.RefreshSelectedUIMode ();
 			DisableAll ();
-			CrossPlatformInputManager.SwitchActiveInputMethod (
-				CrossPlatformInputManager.ActiveInputMethod.Touch);
+			var inputMethod = CrossPlatformInputManager.ActiveInputMethod.Touch;
 			TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
 
-			Debug.Log ("Switching Mode:" + mode);
 			switch (mode) {
 				case UIMode.Mouse:
-					CrossPlatformInputManager.SwitchActiveInputMethod (
-						CrossPlatformInputManager.ActiveInputMethod.Hardware);
+					inputMethod = CrossPlatformInputManager.ActiveInputMethod.Hardware;
 					CurrentCursorMode = CursorController.CursorMode.Mouse;
 					sprayMoveButton.SetActive (true);
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
@@ -182,6 +180,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					break;
 #endif
 			}
+			CrossPlatformInputManager.SwitchActiveInputMethod (inputMethod);
 		}
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
@@ -194,7 +193,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					MessageIds.SetUIMode, msg);
 			}
 		}
-
+	
 		private void DisableAll () {
 			if (joystick) {
 				joystick.SetActive (false);
@@ -217,7 +216,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				SelectAxesAndCursorPointerGestures.enabled = false;
 			}
 #endif
-
 		}
 
 		public static bool InMode (UIMode mode) {

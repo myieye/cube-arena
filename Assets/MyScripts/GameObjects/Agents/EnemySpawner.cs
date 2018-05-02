@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -13,16 +14,12 @@ using Random = UnityEngine.Random;
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class EnemySpawner : MonoBehaviourSingleton<EnemySpawner> {
 
-		[SerializeField]
-		private Collider area;
-		private float radius;
 		private List<GameObject> enemySpawnList = new List<GameObject> ();
 		private List<OverlapManager> enemyOverlapDetecters = new List<OverlapManager> ();
 		private object enemyLock = new object ();
 
 		public override void Awake () {
 			base.Awake ();
-			radius = area.bounds.center.x - area.bounds.min.x;
 			var seed = System.Guid.NewGuid ().GetHashCode ();
 			Random.InitState (seed);
 		}
@@ -62,7 +59,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		public Vector3 GetRandomPosition () {
-			Vector3 pos = Random.insideUnitCircle * radius;
+			Vector3 pos = Random.insideUnitCircle * TransformUtil.LocalRadius;
 			pos.z = pos.y;
 			pos.y = 0;
 			return pos;

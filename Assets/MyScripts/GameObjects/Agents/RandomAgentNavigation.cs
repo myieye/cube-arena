@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -30,7 +32,8 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 		void OnNewDestination (Vector3 newDestination) {
 			if (agent != null) {
-				agent.SetDestination (newDestination);
+				var origin = GameObject.Find (Names.Ground);
+				agent.SetDestination (TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination));
 			}
 		}
 

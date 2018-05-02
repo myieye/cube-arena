@@ -1,8 +1,10 @@
 ﻿using System;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 
 namespace CubeArena.Assets.MyScripts.Network {
 
@@ -11,8 +13,6 @@ namespace CubeArena.Assets.MyScripts.Network {
     public class RelativeNetworkTransform : NetworkBehaviour {
         [SerializeField]
         private float interpolationRate;
-        [SerializeField]
-        private Transform origin;
 
         [SerializeField]
         private float positionThreshold = 1f;
@@ -26,20 +26,20 @@ namespace CubeArena.Assets.MyScripts.Network {
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
 
-        private bool updated;
         private Rigidbody rb;
         private RigidbodyState rbs = new RigidbodyState ();
         private float wait = 0;
 
-        void Start () {
+        void Awake () {
             rb = GetComponent<Rigidbody> ();
-            if (!origin) {
-                origin = GameObject.Find(Names.ARWorld).transform;
-            }
+        }
+
+        void Start () {
+            TransformUtil.MoveToLocalCoordinates (transform);
         }
 
         void Update () {
-            wait = Mathf.Lerp(wait, MaxWait, Time.deltaTime * interpolationSpeed);
+            wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (hasAuthority && PastThreshold ()) {
                 TransmitSync ();
                 SaveState ();
@@ -48,7 +48,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientCallback]
         void TransmitSync () {
-            var relativeRbs = CalcStateRelativeToOrigin();
+            var relativeRbs = CalcStateInServerCoordinates ();
             if (rb) {
                 CmdSyncRigidbody (relativeRbs);
             } else {
@@ -68,13 +68,12 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientRpc]
         private void RpcBroadcastRigidbodyUpdate (RigidbodyState rigidbodyState) {
-            if (hasAuthority) return;
+            if (hasAuthority || !rb) return;
 
-            if (origin && !IsCentered(origin)) {
-                rigidbodyState = TransformFromStateRelativeToOrigin(rigidbodyState);
-            }
-            rb.MovePosition(rigidbodyState.position);
-            rb.MoveRotation(rigidbodyState.rotation);
+            rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
+
+            rb.MovePosition (rigidbodyState.position);
+            rb.MoveRotation (rigidbodyState.rotation);
             rb.velocity = rigidbodyState.velocity;
             rb.angularVelocity = rigidbodyState.angularVelocity;
         }
@@ -83,50 +82,36 @@ namespace CubeArena.Assets.MyScripts.Network {
         private void RpcBroadcastTransfromUpdate (RigidbodyState rigidbodyState) {
             if (hasAuthority) return;
 
-            if (origin && !IsCentered(origin)) {
-                rigidbodyState = TransformFromStateRelativeToOrigin(rigidbodyState);
-            }
+            rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
+
             transform.position = rigidbodyState.position;
             transform.rotation = rigidbodyState.rotation;
         }
 
-        private RigidbodyState CalcStateRelativeToOrigin () {
-            var relativeRbs = new RigidbodyState {
-                position = transform.position - origin.transform.position,
-                rotation = transform.rotation * Quaternion.Inverse(origin.transform.rotation),
-            };
-
+        private RigidbodyState CalcStateInServerCoordinates () {
             if (rb) {
-                var rotation = transform.rotation * Quaternion.Inverse(relativeRbs.rotation);
-                relativeRbs.velocity = rotation * rb.velocity;
-                relativeRbs.angularVelocity = rotation * rb.angularVelocity;
+                return TransformUtil.Transform (TransformDirection.LocalToServer, rb);
+            } else {
+                return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
             }
-
-            return relativeRbs;
         }
 
-        private RigidbodyState TransformFromStateRelativeToOrigin (RigidbodyState rigidbodyState) {
-            var rbs = new RigidbodyState {
-                position = rigidbodyState.position + origin.transform.position,
-                rotation = rigidbodyState.rotation * origin.transform.rotation
-            };
-
+        private RigidbodyState TransformToLocalCoordinates (RigidbodyState rigidbodyState) {
             if (rb) {
-                var rotation = transform.rotation * Quaternion.Inverse(rbs.rotation);
-                rbs.velocity = rotation * rb.velocity;
-                rbs.angularVelocity = rotation * rb.angularVelocity;
+                return TransformUtil.Transform (TransformDirection.ServerToLocal, ref rigidbodyState, true);
+            } else {
+                return TransformUtil.Transform (TransformDirection.ServerToLocal, ref rigidbodyState, false);
             }
-            return rbs;
         }
 
         private bool PastThreshold () {
-            var pastThreshold = 
-                Vector3.Distance (transform.position, rbs.position) > ScaleThreshold(positionThreshold) ||
-                Quaternion.Angle (transform.rotation, rbs.rotation) > ScaleThreshold(rotationThreshold);
+            var pastThreshold =
+                Vector3.Distance (transform.position, rbs.position) > ScaleThreshold (positionThreshold) ||
+                Quaternion.Angle (transform.rotation, rbs.rotation) > ScaleThreshold (rotationThreshold);
             if (rb) {
                 pastThreshold = pastThreshold ||
-                    Vector3.Distance (rb.velocity, rbs.velocity) > ScaleThreshold(velocityThreshold) ||
-                    Vector3.Distance (rb.angularVelocity, rbs.angularVelocity) > ScaleThreshold(angularVelocityThreshold);
+                    Vector3.Distance (rb.velocity, rbs.velocity) > ScaleThreshold (velocityThreshold) ||
+                    Vector3.Distance (rb.angularVelocity, rbs.angularVelocity) > ScaleThreshold (angularVelocityThreshold);
             }
             return pastThreshold;
         }
@@ -145,13 +130,8 @@ namespace CubeArena.Assets.MyScripts.Network {
             }
         }
 
-        private float ScaleThreshold(float threshold) {
+        private float ScaleThreshold (float threshold) {
             return threshold * (1 - (wait / MaxWait));
-        }
-
-        private bool IsCentered(Transform transform) {
-            return transform.position == Vector3.zero &&
-                transform.rotation == Quaternion.identity;
         }
     }
 }

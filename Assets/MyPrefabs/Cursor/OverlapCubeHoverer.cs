@@ -32,6 +32,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 		}
 
 		void Update () {
+			if (!isLocalPlayer) return;
 			if (stateManager.IsSpraying()) return;
 			
 			GameObject cube;

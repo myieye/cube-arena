@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -63,12 +64,8 @@ public class SpeechCommands : MonoBehaviour {
 	}
 
 	public void PrintWorldInfo () {
-		var world = GameObject.Find (Names.ARWorld);
-		var ground = GameObject.Find (Names.Ground);
-		var groundColl = ground.GetComponent<Collider> ();
-		var radius = groundColl.bounds.center.x - groundColl.bounds.min.x;
-		Debug.Log ("World Pos: " + world.transform.position +
-			". Ground Pos: " + ground.transform.position +
-			". Ground radius: " + radius);
+		Debug.Log (
+			". Ground Pos: " + TransformUtil.Origin.position +
+			". Ground radius: " + TransformUtil.LocalRadius);
 	}
 }

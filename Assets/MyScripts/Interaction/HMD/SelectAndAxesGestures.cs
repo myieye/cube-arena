@@ -115,12 +115,12 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
 
         protected InteractionSourceKind? GetInteractionSourceKind (BaseInputEventData eventData, GestureFunction? function) {
             InteractionSourceInfo kind;
-            if (function.HasValue && detectedKinds[functionToEnabledKind[function.Value]]) {
-                return functionToEnabledKind[function.Value];
-            } else if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
+            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
                 return (InteractionSourceKind) kind;
+            } else if (function.HasValue && detectedKinds[functionToEnabledKind[function.Value]]) {
+                return functionToEnabledKind[function.Value];
             } else {
-                Debug.Log ("Couldn't get source kind");
+                Debug.LogError ("Couldn't get source kind");
                 return null;
             }
         }
