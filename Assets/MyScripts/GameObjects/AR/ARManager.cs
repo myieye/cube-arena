@@ -31,16 +31,17 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 				return world;
 			}
 		}
-		private bool worldEnabled;
 		private List<Renderer> rendererComponents;
 		private List<ParticleSystem> particleSystemComponents;
 		private List<CustomARObject> customObjects;
 		public static ARManager Instance { get; private set; }
+		public static bool WorldEnabled { get; private set; }
 
 		public void Awake () {
 			if (Instance) {
 				Destroy (Instance);
 			}
+			WorldEnabled = !Settings.Instance.AREnabled;
 			Instance = this;
 			rendererComponents = new List<Renderer> ();
 			particleSystemComponents = new List<ParticleSystem> ();
@@ -73,19 +74,21 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			RefreshWorld ();
 		}
 
-		public void RegisterCustomARObject (CustomARObject arObj) {
+		public void RegisterCustomARObject (CustomARObject arObj, bool handleManually = true) {
 			customObjects.Add (arObj);
-			RemoveGameObjectComponents (arObj.gameObject);
+			if (handleManually) {
+				RemoveGameObjectComponents (arObj.gameObject);
+			}
 			RefreshWorld ();
 		}
 
 		protected override void OnTrackingFound () {
-			worldEnabled = true;
+			WorldEnabled = true;
 			RefreshWorld ();
 		}
 
 		protected override void OnTrackingLost () {
-			worldEnabled = false;
+			WorldEnabled = false;
 			RefreshWorld ();
 		}
 
@@ -97,7 +100,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 					if (!component) {
 						rendererComponents.RemoveAt (i--);
 					} else {
-						component.enabled = worldEnabled;
+						component.enabled = WorldEnabled;
 					}
 				}
 
@@ -106,9 +109,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 					var component = particleSystemComponents[i];
 					if (!component) {
 						particleSystemComponents.RemoveAt (i--);
-					} else if (worldEnabled && !component.isPlaying) {
+					} else if (WorldEnabled && !component.isPlaying) {
 						component.Play ();
-					} else if (!worldEnabled) {
+					} else if (!WorldEnabled) {
 						component.Stop (true, ParticleSystemStopBehavior.StopEmittingAndClear);
 					}
 				}
@@ -120,7 +123,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 				if (arObj == null || arObj.gameObject == null) {
 					customObjects.RemoveAt (i--);
 				} else {
-					arObj.ARActive = worldEnabled;
+					arObj.ARActive = WorldEnabled;
 				}
 			}
 		}

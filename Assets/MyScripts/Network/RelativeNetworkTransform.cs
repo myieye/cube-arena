@@ -12,9 +12,6 @@ namespace CubeArena.Assets.MyScripts.Network {
     [AddComponentMenu ("Network/RelativeNetworkTransform")]
     public class RelativeNetworkTransform : NetworkBehaviour {
         [SerializeField]
-        private float interpolationRate;
-
-        [SerializeField]
         private float positionThreshold = 1f;
         [SerializeField]
         private float rotationThreshold = 10f;
@@ -30,15 +27,19 @@ namespace CubeArena.Assets.MyScripts.Network {
         private RigidbodyState rbs = new RigidbodyState ();
         private float wait = 0;
 
-        void Awake () {
+        protected virtual void Awake () {
             rb = GetComponent<Rigidbody> ();
         }
 
-        void Start () {
+        protected virtual void Start () {
+            Init ();
+        }
+
+        protected void Init () {
             TransformUtil.MoveToLocalCoordinates (transform);
         }
 
-        void Update () {
+        protected virtual void Update () {
             wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (hasAuthority && PastThreshold ()) {
                 TransmitSync ();

@@ -65,7 +65,7 @@ public class SpeechCommands : MonoBehaviour {
 
 	public void PrintWorldInfo () {
 		Debug.Log (
-			". Ground Pos: " + TransformUtil.Origin.position +
+			". Ground Pos: " + TransformUtil.World.position +
 			". Ground radius: " + TransformUtil.LocalRadius);
 	}
 }

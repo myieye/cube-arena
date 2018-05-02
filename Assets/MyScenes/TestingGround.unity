@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf043b864f323244a6541b755342648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PassToPlayerTime: 3
+  PassToPlayerTime: 1
   AREnabled: 1
   OverrideAvailableDevices: 1
   EndlessRounds: 1
@@ -8632,6 +8632,56 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -8811,6 +8861,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06edd62b3bf7b3642ba2c61ea6b14092, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &513751940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 513751938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4368ab4389ea0e44c99e435c32b6d065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &515305535
@@ -9724,6 +9785,11 @@ Prefab:
     - target: {fileID: 1000012022330152, guid: 3eddd1c29199313478dd3f912bfab2ab, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011980027866, guid: 3eddd1c29199313478dd3f912bfab2ab,
+        type: 2}
+      propertyPath: StoredStabilitySamples
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3eddd1c29199313478dd3f912bfab2ab, type: 2}
@@ -11003,7 +11069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04efd8f0a9780ac4581ac4ba73162f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  origin: {fileID: 2013732564}
+  ground: {fileID: 2013732566}
 --- !u!114 &1359748397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12409,6 +12475,11 @@ CanvasRenderer:
 --- !u!4 &2013732564 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4163209508657272, guid: 250b8966024050c4f9e4597fe89af415,
+    type: 2}
+  m_PrefabInternal: {fileID: 1345383634}
+--- !u!64 &2013732566 stripped
+MeshCollider:
+  m_PrefabParentObject: {fileID: 64547576364361588, guid: 250b8966024050c4f9e4597fe89af415,
     type: 2}
   m_PrefabInternal: {fileID: 1345383634}
 --- !u!1 &2137779918

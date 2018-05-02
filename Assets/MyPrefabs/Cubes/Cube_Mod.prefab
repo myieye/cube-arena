@@ -47,10 +47,10 @@ GameObject:
   - component: {fileID: 114288766872020012}
   - component: {fileID: 54618727065633808}
   - component: {fileID: 114525807228677854}
-  - component: {fileID: 114486031638773996}
   - component: {fileID: 114162078682063732}
   - component: {fileID: 208097920480794762}
   - component: {fileID: 114990484945501140}
+  - component: {fileID: 114580346044469584}
   m_Layer: 11
   m_Name: Cube_Mod
   m_TagString: Cube
@@ -342,23 +342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98306178ad41c884689dd52a90dc4c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114486031638773996
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationRate: 0
-  positionThreshold: 1
-  rotationThreshold: 5
-  velocityThreshold: 1
-  angularVelocityThreshold: 1
-  interpolationSpeed: 0.4
 --- !u!114 &114524380145941894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -416,6 +399,22 @@ MonoBehaviour:
     i15: 22
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114580346044469584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1185236769734356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9ad08dd4ca0744a9ec10b427cf77f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionThreshold: 1
+  rotationThreshold: 10
+  velocityThreshold: 3
+  angularVelocityThreshold: 3
+  interpolationSpeed: 0.4
 --- !u!114 &114870904069057950
 MonoBehaviour:
   m_ObjectHideFlags: 1

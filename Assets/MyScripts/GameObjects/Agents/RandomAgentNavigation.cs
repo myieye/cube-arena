@@ -32,7 +32,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 		void OnNewDestination (Vector3 newDestination) {
 			if (agent != null) {
-				var origin = GameObject.Find (Names.Ground);
 				agent.SetDestination (TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination));
 			}
 		}
