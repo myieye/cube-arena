@@ -75,6 +75,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         }
 
         public static Vector3 Transform (TransformDirection direction, Vector3 pos) {
+            if (!Origin || IsCentered (Origin)) return pos;
+
             switch (direction) {
                 case TransformDirection.LocalToServer:
                     return TransformToServerCoordinates (pos);
@@ -86,6 +88,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         }
 
         public static Quaternion Transform (TransformDirection direction, Quaternion rot) {
+            if (!Origin || IsCentered (Origin)) return rot;
+            
             switch (direction) {
                 case TransformDirection.LocalToServer:
                     return TransformToServerCoordinates (rot);
@@ -133,8 +137,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             return pos;
         }
 
-        private static void CalcNewVelocity (TransformDirection direction,
-            RigidbodyState from, ref RigidbodyState to) {
+        private static void CalcNewVelocity (TransformDirection direction, RigidbodyState from, ref RigidbodyState to) {
             Quaternion rotation;
             switch (direction) {
                 case TransformDirection.LocalToServer:
