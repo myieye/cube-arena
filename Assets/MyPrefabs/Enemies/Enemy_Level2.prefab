@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 114420335421783920}
   - component: {fileID: 114832729715987862}
   - component: {fileID: 114449438029070584}
-  - component: {fileID: 114170120819219552}
+  - component: {fileID: 114873161474026780}
   m_Layer: 2
   m_Name: Enemy_Level2
   m_TagString: Untagged
@@ -2005,21 +2005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b4a898da6766ee489779fe1694e1aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114170120819219552
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationRate: 0
-  relativeTo: {fileID: 0}
-  positionThreshold: 1
-  rotationThreshold: 10
 --- !u!114 &114420335421783920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2115,6 +2100,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 2
+--- !u!114 &114873161474026780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9ad08dd4ca0744a9ec10b427cf77f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionThreshold: 1
+  rotationThreshold: 10
+  velocityThreshold: 3
+  angularVelocityThreshold: 3
+  interpolationSpeed: 1
 --- !u!136 &136917956573300838
 CapsuleCollider:
   m_ObjectHideFlags: 1

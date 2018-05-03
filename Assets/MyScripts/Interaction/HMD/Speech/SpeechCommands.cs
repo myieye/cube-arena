@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -35,7 +36,7 @@ public class SpeechCommands : MonoBehaviour {
 		camera.transform.rotation = newCameraRot;
 
 		Instantiate (marker, Vector3.zero, Quaternion.identity)
-            .GetComponent<Renderer>().material.color = red;
+			.GetComponent<Renderer> ().material.color = red;
 	}
 
 	public void DrawMarkerAtZero () {
@@ -54,7 +55,17 @@ public class SpeechCommands : MonoBehaviour {
 		FindObjectOfType<NetworkManager> ().StartClient ();
 	}
 
-	public void SetUIMode(int uiMode) {
-		UIModeManager.Instance<UIModeManager> ().OnUIModeChanged(uiMode);
+	public void SetUIMode (int uiMode) {
+		UIModeManager.Instance<UIModeManager> ().OnUIModeChanged (uiMode);
+	}
+
+	public void PrintCameraPosition () {
+		Debug.Log ("Camera Pos: " + Camera.main.transform.position);
+	}
+
+	public void PrintWorldInfo () {
+		Debug.Log (
+			". Ground Pos: " + TransformUtil.World.position +
+			". Ground radius: " + TransformUtil.LocalRadius);
 	}
 }

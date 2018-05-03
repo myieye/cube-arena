@@ -14,15 +14,20 @@ namespace CubeArena.Assets.MyScripts.Utils {
 		private List<string> ignoreList = new List<string> { "UI" };
 		[SerializeField]
 		private List<GameObject> touchedObjects = new List<GameObject> ();
+		private Collider[] colliders;
+		
+		public virtual void Awake () {
+			colliders = GetComponentsInChildren<Collider> (true);
+		}
 
 		public virtual void OnTriggerEnter (Collider col) {
-			if (HasMatchingTag (col.gameObject)) {
+			if (!OwnCollider(col) && HasMatchingTag (col.gameObject)) {
 				touchedObjects.Add (col.gameObject);
 			}
 		}
 
 		public virtual void OnTriggerExit (Collider col) {
-			if (HasMatchingTag (col.gameObject)) {
+			if (!OwnCollider(col) &&HasMatchingTag (col.gameObject)) {
 				touchedObjects.Remove (col.gameObject);
 			}
 		}
@@ -116,6 +121,10 @@ namespace CubeArena.Assets.MyScripts.Utils {
 
 		private void CleanNulls () {
 			touchedObjects.RemoveAll (obj => obj == null);
+		}
+
+		private bool OwnCollider(Collider coll) {
+			return colliders.Contains(coll);
 		}
 	}
 }

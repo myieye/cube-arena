@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
+using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -13,16 +15,12 @@ using Random = UnityEngine.Random;
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class EnemySpawner : MonoBehaviourSingleton<EnemySpawner> {
 
-		[SerializeField]
-		private Collider area;
-		private float radius;
 		private List<GameObject> enemySpawnList = new List<GameObject> ();
 		private List<OverlapManager> enemyOverlapDetecters = new List<OverlapManager> ();
 		private object enemyLock = new object ();
 
 		public override void Awake () {
 			base.Awake ();
-			radius = area.bounds.center.x - area.bounds.min.x;
 			var seed = System.Guid.NewGuid ().GetHashCode ();
 			Random.InitState (seed);
 		}
@@ -40,11 +38,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 					}
 
 					if (!enemyOverlapDetecters[i].HasOverlap ()) {
+						TransformUtil.MoveToServerCoordinates (enemy.transform);
 						EnableEnemy (enemy);
 						NetworkServer.Spawn (enemy);
 						i--;
 					} else {
-						enemy.transform.position = GetRandomPosition ();
+						enemy.transform.position = GetRandomNavMeshPosition ();
 					}
 				}
 			}
@@ -58,19 +57,34 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		public void SpawnEnemy (GameObject enemyPrefab) {
-			DisableEnemy (Instantiate (enemyPrefab, GetRandomPosition (), Random.rotation));
+			DisableEnemy (Instantiate (enemyPrefab, GetRandomNavMeshPosition (), Random.rotation));
 		}
 
 		public Vector3 GetRandomPosition () {
-			Vector3 pos = Random.insideUnitCircle * radius;
+			Vector3 pos = Random.insideUnitCircle * TransformUtil.LocalRadius;
 			pos.z = pos.y;
 			pos.y = 0;
 			return pos;
 		}
 
+		private Vector3 GetRandomLocalPosition () {
+			return TransformUtil.Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
+		}
+
+		private Vector3 GetRandomNavMeshPosition () {
+			return ToNavMeshPosition (GetRandomLocalPosition ());
+		}
+
+		public Vector3 ToNavMeshPosition (Vector3 position) {
+			NavMeshHit hit;
+			NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
+			return hit.position;
+		}
+
 		private void DisableEnemy (GameObject enemy) {
 			enemy.GetComponent<ARObject> ().enabled = false;
 			enemy.GetComponent<Enemy> ().enabled = false;
+			enemy.GetComponent<ARRelativeNetworkTransform> ().enabled = false;
 			var nav = enemy.GetComponent<RandomAgentNavigation> ();
 			nav.enemySpawner = this;
 			nav.enabled = false;
@@ -85,6 +99,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private void EnableEnemy (GameObject enemy) {
 			enemy.GetComponent<ARObject> ().enabled = true;
 			enemy.GetComponent<Enemy> ().enabled = true;
+			enemy.GetComponent<ARRelativeNetworkTransform> ().enabled = true;
 			enemy.GetComponent<RandomAgentNavigation> ().enabled = true;
 			foreach (var c in enemy.GetComponentsInChildren<Collider> ())
 				c.isTrigger = false;

@@ -1,8 +1,9 @@
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
     public static class Names {
-        public static string Controls = "Controls";
-        public static string TwoDTranslationPlane = "2DTranslationPlane";
-        public static string PassToPlayerText = "PassToPlayerText";
-        public static string ARWorld = "ARWorld_Stones";
+        public const string Ground = "Ground";
+        public const string Controls = "Controls";
+        public const string TwoDTranslationPlane = "2DTranslationPlane";
+        public const string PassToPlayerText = "PassToPlayerText";
+        public const string ARWorld = "ARWorld_Stones";
     }
 }
