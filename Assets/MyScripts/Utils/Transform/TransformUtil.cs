@@ -110,6 +110,13 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             }
         }
 
+        public static void MoveToServerCoordinates(Transform transform) {
+            if (!ShouldTransform) return;
+
+            transform.position = TransformToServerCoordinates (transform.position);
+            transform.rotation = TransformToServerCoordinates (transform.rotation);
+        }
+
         public static void MoveToLocalCoordinates (Transform transform) {
             if (!ShouldTransform) return;
 

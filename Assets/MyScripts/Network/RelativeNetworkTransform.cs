@@ -1,10 +1,11 @@
 ﻿using System;
 using CubeArena.Assets.MyScripts.Network;
-using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils;
-using UnityEngine;
-using UnityEngine.Networking;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Network {
 
@@ -23,12 +24,23 @@ namespace CubeArena.Assets.MyScripts.Network {
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
 
+        private NetworkTransformMode mode;
         private Rigidbody rb;
+        private NavMeshAgent agent;
         private RigidbodyState rbs = new RigidbodyState ();
         private float wait = 0;
 
         protected virtual void Awake () {
+            agent = GetComponent<NavMeshAgent> ();
             rb = GetComponent<Rigidbody> ();
+            if (agent) {
+                mode = NetworkTransformMode.Agent;
+                agent.enabled = false;
+            } else if (rb) {
+                mode = NetworkTransformMode.Rigidbody;
+            } else {
+                mode = NetworkTransformMode.Transform;
+            }
         }
 
         protected virtual void Start () {
@@ -36,7 +48,15 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected void Init () {
-            TransformUtil.MoveToLocalCoordinates (transform);
+            switch (mode) {
+                case NetworkTransformMode.Agent:
+                    agent.Warp (TransformUtil.Transform (TransformDirection.ServerToLocal, transform.position));
+                    agent.enabled = true;
+                    break;
+                default:
+                    TransformUtil.MoveToLocalCoordinates (transform);
+                    break;
+            }
         }
 
         protected virtual void Update () {
@@ -50,47 +70,40 @@ namespace CubeArena.Assets.MyScripts.Network {
         [ClientCallback]
         void TransmitSync () {
             var relativeRbs = CalcStateInServerCoordinates ();
-            if (rb) {
-                CmdSyncRigidbody (relativeRbs);
-            } else {
-                CmdSyncTransform (relativeRbs);
-            }
+            CmdSyncPosition (relativeRbs);
         }
 
         [Command]
-        private void CmdSyncRigidbody (RigidbodyState rigidbodyState) {
-            RpcBroadcastRigidbodyUpdate (rigidbodyState);
-        }
-
-        [Command]
-        private void CmdSyncTransform (RigidbodyState rigidbodyState) {
-            RpcBroadcastTransfromUpdate (rigidbodyState);
+        private void CmdSyncPosition (RigidbodyState rigidbodyState) {
+            RpcBroadcastPosition (rigidbodyState);
         }
 
         [ClientRpc]
-        private void RpcBroadcastRigidbodyUpdate (RigidbodyState rigidbodyState) {
-            if (hasAuthority || !rb) return;
-
-            rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
-
-            rb.MovePosition (rigidbodyState.position);
-            rb.MoveRotation (rigidbodyState.rotation);
-            rb.velocity = rigidbodyState.velocity;
-            rb.angularVelocity = rigidbodyState.angularVelocity;
-        }
-
-        [ClientRpc]
-        private void RpcBroadcastTransfromUpdate (RigidbodyState rigidbodyState) {
+        private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
             if (hasAuthority) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
 
-            transform.position = rigidbodyState.position;
-            transform.rotation = rigidbodyState.rotation;
+            switch (mode) {
+                case NetworkTransformMode.Rigidbody:
+                    if (!rb) return;
+                    rb.MovePosition (rigidbodyState.position);
+                    rb.MoveRotation (rigidbodyState.rotation);
+                    rb.velocity = rigidbodyState.velocity;
+                    rb.angularVelocity = rigidbodyState.angularVelocity;
+                    break;
+                case NetworkTransformMode.Transform:
+                    transform.position = rigidbodyState.position;
+                    transform.rotation = rigidbodyState.rotation;
+                    break;
+                case NetworkTransformMode.Agent:
+                    agent.Warp (rigidbodyState.position);
+                    break;
+            }
         }
 
         private RigidbodyState CalcStateInServerCoordinates () {
-            if (rb) {
+            if (mode == NetworkTransformMode.Rigidbody) {
                 return TransformUtil.Transform (TransformDirection.LocalToServer, rb);
             } else {
                 return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
@@ -98,7 +111,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private RigidbodyState TransformToLocalCoordinates (RigidbodyState rigidbodyState) {
-            if (rb) {
+            if (mode == NetworkTransformMode.Rigidbody) {
                 return TransformUtil.Transform (TransformDirection.ServerToLocal, ref rigidbodyState, true);
             } else {
                 return TransformUtil.Transform (TransformDirection.ServerToLocal, ref rigidbodyState, false);
@@ -109,7 +122,8 @@ namespace CubeArena.Assets.MyScripts.Network {
             var pastThreshold =
                 Vector3.Distance (transform.position, rbs.position) > ScaleThreshold (positionThreshold) ||
                 Quaternion.Angle (transform.rotation, rbs.rotation) > ScaleThreshold (rotationThreshold);
-            if (rb) {
+            if (mode == NetworkTransformMode.Rigidbody) {
+                if (!rb) return false;
                 pastThreshold = pastThreshold ||
                     Vector3.Distance (rb.velocity, rbs.velocity) > ScaleThreshold (velocityThreshold) ||
                     Vector3.Distance (rb.angularVelocity, rbs.angularVelocity) > ScaleThreshold (angularVelocityThreshold);
@@ -119,8 +133,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         private void SaveState () {
             wait = 0;
-
-            if (rb) {
+            if (mode == NetworkTransformMode.Rigidbody) {
+                if (!rb) return;
                 rbs.position = rb.position;
                 rbs.rotation = rb.rotation;
                 rbs.velocity = rb.velocity;
