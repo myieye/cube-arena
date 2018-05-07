@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114383090961952712}
   - component: {fileID: 114664024161728946}
   m_Layer: 2
-  m_Name: Cursor_Mod
+  m_Name: Cursor
   m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,10 +338,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interpolationRate: 0
-  relativeTo: {fileID: 0}
   positionThreshold: 1
   rotationThreshold: 10
+  velocityThreshold: 3
+  angularVelocityThreshold: 3
+  interpolationSpeed: 0.4
 --- !u!114 &114383090961952712
 MonoBehaviour:
   m_ObjectHideFlags: 1

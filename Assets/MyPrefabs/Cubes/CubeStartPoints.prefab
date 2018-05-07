@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4320514580022750}
   m_Layer: 0
   m_Name: Left
-  m_TagString: Cube
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,7 +36,7 @@ GameObject:
   - component: {fileID: 4457133084823124}
   m_Layer: 0
   m_Name: Top
-  m_TagString: Cube
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4254220264259340}
-  - component: {fileID: 114364866649412300}
   m_Layer: 0
   m_Name: CubeStartPoints
   m_TagString: Untagged
@@ -67,7 +66,7 @@ GameObject:
   - component: {fileID: 4705596772052106}
   m_Layer: 0
   m_Name: Right
-  m_TagString: Cube
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,8 +77,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1264262505288726}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 5, z: 15}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 15, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4705596772052106}
@@ -127,35 +126,3 @@ Transform:
   m_Father: {fileID: 4254220264259340}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 9.889001, z: 0}
---- !u!114 &114364866649412300
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1264262505288726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 50
-    i1: 125
-    i2: 41
-    i3: 254
-    i4: 228
-    i5: 122
-    i6: 234
-    i7: 212
-    i8: 104
-    i9: 202
-    i10: 153
-    i11: 42
-    i12: 1
-    i13: 235
-    i14: 179
-    i15: 77
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0

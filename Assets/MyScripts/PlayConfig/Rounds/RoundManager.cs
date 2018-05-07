@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
+using CubeArena.Assets.MyScripts.GameObjects.Spray;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
@@ -121,9 +122,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void ResetGameObjects () {
 			EnemyManager.Instance.ClearEnemies ();
 			PlayerManager.Instance.ResetPlayers ();
-			foreach (var cloud in FindObjectsOfType<Cloud> ()) {
-				Destroy (cloud.gameObject);
-			}
+			SprayManager.Instance.ResetSpray ();
 		}
 
 		private void Reset () {

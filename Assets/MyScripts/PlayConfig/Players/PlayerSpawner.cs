@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
-using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using UnityEngine.Networking;
-using CubeArena.Assets.MyScripts.Utils.Helpers;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 	public class PlayerSpawner : MonoBehaviourSingleton<PlayerSpawner> {
 
-		public GameObject cubeStartPoints;
+		public GameObject cubeStartPointsPrefab;
 		public GameObject cubePrefab;
 		public GameObject playerPrefab;
 		public Material[] materials;
@@ -21,7 +21,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		private int nextSpawnPoint;
 
 		void Start () {
-			spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+			spawnPoints = FindObjectsOfType<NetworkStartPosition> ();
 			nextSpawnPoint = 0;
 		}
 
@@ -51,10 +51,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		}
 
 		private void SpawnCubesForPlayer (Transform startPos, NetworkPlayer netPlayer, Color color) {
-			cubeStartPoints.transform.rotation = startPos.rotation;
-			cubeStartPoints.transform.position = startPos.position;
+			var cubeStartPoints = Instantiate (cubeStartPointsPrefab, startPos.position, startPos.rotation);
+			
 			var i = 1;
-			foreach (Transform trans in cubeStartPoints.transform) {
+			foreach (Transform trans in cubeStartPointsPrefab.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = color;
@@ -62,6 +62,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				cube.name += i++;
 				NetworkServer.SpawnWithClientAuthority (cube, netPlayer.PlayerGameObject);
 			}
+			
+			Destroy (cubeStartPoints);
 		}
 
 		private Transform GetStartPosition () {

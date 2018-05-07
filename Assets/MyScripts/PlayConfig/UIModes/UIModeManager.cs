@@ -29,15 +29,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				return FindObjectOfType<GestureCubeMover> ();
 			}
 		}
-		private AbstractSprayToggle _sprayToggle;
-		public AbstractSprayToggle SprayToggle {
-			get {
-				if (!_sprayToggle) {
-					_sprayToggle = FindObjectOfType<AbstractSprayToggle> ();
-				}
-				return _sprayToggle;
-			}
-		}
+		
 #if (UNITY_WSA || UNITY_EDITOR)
 		public SelectAndAxesGestures SelectAndAxesGestures {
 			get {
@@ -59,6 +51,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		private GameObject touchpad;
 		[SerializeField]
 		private GameObject sprayMoveButton;
+		[SerializeField]
+		private GameObject sprayBar;
 		[SerializeField]
 		private UIModeList uiModeList;
 		[SerializeField]
@@ -191,9 +185,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 #endif
 			}
 			CrossPlatformInputManager.SwitchActiveInputMethod (inputMethod);
-			if (SprayToggle) {
-				SprayToggle.ResetToMove ();
-			}
 		}
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {

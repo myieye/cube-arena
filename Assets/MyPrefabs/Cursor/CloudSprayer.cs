@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using ProgressBar;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
@@ -12,6 +13,7 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyPrefabs.Cursor {
 	public class CloudSprayer : NetworkBehaviour {
 
+		private ProgressBarBehaviour progressBar;
 		[SerializeField]
 		private GameObject sprayPrefab;
 		[SerializeField]
@@ -21,7 +23,16 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		[SerializeField]
 		private float cooldown;
 		private const float Cost = 1;
-		private float currAmount;
+		private float _currAmount;
+		private float CurrAmount {
+			get {
+				return _currAmount;
+			}
+			set {
+				_currAmount = value;
+				progressBar.Value = ((_currAmount / capacity) * 100);
+			}
+		}
 		private DateTime lastSpray;
 
 		private InteractionStateManager stateManager;
@@ -29,34 +40,43 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private PlayerId playerId;
 
 		void Start () {
+			progressBar = FindObjectOfType<ProgressBarBehaviour> ();
 			stateManager = GetComponent<InteractionStateManager> ();
 			cursorCtrl = GetComponent<CursorController> ();
 			playerId = GetComponent<PlayerId> ();
+			Reset ();
+		}
+
+		public void Reset () {
 			lastSpray = DateTime.Now.AddMilliseconds (-cooldown);
-			currAmount = capacity;
+			CurrAmount = capacity;
 		}
 
 		void Update () {
-			currAmount = Mathf.Min (currAmount + (rechargeSpeed * Time.deltaTime), capacity);
+			CurrAmount = Mathf.Min (CurrAmount + (rechargeSpeed * Time.deltaTime), capacity);
 
 			if (stateManager.IsSpraying () && Spraying ()) {
 				var pos = cursorCtrl.Position;
 				if (pos.HasValue) {
-					CmdSpray (pos.Value);
+					Spray (pos.Value);
 				}
 			}
 		}
 
+		private void Spray (Vector3 position) {
+			lastSpray = DateTime.Now;
+			CurrAmount -= Cost;
+			CmdSpray (position);
+		}
+
 		private bool Spraying () {
 			return (DateTime.Now - lastSpray).TotalMilliseconds >= cooldown &&
-				currAmount >= Cost &&
+				CurrAmount >= Cost &&
 				CrossPlatformInputManager.GetButton (Buttons.Select);
 		}
 
 		[Command]
 		private void CmdSpray (Vector3 position) {
-			lastSpray = DateTime.Now;
-			currAmount -= Cost;
 			var spray = GenerateSpray (position);
 			NetworkServer.Spawn (spray);
 		}
