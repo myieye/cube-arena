@@ -61,7 +61,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             } else if (isLocalPlayer) {
                 Instance = this;
             }
-            interactionArea = -1;
+            interactionArea = null;
         }
 
         public void StartMove (GameObject obj) {

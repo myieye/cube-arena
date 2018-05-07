@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Network;
@@ -91,7 +92,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				var players = PlayerManager.Instance.ConfigurePlayersForRound (
 					currRound, deviceRoundConfigs[currRound - 1]);
 				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
-				
+
 				timeManager.StartRound (practiceRoundLength, Settings.Instance.PassToPlayerTime, this);
 				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
 			} else {
@@ -120,6 +121,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void ResetGameObjects () {
 			EnemyManager.Instance.ClearEnemies ();
 			PlayerManager.Instance.ResetPlayers ();
+			foreach (var cloud in FindObjectsOfType<Cloud> ()) {
+				Destroy (cloud.gameObject);
+			}
 		}
 
 		private void Reset () {

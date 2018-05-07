@@ -5,6 +5,7 @@ using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.Interaction.HMD;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
@@ -26,6 +27,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public GestureCubeMover GestureCubeMover {
 			get {
 				return FindObjectOfType<GestureCubeMover> ();
+			}
+		}
+		private AbstractSprayToggle _sprayToggle;
+		public AbstractSprayToggle SprayToggle {
+			get {
+				if (!_sprayToggle) {
+					_sprayToggle = FindObjectOfType<AbstractSprayToggle> ();
+				}
+				return _sprayToggle;
 			}
 		}
 #if (UNITY_WSA || UNITY_EDITOR)
@@ -181,6 +191,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 #endif
 			}
 			CrossPlatformInputManager.SwitchActiveInputMethod (inputMethod);
+			if (SprayToggle) {
+				SprayToggle.ResetToMove ();
+			}
 		}
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
@@ -193,7 +206,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					MessageIds.SetUIMode, msg);
 			}
 		}
-	
+
 		private void DisableAll () {
 			if (joystick) {
 				joystick.SetActive (false);

@@ -4,7 +4,7 @@ using CubeArena.Assets.MyScripts.Interaction;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
-	public class AbstractSprayToggle : MonoBehaviour {
+	public abstract class AbstractSprayToggle : MonoBehaviour {
 
 		private InteractionStateManager _stateManager;
 		protected InteractionStateManager StateManager {
@@ -17,10 +17,20 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		}
 
 		public virtual void ToggleState () {
-			if (StateManager.IsSpraying ()) {
-				StateManager.EndSpray ();
-			} else {
-				StateManager.StartSpray ();
+			if (StateManager) {
+				if (StateManager.IsSpraying ()) {
+					StateManager.EndSpray ();
+				} else {
+					StateManager.StartSpray ();
+				}
+			}
+		}
+
+		public virtual void ResetToMove () {
+			if (StateManager) {
+				if (StateManager.IsSpraying ()) {
+					StateManager.EndSpray ();
+				}
 			}
 		}
 	}
