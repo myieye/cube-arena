@@ -204,36 +204,49 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             };
         }
 
-        public static void ClampInArea (Transform transform) {
+        public static void ClampInArea (Transform transform, float extent) {
             var currServerPoint = TransformToServerCoordinates (transform.position);
-            var closestPoint = Ground.ClosestPointOnBounds (transform.position);
-            var closestServerPoint = TransformToServerCoordinates (closestPoint);
-            if (closestServerPoint.magnitude < currServerPoint.magnitude) {
-                var clampedPoint = TransformToLocalCoordinates (
-                    Vector3.ClampMagnitude (currServerPoint, closestServerPoint.magnitude));
-                transform.position = clampedPoint;
+
+            var max = LocalRadius - extent;
+            var outOfBounds = false;
+
+            if (currServerPoint.x < -max || currServerPoint.x > max) {
+                outOfBounds = true;
+                currServerPoint.x = Mathf.Clamp (currServerPoint.x, -max, max);
+            }
+            if (currServerPoint.z < -max || currServerPoint.z > max) {
+                outOfBounds = true;
+                currServerPoint.z = Mathf.Clamp (currServerPoint.z, -max, max);
+            }
+            if (currServerPoint.y < 0 || currServerPoint.y > max) {
+                outOfBounds = true;
+                currServerPoint.y = Mathf.Clamp (currServerPoint.y, extent, max);
+            }
+
+            if (outOfBounds) {
+                transform.position = TransformToLocalCoordinates (currServerPoint);
             }
         }
 
-		public static Vector3 GetRandomPosition () {
-			Vector3 pos = UnityEngine.Random.insideUnitCircle * TransformUtil.LocalRadius;
-			pos.z = pos.y;
-			pos.y = 0;
-			return pos;
-		}
+        public static Vector3 GetRandomPosition () {
+            return new Vector3 (
+                UnityEngine.Random.Range (-LocalRadius, LocalRadius),
+                0,
+                UnityEngine.Random.Range (-LocalRadius, LocalRadius));
+        }
 
-		public static Vector3 GetRandomLocalPosition () {
-			return TransformUtil.Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
-		}
+        public static Vector3 GetRandomLocalPosition () {
+            return Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
+        }
 
-		public static Vector3 GetRandomNavMeshPosition () {
-			return ToNavMeshPosition (GetRandomLocalPosition ());
-		}
+        public static Vector3 GetRandomNavMeshPosition () {
+            return ToNavMeshPosition (GetRandomLocalPosition ());
+        }
 
-		public static Vector3 ToNavMeshPosition (Vector3 position) {
-			NavMeshHit hit;
-			NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
-			return hit.position;
-		}
+        public static Vector3 ToNavMeshPosition (Vector3 position) {
+            NavMeshHit hit;
+            NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
+            return hit.position;
+        }
     }
 }
