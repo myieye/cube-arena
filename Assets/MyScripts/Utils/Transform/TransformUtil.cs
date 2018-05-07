@@ -2,6 +2,7 @@ using System;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
@@ -10,6 +11,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         [SerializeField]
         private Collider ground;
         public static Transform World { get; private set; }
+        public static Collider Ground { get; private set; }
 
         [SyncVar (hook = "OnServerRadiusChange")]
         private float _serverRadius;
@@ -33,7 +35,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             if (!ground) {
                 ground = GameObject.Find (Names.Ground).GetComponent<Collider> ();
             }
-
+            Ground = ground;
             World = ground.transform;
 
 #if UNITY_WSA && !UNITY_EDITOR
@@ -110,7 +112,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             }
         }
 
-        public static void MoveToServerCoordinates(Transform transform) {
+        public static void MoveToServerCoordinates (Transform transform) {
             if (!ShouldTransform) return;
 
             transform.position = TransformToServerCoordinates (transform.position);
@@ -201,5 +203,37 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     angularVelocity = rigidbody.angularVelocity
             };
         }
+
+        public static void ClampInArea (Transform transform) {
+            var currServerPoint = TransformToServerCoordinates (transform.position);
+            var closestPoint = Ground.ClosestPointOnBounds (transform.position);
+            var closestServerPoint = TransformToServerCoordinates (closestPoint);
+            if (closestServerPoint.magnitude < currServerPoint.magnitude) {
+                var clampedPoint = TransformToLocalCoordinates (
+                    Vector3.ClampMagnitude (currServerPoint, closestServerPoint.magnitude));
+                transform.position = clampedPoint;
+            }
+        }
+
+		public static Vector3 GetRandomPosition () {
+			Vector3 pos = UnityEngine.Random.insideUnitCircle * TransformUtil.LocalRadius;
+			pos.z = pos.y;
+			pos.y = 0;
+			return pos;
+		}
+
+		public static Vector3 GetRandomLocalPosition () {
+			return TransformUtil.Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
+		}
+
+		public static Vector3 GetRandomNavMeshPosition () {
+			return ToNavMeshPosition (GetRandomLocalPosition ());
+		}
+
+		public static Vector3 ToNavMeshPosition (Vector3 position) {
+			NavMeshHit hit;
+			NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
+			return hit.position;
+		}
     }
 }

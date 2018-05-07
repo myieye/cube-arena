@@ -43,7 +43,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 						NetworkServer.Spawn (enemy);
 						i--;
 					} else {
-						enemy.transform.position = GetRandomNavMeshPosition ();
+						enemy.transform.position = TransformUtil.GetRandomNavMeshPosition ();
 					}
 				}
 			}
@@ -57,37 +57,14 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		public void SpawnEnemy (GameObject enemyPrefab) {
-			DisableEnemy (Instantiate (enemyPrefab, GetRandomNavMeshPosition (), Random.rotation));
-		}
-
-		public Vector3 GetRandomPosition () {
-			Vector3 pos = Random.insideUnitCircle * TransformUtil.LocalRadius;
-			pos.z = pos.y;
-			pos.y = 0;
-			return pos;
-		}
-
-		private Vector3 GetRandomLocalPosition () {
-			return TransformUtil.Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
-		}
-
-		private Vector3 GetRandomNavMeshPosition () {
-			return ToNavMeshPosition (GetRandomLocalPosition ());
-		}
-
-		public Vector3 ToNavMeshPosition (Vector3 position) {
-			NavMeshHit hit;
-			NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
-			return hit.position;
+			DisableEnemy (Instantiate (enemyPrefab, TransformUtil.GetRandomNavMeshPosition (), Random.rotation));
 		}
 
 		private void DisableEnemy (GameObject enemy) {
 			enemy.GetComponent<ARObject> ().enabled = false;
 			enemy.GetComponent<Enemy> ().enabled = false;
 			enemy.GetComponent<ARRelativeNetworkTransform> ().enabled = false;
-			var nav = enemy.GetComponent<RandomAgentNavigation> ();
-			nav.enemySpawner = this;
-			nav.enabled = false;
+			enemy.GetComponent<RandomAgentNavigation> ().enabled = false;
 			foreach (var c in enemy.GetComponentsInChildren<Collider> ())
 				c.isTrigger = true;
 			foreach (var r in enemy.GetComponentsInChildren<Renderer> ())

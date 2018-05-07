@@ -11,7 +11,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         protected override void Start () { }
 
         protected override void Update () {
-            if (activated) {
+            if (activated && ARManager.WorldEnabled) {
                 base.Update ();
             } else if (ARManager.WorldEnabled) {
                 Init ();

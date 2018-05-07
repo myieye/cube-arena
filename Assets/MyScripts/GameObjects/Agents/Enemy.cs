@@ -5,8 +5,10 @@ using System.Linq;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.GameObjects.Fire;
 using CubeArena.Assets.MyScripts.Logging;
+using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
@@ -36,7 +38,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			foreach (var collider in GetComponentsInChildren<Collider> ()) {
 				collider.enabled = false;
 			}
-			GetComponent<Animator> ().enabled = false;
+			DisableEnemy ();
 			Destroy (gameObject, 3);
 		}
 
@@ -46,6 +48,13 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			/* &&
 							col.gameObject.transform.position.y > killHeight*/
 			;
+		}
+
+		private void DisableEnemy () {
+			GetComponent<Animator> ().enabled = false;
+			GetComponent<ARRelativeNetworkTransform> ().enabled = false;
+			GetComponent<RandomAgentNavigation> ().enabled = false;
+			GetComponent<NavMeshAgent> ().enabled = false;
 		}
 	}
 }

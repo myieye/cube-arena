@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -11,8 +12,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 	public class RandomAgentNavigation : NetworkBehaviour {
 
-		[HideInInspector]
-		public EnemySpawner enemySpawner;
 		private NavMeshAgent agent;
 		private Animator animator;
 		[SyncVar (hook = "OnNewDestination")]
@@ -26,21 +25,28 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		void Update () {
-			//Debug.Log("Update: " + transform.position);
 			Debug.DrawRay (agent.destination, Vector3.up, Color.blue, Mathf.Infinity);
 			Move ();
 		}
 
 		private void Move () {
 			if (isServer && Arrived ()) {
-				destination = enemySpawner.GetRandomPosition ();
+				destination = TransformUtil.GetRandomPosition ();
 			}
+
+			if (AgentLostPath ()) {
+				OnNewDestination (destination);
+			}
+
 			animator.SetBool ("Moving", IsMoving ());
 		}
 
 		void OnNewDestination (Vector3 newDestination) {
+			if (!isServer) {
+				destination = newDestination;
+			}
 			newDestination = TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination);
-			var navMeshDestination = enemySpawner.ToNavMeshPosition (newDestination);
+			var navMeshDestination = TransformUtil.ToNavMeshPosition (newDestination);
 			if (agent != null) {
 				agent.SetDestination (navMeshDestination);
 			}
@@ -51,11 +57,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		bool Arrived () {
-			return agent.isOnNavMesh && //(!agent.pathPending) &&
-				(agent.remainingDistance <= agent.stoppingDistance)
-			/*&&
-			(!agent.hasPath || agent.velocity.sqrMagnitude == 0f)*/
-			;
+			return agent.isOnNavMesh &&
+				(agent.remainingDistance <= agent.stoppingDistance);
+		}
+
+		private bool AgentLostPath () {
+			return agent.pathStatus == NavMeshPathStatus.PathComplete && !agent.hasPath;
 		}
 	}
 }

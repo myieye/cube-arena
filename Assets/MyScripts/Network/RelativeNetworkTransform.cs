@@ -50,6 +50,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         protected void Init () {
             switch (mode) {
                 case NetworkTransformMode.Agent:
+                    agent.enabled = false;
                     agent.Warp (TransformUtil.Transform (TransformDirection.ServerToLocal, transform.position));
                     agent.enabled = true;
                     break;
@@ -97,7 +98,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                     transform.rotation = rigidbodyState.rotation;
                     break;
                 case NetworkTransformMode.Agent:
-                    agent.Warp (rigidbodyState.position);
+                    agent.Move(rigidbodyState.position - transform.position);
                     break;
             }
         }
