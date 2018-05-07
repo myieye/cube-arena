@@ -70,7 +70,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 			Instance = this;
 
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_EDITOR
+			if (WebCamTexture.devices.Length == 0) {
+				AREnabled = false;
+			}
+#elif UNITY_STANDALONE
 			AREnabled = false;
 #else
 			AREnabled = true;
