@@ -26,7 +26,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
             }
             //*/
 
-            /*
+            //*
             var instance = GetInstance (this);
 
             if (instance != null) {
