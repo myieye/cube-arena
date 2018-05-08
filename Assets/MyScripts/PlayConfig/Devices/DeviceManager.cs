@@ -18,7 +18,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		public Dictionary<string, ConnectedDevice> ConnectedDevices { get; private set; }
 		public Dictionary<DeviceTypeSpec, List<ConnectedDevice>> DevicesByType { get; private set; }
 
-		[Server]
 		void Start () {
 			ConnectedDevices = new Dictionary<string, ConnectedDevice> ();
 			DevicesByType = new Dictionary<DeviceTypeSpec, List<ConnectedDevice>> ();

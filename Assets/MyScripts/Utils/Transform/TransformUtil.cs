@@ -18,12 +18,12 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         private static float ServerRadius { get; set; }
         public static float LocalRadius { get; private set; }
 
+        public static bool IsInitialized { get; private set; }
         private static bool ShouldTransform {
             get {
-                return World && !IsCentered;
+                return IsInitialized && !IsCentered;
             }
         }
-
         private static bool IsCentered {
             get {
                 return World && World.position == Vector3.zero &&
@@ -35,8 +35,6 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             if (!ground) {
                 ground = GameObject.Find (Names.Ground).GetComponent<Collider> ();
             }
-            Ground = ground;
-            World = ground.transform;
 
 #if UNITY_WSA && !UNITY_EDITOR
             InvokeRepeating ("UpdateLocalRadius", 0, 0.5f);
@@ -47,6 +45,10 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             if (isServer) {
                 _serverRadius = LocalRadius;
             }
+
+            Ground = ground;
+            World = ground.transform;
+            IsInitialized = true;
         }
 
         public override void OnStartClient () {
@@ -126,6 +128,55 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             transform.rotation = TransformToLocalCoordinates (transform.rotation);
         }
 
+        public static void ClampInArea (Transform transform, float extent) {
+            if (!IsInitialized) return;
+
+            var currServerPoint = TransformToServerCoordinates (transform.position);
+
+            var max = LocalRadius - extent;
+            var outOfBounds = false;
+
+            if (currServerPoint.x < -max || currServerPoint.x > max) {
+                outOfBounds = true;
+                currServerPoint.x = Mathf.Clamp (currServerPoint.x, -max, max);
+            }
+            if (currServerPoint.z < -max || currServerPoint.z > max) {
+                outOfBounds = true;
+                currServerPoint.z = Mathf.Clamp (currServerPoint.z, -max, max);
+            }
+            if (currServerPoint.y < 0 || currServerPoint.y > max) {
+                outOfBounds = true;
+                currServerPoint.y = Mathf.Clamp (currServerPoint.y, extent, max);
+            }
+
+            if (outOfBounds) {
+                transform.position = TransformToLocalCoordinates (currServerPoint);
+            }
+        }
+
+        public static Vector3 GetRandomPosition () {
+            if (!IsInitialized) return Vector3.zero;
+
+            return new Vector3 (
+                UnityEngine.Random.Range (-LocalRadius, LocalRadius),
+                0,
+                UnityEngine.Random.Range (-LocalRadius, LocalRadius));
+        }
+
+        public static Vector3 GetRandomLocalPosition () {
+            return Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
+        }
+
+        public static Vector3 GetRandomNavMeshPosition () {
+            return ToNavMeshPosition (GetRandomLocalPosition ());
+        }
+
+        public static Vector3 ToNavMeshPosition (Vector3 position) {
+            NavMeshHit hit;
+            NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
+            return hit.position;
+        }
+
         private static Vector3 TransformToServerCoordinates (Vector3 pos) {
             pos = pos - World.transform.position;
             //pos = TransformToServerScale (pos);
@@ -202,51 +253,6 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     velocity = rigidbody.velocity,
                     angularVelocity = rigidbody.angularVelocity
             };
-        }
-
-        public static void ClampInArea (Transform transform, float extent) {
-            var currServerPoint = TransformToServerCoordinates (transform.position);
-
-            var max = LocalRadius - extent;
-            var outOfBounds = false;
-
-            if (currServerPoint.x < -max || currServerPoint.x > max) {
-                outOfBounds = true;
-                currServerPoint.x = Mathf.Clamp (currServerPoint.x, -max, max);
-            }
-            if (currServerPoint.z < -max || currServerPoint.z > max) {
-                outOfBounds = true;
-                currServerPoint.z = Mathf.Clamp (currServerPoint.z, -max, max);
-            }
-            if (currServerPoint.y < 0 || currServerPoint.y > max) {
-                outOfBounds = true;
-                currServerPoint.y = Mathf.Clamp (currServerPoint.y, extent, max);
-            }
-
-            if (outOfBounds) {
-                transform.position = TransformToLocalCoordinates (currServerPoint);
-            }
-        }
-
-        public static Vector3 GetRandomPosition () {
-            return new Vector3 (
-                UnityEngine.Random.Range (-LocalRadius, LocalRadius),
-                0,
-                UnityEngine.Random.Range (-LocalRadius, LocalRadius));
-        }
-
-        public static Vector3 GetRandomLocalPosition () {
-            return Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
-        }
-
-        public static Vector3 GetRandomNavMeshPosition () {
-            return ToNavMeshPosition (GetRandomLocalPosition ());
-        }
-
-        public static Vector3 ToNavMeshPosition (Vector3 position) {
-            NavMeshHit hit;
-            NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
-            return hit.position;
         }
     }
 }

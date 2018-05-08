@@ -29,6 +29,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         private NavMeshAgent agent;
         private RigidbodyState rbs = new RigidbodyState ();
         private float wait = 0;
+        protected bool isInitialized;
 
         protected virtual void Awake () {
             agent = GetComponent<NavMeshAgent> ();
@@ -44,10 +45,18 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Start () {
-            Init ();
+            InvokeRepeating("TryInit", 0, 0.1f);
         }
 
-        protected void Init () {
+        private void TryInit () {
+            if (Init ()) {
+                CancelInvoke ("TryInit");
+            }
+        }
+
+        protected bool Init () {
+            if (!TransformUtil.IsInitialized) return false;
+
             switch (mode) {
                 case NetworkTransformMode.Agent:
                     agent.enabled = false;
@@ -58,6 +67,8 @@ namespace CubeArena.Assets.MyScripts.Network {
                     TransformUtil.MoveToLocalCoordinates (transform);
                     break;
             }
+            
+            return isInitialized = true;
         }
 
         protected virtual void Update () {
@@ -81,7 +92,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientRpc]
         private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
-            if (hasAuthority) return;
+            if (hasAuthority || !isInitialized) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
 
