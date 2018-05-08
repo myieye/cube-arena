@@ -10,5 +10,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         public DeviceConfig DeviceConfig { get; set; }
         public GameObject PlayerGameObject { get; set; }
         public Transform StartPosition { get; set; }
+        public bool Spawned { get; set; }
     }
 }

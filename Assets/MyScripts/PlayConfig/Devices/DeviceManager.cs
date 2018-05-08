@@ -60,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		[Server]
 		public void ResetDevices () {
 			if (Settings.Instance.LogDeviceConnections) {
-				Debug.Log (string.Format ("Clearing connected devices: ({0})", ConnectedDevices.Count));
+				Debug.Log (string.Format ("Clearing connected devices. ({0})", ConnectedDevices.Count));
 			}
 			ConnectedDevices.Clear ();
 			DevicesByType.Clear ();

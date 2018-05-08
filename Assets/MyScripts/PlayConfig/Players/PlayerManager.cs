@@ -74,8 +74,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public void ResetPlayers () {
-            foreach (var cube in GameObject.FindGameObjectsWithTag(Tags.Cube)) {
-                NetworkServer.Destroy(cube);
+            foreach (var cube in GameObject.FindGameObjectsWithTag (Tags.Cube)) {
+                NetworkServer.Destroy (cube);
             }
         }
     }

@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
-	[RequireComponent(typeof(CustomARObject))]
+	[RequireComponent (typeof (CustomARObject))]
 	public class CursorController : NetworkBehaviour {
 
 		public enum CursorMode { Camera, Mouse, Touch, Pointer }
@@ -65,6 +65,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		void FixedUpdate () {
+			if (!isLocalPlayer) return;
+			
 			if (currRaycastSuccess) {
 				MoveTowardsLastHit ();
 				AlignWithLastHit ();
@@ -72,6 +74,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		void Update () {
+			if (!isLocalPlayer) return;
+
 			prevRaycastSuccess = currRaycastSuccess;
 			SetRayCastHit ();
 			ShowHideCursor ();
@@ -87,6 +91,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				AdjustVelocityForTouch ();
 				AdjustOffsetForTouch ();
 			}
+
 			MeasureUserInteractionArea ();
 		}
 

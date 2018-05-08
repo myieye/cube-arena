@@ -3,11 +3,7 @@ using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
     public class PlayerId : NetworkBehaviour {
-
-        public int Id { get; [Server] set; }
-
-        void Start() {
-            //Destroy (this);
-        }
+        [SyncVar]
+        public int Id;
     }
 }

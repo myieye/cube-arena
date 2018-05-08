@@ -29,19 +29,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 
 		void Start () {
-			if (isServer) {
-				Init ();
-			}
+			Init ();
 		}
 
-		[Server]
+		void OnEnable () {
+			Reset ();
+		}
+
 		private void Init () {
 			timeManager = FindObjectOfType<TimeManager> ();
 			numRounds = UIModeHelpers.UIModes.Count;
 			Reset ();
 		}
 
-		[Server]
 		public void TriggerNewRound () {
 			if (InLastRound ()) {
 				Reset ();
@@ -55,12 +55,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				}
 			}
 
-			// Reload the scene
-			//UnityEngine.Networking.NetworkManager.singleton.ServerChangeScene (SceneManager.GetActiveScene ().name);
 			StartNewRound ();
 		}
 
-		[Server]
 		public void OnRoundOver () {
 			if (Settings.Instance.EndlessRounds) return;
 
@@ -72,7 +69,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
-		[Server]
 		private void StartNewRound () {
 			UpdateModeAndRoundNumber ();
 
@@ -81,7 +77,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 
 			practiceModeIndicator.SetActive (InPracticeMode);
-
+			
 			if (InPracticeMode) {
 				if (InFirstRound ()) {
 					var numPlayers = PlayerManager.Instance.GenerateNewPlayers ();
@@ -102,7 +98,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
-		[Server]
 		private void UpdateModeAndRoundNumber () {
 			// Toggle practice mode
 			InPracticeMode = !InPracticeMode;
@@ -112,13 +107,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
-		[Server]
 		private void SpawnGameObjects () {
 			EnemyManager.Instance.InitEnemies ();
 			PlayerManager.Instance.SpawnPlayers ();
 		}
 
-		[Server]
 		private void ResetGameObjects () {
 			EnemyManager.Instance.ClearEnemies ();
 			PlayerManager.Instance.ResetPlayers ();
