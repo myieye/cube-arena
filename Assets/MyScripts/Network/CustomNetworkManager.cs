@@ -25,12 +25,24 @@ namespace CubeArena.Assets.MyScripts.Network {
 			}
 		}
 
+		public void Start () {
+#if (UNITY_WSA || UNITY_ANDROID) && !UNITY_EDITOR
+			networkAddress = "192.168.1.103";
+#endif
+		}
+
+		public override void OnServerDisconnect (NetworkConnection conn) {
+			DeviceManager.UnregisterDevice (conn);
+		}
+
+		public override void OnStopServer () {
+			DeviceManager.ResetDevices ();
+		}
+
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId, NetworkReader msgReader) {
 			DeviceTypeMessage msg = new DeviceTypeMessage ();
 			msg.Deserialize (msgReader);
-			if (Settings.Instance.LogDeviceConnections) {
-				Debug.Log (string.Format ("Device Connected: {0} ({1})", msg.Model, msg.Type));
-			}
+
 			DeviceManager.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
 
@@ -46,7 +58,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 			}
 		}
 
-		private bool clientIsConnecting = false;
 		/*
 			Copied from NetworkManager.
 			Added extra message.

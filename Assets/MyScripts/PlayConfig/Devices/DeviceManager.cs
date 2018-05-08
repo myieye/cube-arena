@@ -28,6 +28,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		public void RegisterConnectedDevice (ConnectedDevice connectedDevice) {
 			var key = GenerateConnectionKey (connectedDevice.Connection, connectedDevice.ControllerId);
 			if (!ConnectedDevices.ContainsKey (key)) {
+
+				if (Settings.Instance.LogDeviceConnections) {
+					Debug.Log (string.Format ("Device Connected: {0} ({1})", connectedDevice.Model, connectedDevice.Type));
+				}
+
 				DataService.Instance.SaveDeviceIfNewModel (connectedDevice);
 				//var netPlayer = PlayerManager.Instance.AddPlayer (device.Connection, playerControllerId);
 				ConnectedDevices[key] = connectedDevice;
@@ -38,6 +43,30 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			}
 		}
 
+		[Server]
+		public void UnregisterDevice (NetworkConnection conn) {
+			var connectedDevicePair = ConnectedDevices.FirstOrDefault (dev => dev.Value.Connection.connectionId == conn.connectionId);
+			var connectedDevice = connectedDevicePair.Value;
+			if (connectedDevice != null) {
+				if (Settings.Instance.LogDeviceConnections) {
+					Debug.Log (string.Format ("Device Disonnected: {0} ({1})", connectedDevice.Model, connectedDevice.Type));
+				}
+				ConnectedDevices.Remove (connectedDevicePair.Key);
+			} else {
+				Debug.Log ("Didn't find disconnecting device");
+			}
+		}
+
+		[Server]
+		public void ResetDevices () {
+			if (Settings.Instance.LogDeviceConnections) {
+				Debug.Log (string.Format ("Clearing connected devices: ({0})", ConnectedDevices.Count));
+			}
+			ConnectedDevices.Clear ();
+			DevicesByType.Clear ();
+		}
+
+		[Server]
 		public bool HasConnectedDevice (NetworkConnection conn, short controllerId) {
 			var key = GenerateConnectionKey (conn, controllerId);
 			return ConnectedDevices.ContainsKey (key);
@@ -126,15 +155,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceTypeSpec deviceType) {
 			ConnectedDevice device = null;
 			if (DevicesByType.ContainsKey (deviceType)) {
-				device = DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused(d, round));
-			} 
+				device = DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused (d, round));
+			}
 			if (device == null && Settings.Instance.OverrideAvailableDevices) {
-				device = ConnectedDevices.First (d => DeviceIsUnused(d.Value, round)).Value;
+				device = ConnectedDevices.First (d => DeviceIsUnused (d.Value, round)).Value;
 			}
 			return device;
 		}
 
-		private bool DeviceIsUnused(ConnectedDevice device, List<DeviceConfig> round) {
+		private bool DeviceIsUnused (ConnectedDevice device, List<DeviceConfig> round) {
 			return !round.Exists (dc => dc.Device.Equals (device));
 		}
 
