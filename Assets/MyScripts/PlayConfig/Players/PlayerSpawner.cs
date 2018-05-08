@@ -33,36 +33,43 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 		private void SpawnPlayer (NetworkPlayer netPlayer) {
 			var startPos = GetStartPosition ();
-			if (!netPlayer.PlayerGameObject) {
-				netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer, netPlayer.Color);
+			if (netPlayer.Spawned) {
+				ConfigurePlayerCursor (netPlayer.PlayerGameObject, netPlayer);
+			} else {
+				netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer);
 			}
 			netPlayer.StartPosition = startPos;
-			SpawnCubesForPlayer (startPos, netPlayer, netPlayer.Color);
+			SpawnCubesForPlayer (startPos, netPlayer);
 		}
 
-		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer, Color color) {
+		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
-			color = Highlight.ReduceTransparency (color, Highlight.CursorTransparency);
-			player.GetComponent<Colourer> ().color = color;
-			player.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;
+			ConfigurePlayerCursor (player, netPlayer);
 			var device = netPlayer.DeviceConfig.Device;
 			NetworkServer.AddPlayerForConnection (device.Connection, player, device.ControllerId);
+			netPlayer.Spawned = true;
 			return player;
 		}
 
-		private void SpawnCubesForPlayer (Transform startPos, NetworkPlayer netPlayer, Color color) {
+		private void ConfigurePlayerCursor (GameObject cursor, NetworkPlayer netPlayer) {
+			var color = Highlight.ReduceTransparency (netPlayer.Color, Highlight.CursorTransparency);
+			cursor.GetComponent<Colourer> ().color = color;
+			cursor.GetComponent<PlayerId> ().Id = netPlayer.PlayerId;
+		}
+
+		private void SpawnCubesForPlayer (Transform startPos, NetworkPlayer netPlayer) {
 			var cubeStartPoints = Instantiate (cubeStartPointsPrefab, startPos.position, startPos.rotation);
-			
+
 			var i = 1;
 			foreach (Transform trans in cubeStartPointsPrefab.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
-				cube.GetComponent<Colourer> ().color = color;
+				cube.GetComponent<Colourer> ().color = netPlayer.Color;
 				cube.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;
 				cube.name += i++;
 				NetworkServer.SpawnWithClientAuthority (cube, netPlayer.PlayerGameObject);
 			}
-			
+
 			Destroy (cubeStartPoints);
 		}
 

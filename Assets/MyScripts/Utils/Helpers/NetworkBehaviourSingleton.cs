@@ -23,6 +23,17 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
             } else {
                 _instances.Add (this);
             }
+
+            /*
+                var instance = GetInstance (this);
+                
+                if (instance != null) {
+                    _instances.Remove (instance);
+                    Destroy (instance);
+                }
+                
+                _instances.Add (this);
+                */
         }
 
         private static NetworkBehaviourSingleton GetInstance (NetworkBehaviourSingleton obj) {

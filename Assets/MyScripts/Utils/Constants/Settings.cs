@@ -9,6 +9,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		[Header ("Device Management")]
 		public float PassToPlayerTime;
 		[Header ("AR")]
+		public bool AREnabledInEditor;
 		public bool AREnabled;
 		[Header ("Testing")]
 		public bool OverrideAvailableDevices;
@@ -71,9 +72,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 			Instance = this;
 
 #if UNITY_EDITOR
-			if (WebCamTexture.devices.Length == 0) {
-				AREnabled = false;
-			}
+			AREnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
 #elif UNITY_STANDALONE
 			AREnabled = false;
 #else
