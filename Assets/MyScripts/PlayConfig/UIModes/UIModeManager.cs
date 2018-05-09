@@ -104,7 +104,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					MessageIds.SetUIMode, OnUIModeMessage);
 				CancelInvoke ("TryRegisterUIModeMessageHandler");
 			}
-		} 
+		}
 
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
