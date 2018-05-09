@@ -7,6 +7,7 @@ namespace CubeArena.Assets.MyScripts.Utils
 {
 	public class Colourer : NetworkBehaviour {
 
+		[HideInInspector]
 		[SyncVar]
 		public Color color;
 		protected Renderer rend;
