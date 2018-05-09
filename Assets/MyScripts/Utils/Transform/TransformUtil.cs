@@ -128,12 +128,12 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             transform.rotation = TransformToLocalCoordinates (transform.rotation);
         }
 
-        public static void ClampInArea (Transform transform, float extent) {
+        public static void ClampInArea (Transform transform, float radius) {
             if (!IsInitialized) return;
 
             var currServerPoint = TransformToServerCoordinates (transform.position);
 
-            var max = LocalRadius - extent;
+            var max = LocalRadius - radius;
             var outOfBounds = false;
 
             if (currServerPoint.x < -max || currServerPoint.x > max) {
@@ -144,13 +144,17 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                 outOfBounds = true;
                 currServerPoint.z = Mathf.Clamp (currServerPoint.z, -max, max);
             }
-            if (currServerPoint.y < 0 || currServerPoint.y > max) {
+            if (currServerPoint.y < radius || currServerPoint.y > max) {
                 outOfBounds = true;
-                currServerPoint.y = Mathf.Clamp (currServerPoint.y, extent, max);
+                currServerPoint.y = Mathf.Clamp (currServerPoint.y, radius, max);
             }
 
             if (outOfBounds) {
                 transform.position = TransformToLocalCoordinates (currServerPoint);
+                var rb = transform.gameObject.GetComponent<Rigidbody> ();
+                if (rb) {
+                    rb.velocity = Vector3.zero;
+                }
             }
         }
 
