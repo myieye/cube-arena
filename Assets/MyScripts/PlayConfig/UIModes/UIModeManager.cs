@@ -95,11 +95,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public UIMode CurrentUIMode { get; private set; }
 
 		void OnEnable () {
-			Debug.Log("OnEnable");
-		}
-
-		void Start () {
-			Debug.Log("Start");
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
 		}
 
