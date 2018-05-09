@@ -93,9 +93,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
-
-		public override void OnStartClient() {
-			base.OnStartClient ();
+		
+		public void OnEnable() {
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
 		}
 
@@ -105,7 +104,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					MessageIds.SetUIMode, OnUIModeMessage);
 				CancelInvoke ("TryRegisterUIModeMessageHandler");
 			}
-		}
+		} 
 
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
