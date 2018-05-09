@@ -18,11 +18,6 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 		private float maxA;
 		private Colourer colourer;
 
-		void Awake () {
-			// Server Code ------------------------
-			if (!isServer) return;
-		}
-
 		void Start () {
 			// Server Code ------------------------
 			if (!isServer) return;

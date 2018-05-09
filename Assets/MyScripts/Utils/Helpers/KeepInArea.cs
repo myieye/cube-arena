@@ -7,7 +7,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 	public class KeepInArea : MonoBehaviour {
 
 		void Update () {
-			TransformUtil.ClampInArea(transform, GetComponent<Renderer>().bounds.extents.magnitude);
+			TransformUtil.ClampInArea(transform, GetComponent<BoxCollider>().size.x / 2);
 		}
 	}
 }
