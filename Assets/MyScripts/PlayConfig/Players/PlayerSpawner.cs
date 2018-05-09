@@ -61,7 +61,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			var cubeStartPoints = Instantiate (cubeStartPointsPrefab, startPos.position, startPos.rotation);
 
 			var i = 1;
-			foreach (Transform trans in cubeStartPointsPrefab.transform) {
+			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = netPlayer.Color;
