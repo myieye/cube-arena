@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using ProgressBar;
 using UnityEngine;
@@ -90,7 +91,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			var rend = spray.GetComponent<MeshRenderer> ();
 			var playerColour = PlayerManager.Instance.GetPlayerColor (playerId);
 			playerColour.a = rend.material.color.a;
-			rend.material.SetColor ("_Color", playerColour);
+			spray.GetComponent<Colourer> ().color = playerColour;
 			return spray;
 		}
 	}
