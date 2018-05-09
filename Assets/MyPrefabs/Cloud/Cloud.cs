@@ -29,7 +29,6 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 
 			colourer = GetComponent<Colourer> ();
 			maxA = GetComponent<Renderer> ().material.color.a;
-			Debug.Log("maxA: " + maxA);
 			createdAt = DateTime.Now;
 		}
 
