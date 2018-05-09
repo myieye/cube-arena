@@ -33,18 +33,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		void OnEnable () {
-			Reset ();
+			ResetRoundCounter ();
 		}
 
 		private void Init () {
 			timeManager = FindObjectOfType<TimeManager> ();
 			numRounds = UIModeHelpers.UIModes.Count;
-			Reset ();
+			ResetRoundCounter ();
 		}
 
 		public void TriggerNewRound () {
 			if (InLastRound ()) {
-				Reset ();
+				ResetRoundCounter ();
+				PlayerManager.Instance.DestroyPlayers ();
 			}
 
 			if (!DeviceManager.Instance<DeviceManager> ()
@@ -118,7 +119,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			SprayManager.Instance.ResetSpray ();
 		}
 
-		private void Reset () {
+		private void ResetRoundCounter () {
 			InPracticeMode = false;
 			currRound = 0;
 		}
