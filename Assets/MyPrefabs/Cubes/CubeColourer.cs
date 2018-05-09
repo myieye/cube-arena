@@ -23,19 +23,19 @@ namespace CubeArena.Assets.MyPrefabs.Cubes
 		}
 
 		public void Hover() {
-			SetColor(hoverColour);
+			SetColour(hoverColour);
 		}
 
 		public void Select() {
-			SetColor(selectColour);
+			SetColour(selectColour);
 		}
 
 		public void Unhighlight() {
-			SetColor(baseColor);
+			SetColour(baseColor);
 		}
 
 		public void MarkDisallowed() {
-			SetColor(disallowedColor);
+			SetColour(disallowedColor);
 		}
 	}
 }

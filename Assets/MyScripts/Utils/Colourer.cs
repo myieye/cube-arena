@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace CubeArena.Assets.MyScripts.Utils
-{
+namespace CubeArena.Assets.MyScripts.Utils {
 	public class Colourer : NetworkBehaviour {
 
 		[HideInInspector]
-		[SyncVar]
+		[SyncVar (hook = "SetColour")]
 		public Color color;
 		protected Renderer rend;
 
 		public virtual void Start () {
-			rend = GetComponent<Renderer>();
-			SetColor(color);
+			rend = GetComponent<Renderer> ();
+			SetColour (color);
 		}
 
-		protected void SetColor(Color color) {
-			rend.material.color = color;
+		protected void SetColour (Color color) {
+			if (rend) {
+				rend.material.color = color;
+			}
 		}
 	}
 }

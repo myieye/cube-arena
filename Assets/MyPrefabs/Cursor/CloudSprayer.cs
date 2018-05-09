@@ -85,12 +85,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private GameObject GenerateSpray (Vector3 position) {
+			// Prepare colour
+			var playerColour = PlayerManager.Instance.GetPlayerColor (playerId);
+			playerColour.a = sprayPrefab.GetComponent<MeshRenderer> ().sharedMaterial.color.a;
+
+			// Instantiate
 			var spray = Instantiate (sprayPrefab);
 			spray.transform.rotation = UnityEngine.Random.rotation;
 			spray.transform.position = position;
-			var rend = spray.GetComponent<MeshRenderer> ();
-			var playerColour = PlayerManager.Instance.GetPlayerColor (playerId);
-			playerColour.a = rend.material.color.a;
 			spray.GetComponent<Colourer> ().color = playerColour;
 			return spray;
 		}
