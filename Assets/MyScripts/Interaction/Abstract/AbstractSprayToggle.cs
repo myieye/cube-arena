@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
@@ -10,7 +11,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		protected InteractionStateManager StateManager {
 			get {
 				if (!_stateManager) {
-					_stateManager = FindObjectOfType<InteractionStateManager> ();
+					_stateManager = GameObjectUtil.FindLocalAuthoritativeObject<InteractionStateManager> ();
 				}
 				return _stateManager;
 			}

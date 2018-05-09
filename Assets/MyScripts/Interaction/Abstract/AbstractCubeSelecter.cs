@@ -11,7 +11,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		protected InteractionStateManager stateManager;
 
 		protected virtual void Start () {
-			stateManager = GetComponentInParent<InteractionStateManager> ();
+			stateManager = GetComponent<InteractionStateManager> ();
 		}
 
 		protected virtual void Update () {
@@ -36,8 +36,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		private bool CheckEndingSelect (GameObject justSelected) {
 			if (stateManager.HasSelection () && IsDeselecting () && !stateManager.IsSelected (justSelected)) {
 				stateManager.Deselect ();
-        stateManager.UnlockRotation();
-                return true;
+				stateManager.UnlockRotation ();
+				return true;
 			}
 			return false;
 		}

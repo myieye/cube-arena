@@ -12,7 +12,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract
 		protected InteractionStateManager stateManager;
 		
 		protected virtual void Start () {
-			stateManager = GetComponentInParent<InteractionStateManager>();
+			stateManager = GetComponent<InteractionStateManager>();
 		}
 		
 		protected virtual void Update () {

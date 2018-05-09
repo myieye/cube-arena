@@ -1,14 +1,15 @@
 ﻿#if (UNITY_WSA || UNITY_EDITOR)
 
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
+using CubeArena.Assets.MyScripts.Utils;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
-using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD {
     public class SelectAxesAndCursorPointerGestures : SelectAndAxesGestures, IManipulationHandler {
@@ -17,8 +18,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
         private CursorController CursorController {
             get {
                 if (!_cursorCtrl) {
-                    _cursorCtrl = FindObjectsOfType <CursorController> ()
-                        .First(cc => cc.GetComponent<NetworkIdentity> ().hasAuthority);
+                    _cursorCtrl = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
                 }
                 return _cursorCtrl;
             }
@@ -27,7 +27,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
         private InteractionStateManager StateManager {
             get {
                 if (!_stateManager) {
-                    _stateManager = FindObjectOfType<InteractionStateManager> ();
+                    _stateManager = GameObjectUtil.FindLocalAuthoritativeObject<InteractionStateManager> ();
                 }
                 return _stateManager;
             }

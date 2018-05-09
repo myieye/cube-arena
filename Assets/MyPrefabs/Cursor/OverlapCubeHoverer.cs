@@ -15,7 +15,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor
 		private InteractionStateManager stateManager;
 
 		void Start () {
-			stateManager = GetComponentInParent<InteractionStateManager>();
+			stateManager = GetComponent<InteractionStateManager>();
 		}
 		
 		protected void OnTriggerEnter(Collider col) {
