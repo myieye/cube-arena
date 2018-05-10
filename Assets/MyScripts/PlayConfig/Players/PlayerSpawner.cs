@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
@@ -21,7 +22,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		[SerializeField]
 		private GameObject playerPrefab;
 		[SerializeField]
-		private Vector3 spawnOffset;
+		private Vector3 spawnOffsetRatio;
 		[SerializeField]
 		public Material[] materials;
 		private List<Transform> spawnPoints;
@@ -98,6 +99,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		private void GenerateSpawnPoints (int count) {
 			spawnPoints = new List<Transform> ();
 			float spacing = 360f / count;
+			var spawnOffset = spawnOffsetRatio * TransformUtil.LocalRadius;
 			Vector3 heightenedCenter = new Vector3 (0, spawnOffset.y, 0);
 
 			for (var i = 0; i < count; i++) {

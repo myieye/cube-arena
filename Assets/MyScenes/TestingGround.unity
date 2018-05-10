@@ -10361,6 +10361,16 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -13836,7 +13846,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 1185236769734356, guid: a3dfb608897b4fb4eb8a2d8e94365716, type: 2}
   playerPrefab: {fileID: 1596389934492644, guid: 5e43870cca8059e4d8e29cbd089cd19f,
     type: 2}
-  spawnOffset: {x: 0, y: 5, z: -15}
+  spawnRadiusPercentOffset: {x: 0, y: 0.2, z: -0.6}
   materials:
   - {fileID: 2100000, guid: b882c24fb23f54a4eb53c06f3a014d98, type: 2}
   - {fileID: 2100000, guid: 200b1e89688840347be35a583ddd65b2, type: 2}
