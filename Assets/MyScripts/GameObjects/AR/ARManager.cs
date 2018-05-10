@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 #if !UNITY_STANDALONE
@@ -83,6 +84,16 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 		}
 
 		protected override void OnTrackingFound () {
+#if UNITY_WSA// && !UNITY_EDITOR
+			if (CustomNetworkManager.IsServer) {
+				var behaviour = FindObjectOfType<Vuforia.ImageTargetBehaviour> ();
+				var t = behaviour.Trackable;
+				Debug.Log (t.Name);
+				var it = t as Vuforia.ImageTarget;
+				it.StartExtendedTracking ();
+				Debug.Log ("Starting extended tracking");
+			}
+#endif
 			WorldEnabled = true;
 			RefreshWorld ();
 		}

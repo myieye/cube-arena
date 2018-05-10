@@ -15,6 +15,8 @@ using UnityEngine.Networking.NetworkSystem;
 namespace CubeArena.Assets.MyScripts.Network {
 	public class CustomNetworkManager : UnityEngine.Networking.NetworkManager {
 
+		public static bool IsServer { get; private set; }
+
 		private DeviceManager _deviceManager;
 		public DeviceManager DeviceManager {
 			get {
@@ -35,7 +37,12 @@ namespace CubeArena.Assets.MyScripts.Network {
 			DeviceManager.UnregisterDevice (conn);
 		}
 
+		public override void OnStartServer () {
+			IsServer = true;
+		}
+
 		public override void OnStopServer () {
+			IsServer = false;
 			DeviceManager.ResetDevices ();
 		}
 
