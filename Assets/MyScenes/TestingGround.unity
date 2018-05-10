@@ -13423,7 +13423,7 @@ Prefab:
     - target: {fileID: 114672781033768744, guid: e728d26456b6064469213a7f8ba31d85,
         type: 2}
       propertyPath: mExtendedTracking
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114672781033768744, guid: e728d26456b6064469213a7f8ba31d85,
         type: 2}
