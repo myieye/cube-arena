@@ -30,6 +30,11 @@ namespace CubeArena.Assets.MyScripts.Network {
         private RigidbodyState rbs = new RigidbodyState ();
         private float wait = 0;
         protected bool isInitialized;
+        public bool IsSender {
+            get {
+                return hasAuthority || (!localPlayerAuthority && isServer);
+            }
+        }
 
         protected virtual void Awake () {
             agent = GetComponent<NavMeshAgent> ();
@@ -45,7 +50,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Start () {
-            InvokeRepeating("TryInit", 0, 0.1f);
+            InvokeRepeating ("TryInit", 0, 0.1f);
         }
 
         private void TryInit () {
@@ -67,19 +72,18 @@ namespace CubeArena.Assets.MyScripts.Network {
                     TransformUtil.MoveToLocalCoordinates (transform);
                     break;
             }
-            
+
             return isInitialized = true;
         }
 
         protected virtual void Update () {
             wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
-            if (hasAuthority && PastThreshold ()) {
+            if (IsSender && PastThreshold ()) {
                 TransmitSync ();
                 SaveState ();
             }
         }
 
-        [ClientCallback]
         void TransmitSync () {
             var relativeRbs = CalcStateInServerCoordinates ();
             CmdSyncPosition (relativeRbs);
@@ -92,7 +96,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientRpc]
         private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
-            if (hasAuthority || !isInitialized) return;
+            if (IsSender || !isInitialized) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
 
@@ -109,7 +113,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                     transform.rotation = rigidbodyState.rotation;
                     break;
                 case NetworkTransformMode.Agent:
-                    agent.Move(rigidbodyState.position - transform.position);
+                    agent.Move (rigidbodyState.position - transform.position);
                     break;
             }
         }
