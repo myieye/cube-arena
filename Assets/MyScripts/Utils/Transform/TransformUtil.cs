@@ -223,12 +223,12 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             CheckTransformMatricesReady ();
             switch (direction) {
                 case TransformDirection.LocalToServer:
-                    to.velocity = worldToLocalMatrix.MultiplyVector (to.velocity);
-                    to.angularVelocity = worldToLocalMatrix.MultiplyVector (to.angularVelocity);
+                    to.velocity = worldToLocalMatrix.MultiplyVector (from.velocity);
+                    to.angularVelocity = worldToLocalMatrix.MultiplyVector (from.angularVelocity);
                     break;
                 case TransformDirection.ServerToLocal:
-                    to.velocity = localToWorldMatrix.MultiplyVector (to.velocity);
-                    to.angularVelocity = localToWorldMatrix.MultiplyVector (to.angularVelocity);
+                    to.velocity = localToWorldMatrix.MultiplyVector (from.velocity);
+                    to.angularVelocity = localToWorldMatrix.MultiplyVector (from.angularVelocity);
                     break;
                 default:
                     throw new InvalidTransformDirectionException (direction);
