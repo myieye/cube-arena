@@ -48,7 +48,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		private GameObject SpawnPlayerCursor (NetworkPlayer netPlayer) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
 
-			netPlayer.Color = PlayerSpawner.Instance.materials[netPlayer.PlayerNum - 1].color;
+			netPlayer.Color = materials[netPlayer.PlayerNum - 1].color;
 			var transparentColor = Highlight.ReduceTransparency (netPlayer.Color, Highlight.CursorTransparency);
 			player.GetComponent<Colourer> ().color = transparentColor;
 
