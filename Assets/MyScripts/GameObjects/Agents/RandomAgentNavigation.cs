@@ -19,6 +19,8 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private Vector3 localDestination;
 		private ARRelativeNetworkTransform arNetworkTransform;
 		private GameObject target;
+		[SyncVar]
+		private bool movingOnServer;
 
 		void Start () {
 			target = GameObject.CreatePrimitive (PrimitiveType.Sphere);
@@ -56,21 +58,30 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		void SetAgentDestination (Vector3 destination) {
-			
+
 		}
 
 		bool IsMoving () {
-			return agent.velocity.magnitude > 0;
+			var moving = agent.velocity.magnitude > 0;
+
+			if (isServer) {
+				movingOnServer = moving;
+				return moving;
+			} else {
+				return moving || (movingOnServer && !AtDestination ());
+			}
 		}
 
 		bool Arrived () {
-			return agent.isOnNavMesh && !agent.pathPending &&
-				Vector3.Distance (agent.transform.position, localDestination) <= agent.stoppingDistance;
+			return agent.isOnNavMesh && !agent.pathPending && AtDestination ();
 		}
 
 		private bool AgentLostPath () {
-			return !agent.hasPath && !agent.pathPending &&
-				Vector3.Distance (agent.transform.position, localDestination) > agent.stoppingDistance;
+			return !agent.hasPath && !agent.pathPending && !AtDestination ();
+		}
+
+		private bool AtDestination () {
+			return Vector3.Distance (agent.transform.position, localDestination) <= agent.stoppingDistance;
 		}
 	}
 }
