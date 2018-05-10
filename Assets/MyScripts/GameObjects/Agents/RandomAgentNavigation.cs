@@ -16,9 +16,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private Animator animator;
 		[SyncVar (hook = "OnNewDestination")]
 		private Vector3 destination;
+		private Vector3 localDestination;
 		private ARRelativeNetworkTransform arNetworkTransform;
+		private GameObject target;
 
 		void Start () {
+			target = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 			agent = GetComponent<NavMeshAgent> ();
 			animator = GetComponent<Animator> ();
 			arNetworkTransform = GetComponent<ARRelativeNetworkTransform> ();
@@ -32,9 +35,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private void Move () {
 			if (isServer && Arrived ()) {
 				destination = TransformUtil.GetRandomPosition ();
-			}
-
-			if (AgentLostPath ()) {
+			} else if (AgentLostPath ()) {
 				OnNewDestination (destination);
 			}
 
@@ -45,11 +46,17 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			if (!isServer) {
 				destination = newDestination;
 			}
-			newDestination = TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination);
-			var navMeshDestination = TransformUtil.ToNavMeshPosition (newDestination);
+
+			localDestination = TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination);
+			var navMeshDestination = TransformUtil.ToNavMeshPosition (localDestination);
 			if (agent != null) {
-				agent.SetDestination (navMeshDestination);
+				var destinationSuccess = agent.SetDestination (navMeshDestination);
+				target.transform.position = navMeshDestination;
 			}
+		}
+
+		void SetAgentDestination (Vector3 destination) {
+			
 		}
 
 		bool IsMoving () {
@@ -57,12 +64,13 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		bool Arrived () {
-			return agent.isOnNavMesh &&
-				(agent.remainingDistance <= agent.stoppingDistance);
+			return agent.isOnNavMesh && !agent.pathPending &&
+				Vector3.Distance (agent.transform.position, localDestination) <= agent.stoppingDistance;
 		}
 
 		private bool AgentLostPath () {
-			return agent.pathStatus == NavMeshPathStatus.PathComplete && !agent.hasPath;
+			return !agent.hasPath && !agent.pathPending &&
+				Vector3.Distance (agent.transform.position, localDestination) > agent.stoppingDistance;
 		}
 	}
 }
