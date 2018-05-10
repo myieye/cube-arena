@@ -42,7 +42,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             for (int i = 0; i < NumPlayers; i++) {
                 players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
-                        Color = PlayerSpawner.Instance.materials[i].color,
                         PlayerNum = i + 1
                 });
             }
