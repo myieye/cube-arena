@@ -52,6 +52,7 @@ public class SpeechCommands : MonoBehaviour {
 	}
 
 	public void ConnectClient () {
+		NetworkManager.singleton.networkAddress = "192.168.1.103";
 		FindObjectOfType<NetworkManager> ().StartClient ();
 	}
 
