@@ -35,7 +35,6 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         void Start () {
             Ground = GameObject.Find (Names.Ground).GetComponent<BoxCollider> ();
             World = Ground.transform;
-            CheckTransformMatricesReady ();
 
             UpdateLocalRadius ();
 #if UNITY_WSA && !UNITY_EDITOR
@@ -44,6 +43,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
             if (isServer) {
                 _serverRadius = LocalRadius;
+            } else {
+                OnServerRadiusChange (_serverRadius);
             }
 
             IsInitialized = true;
@@ -55,23 +56,23 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             if (matricesInitialized) return;
 #endif
 
-            localToWorldMatrix = Matrix4x4.TRS (World.position, World.rotation, Vector3.one * (LocalRadius / ServerRadius));
+            localToWorldMatrix = Matrix4x4.TRS (World.position, World.rotation,
+                Vector3.one * (LocalRadius / ServerRadius));
             worldToLocalMatrix = localToWorldMatrix.inverse;
             matricesInitialized = true;
         }
 
         public override void OnStartClient () {
             base.OnStartClient ();
-            OnServerRadiusChange (_serverRadius);
         }
 
         private void UpdateLocalRadius () {
-            LocalRadius = World.localScale.magnitude * (Ground.size.x / 2) /
-                World.parent.localScale.magnitude;
+            LocalRadius = (Ground.size.x * Ground.transform.lossyScale.x) / 2;
         }
 
         private void OnServerRadiusChange (float newServerRadius) {
             ServerRadius = newServerRadius;
+            CheckTransformMatricesReady ();
         }
 
         public static RigidbodyState Transform (TransformDirection direction, Transform transform) {
@@ -196,25 +197,11 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         private static Vector3 TransformToServerCoordinates (Vector3 pos) {
             CheckTransformMatricesReady ();
             return worldToLocalMatrix.MultiplyPoint3x4 (pos);
-            /*
-            pos = pos - World.transform.position;
-            //pos = TransformToServerScale (pos);
-#if UNITY_WSA && !UNITY_EDITOR
-            pos = Quaternion.Euler (0, 180, 0) * pos;
-#endif
-            return pos; */
         }
 
         private static Vector3 TransformToLocalCoordinates (Vector3 pos) {
             CheckTransformMatricesReady ();
             return localToWorldMatrix.MultiplyPoint3x4 (pos);
-            //pos = TransformToLocalScale (pos);
-            /*
-#if UNITY_WSA && !UNITY_EDITOR
-            pos = Quaternion.Euler (0, 180, 0) * pos;
-#endif
-            
-            return pos + World.transform.position; */
         }
 
         private static Quaternion TransformToServerCoordinates (Quaternion rot) {
@@ -246,20 +233,6 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                 default:
                     throw new InvalidTransformDirectionException (direction);
             }
-        }
-
-        private static Vector3 TransformToServerScale (Vector3 pos) {
-            var y = pos.y;
-            pos = (pos / LocalRadius) * ServerRadius;
-            pos.y = y;
-            return pos;
-        }
-
-        private static Vector3 TransformToLocalScale (Vector3 pos) {
-            var y = pos.y;
-            pos = pos * (LocalRadius / ServerRadius);
-            pos.y = y;
-            return pos;
         }
 
         private static RigidbodyState TransformToRigidbodyState (Transform transform) {
