@@ -78,5 +78,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 NetworkServer.Destroy (cube);
             }
         }
+
+        public void DestroyPlayers () {
+            foreach (var playerId in GameObject.FindObjectsOfType<PlayerId> ()) {
+                NetworkServer.Destroy (playerId.gameObject);
+            }
+        }
     }
 }

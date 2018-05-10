@@ -8,10 +8,8 @@ using UnityEngine.Networking;
 namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
     public class TransformUtil : NetworkBehaviour {
 
-        [SerializeField]
-        private Collider ground;
         public static Transform World { get; private set; }
-        public static Collider Ground { get; private set; }
+        public static BoxCollider Ground { get; private set; }
 
         [SyncVar (hook = "OnServerRadiusChange")]
         private float _serverRadius;
@@ -30,38 +28,51 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     World.rotation == Quaternion.identity;
             }
         }
+        private static bool matricesInitialized;
+        private static Matrix4x4 localToWorldMatrix;
+        private static Matrix4x4 worldToLocalMatrix;
 
         void Start () {
-            if (!ground) {
-                ground = GameObject.Find (Names.Ground).GetComponent<Collider> ();
-            }
+            Ground = GameObject.Find (Names.Ground).GetComponent<BoxCollider> ();
+            World = Ground.transform;
 
+            UpdateLocalRadius ();
 #if UNITY_WSA && !UNITY_EDITOR
             InvokeRepeating ("UpdateLocalRadius", 0, 0.5f);
-#else 
-            LocalRadius = ground.bounds.center.x - ground.bounds.min.x;
 #endif
 
             if (isServer) {
                 _serverRadius = LocalRadius;
+            } else {
+                OnServerRadiusChange (_serverRadius);
             }
 
-            Ground = ground;
-            World = ground.transform;
             IsInitialized = true;
+        }
+
+        private static void CheckTransformMatricesReady () {
+            // Only the HoloLens needs to repeatedly compute the matrices.
+#if !UNITY_WSA || UNITY_EDITOR
+            if (matricesInitialized) return;
+#endif
+
+            localToWorldMatrix = Matrix4x4.TRS (World.position, World.rotation,
+                Vector3.one * (LocalRadius / ServerRadius));
+            worldToLocalMatrix = localToWorldMatrix.inverse;
+            matricesInitialized = true;
         }
 
         public override void OnStartClient () {
             base.OnStartClient ();
-            OnServerRadiusChange (_serverRadius);
         }
 
         private void UpdateLocalRadius () {
-            LocalRadius = ground.bounds.center.x - ground.bounds.min.x;
+            LocalRadius = (Ground.size.x * Ground.transform.lossyScale.x) / 2;
         }
 
         private void OnServerRadiusChange (float newServerRadius) {
             ServerRadius = newServerRadius;
+            CheckTransformMatricesReady ();
         }
 
         public static RigidbodyState Transform (TransformDirection direction, Transform transform) {
@@ -177,29 +188,24 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
         public static Vector3 ToNavMeshPosition (Vector3 position) {
             NavMeshHit hit;
-            NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas);
+            if (!NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas)) {
+                Debug.LogWarning ("Failed to sample position");
+            }
             return hit.position;
         }
 
         private static Vector3 TransformToServerCoordinates (Vector3 pos) {
-            pos = pos - World.transform.position;
-            //pos = TransformToServerScale (pos);
-#if UNITY_WSA && !UNITY_EDITOR
-            pos = Quaternion.Euler (0, 180, 0) * pos;
-#endif
-            return pos;
+            CheckTransformMatricesReady ();
+            return worldToLocalMatrix.MultiplyPoint3x4 (pos);
         }
 
         private static Vector3 TransformToLocalCoordinates (Vector3 pos) {
-            //pos = TransformToLocalScale (pos);
-#if UNITY_WSA && !UNITY_EDITOR
-            pos = Quaternion.Euler (0, 180, 0) * pos;
-#endif
-            return pos + World.transform.position;
+            CheckTransformMatricesReady ();
+            return localToWorldMatrix.MultiplyPoint3x4 (pos);
         }
 
         private static Quaternion TransformToServerCoordinates (Quaternion rot) {
-            rot = rot * Quaternion.Inverse (World.transform.rotation);
+            rot = Quaternion.Inverse (World.transform.rotation) * rot;
 #if UNITY_WSA && !UNITY_EDITOR
             rot = Quaternion.Inverse (rot);
 #endif
@@ -210,37 +216,23 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 #if UNITY_WSA && !UNITY_EDITOR
             rot = Quaternion.Inverse (rot);
 #endif
-            return rot * World.transform.rotation;
+            return World.rotation * rot;
         }
 
         private static void CalcNewVelocity (TransformDirection direction, ref RigidbodyState from, ref RigidbodyState to) {
-            Quaternion rotation;
+            CheckTransformMatricesReady ();
             switch (direction) {
                 case TransformDirection.LocalToServer:
-                    rotation = from.rotation * Quaternion.Inverse (to.rotation);
+                    to.velocity = worldToLocalMatrix.MultiplyVector (to.velocity);
+                    to.angularVelocity = worldToLocalMatrix.MultiplyVector (to.angularVelocity);
                     break;
                 case TransformDirection.ServerToLocal:
-                    rotation = World.rotation * Quaternion.Inverse (to.rotation);
+                    to.velocity = localToWorldMatrix.MultiplyVector (to.velocity);
+                    to.angularVelocity = localToWorldMatrix.MultiplyVector (to.angularVelocity);
                     break;
                 default:
                     throw new InvalidTransformDirectionException (direction);
             }
-            to.velocity = rotation * from.velocity;
-            to.angularVelocity = rotation * from.angularVelocity;
-        }
-
-        private static Vector3 TransformToServerScale (Vector3 pos) {
-            var y = pos.y;
-            pos = (pos / LocalRadius) * ServerRadius;
-            pos.y = y;
-            return pos;
-        }
-
-        private static Vector3 TransformToLocalScale (Vector3 pos) {
-            var y = pos.y;
-            pos = pos * (LocalRadius / ServerRadius);
-            pos.y = y;
-            return pos;
         }
 
         private static RigidbodyState TransformToRigidbodyState (Transform transform) {

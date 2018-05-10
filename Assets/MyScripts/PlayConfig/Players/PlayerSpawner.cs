@@ -32,22 +32,21 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		}
 
 		private void SpawnPlayer (NetworkPlayer netPlayer) {
-			var startPos = GetStartPosition ();
 			if (netPlayer.Spawned) {
 				ConfigurePlayerCursor (netPlayer.PlayerGameObject, netPlayer);
 			} else {
-				netPlayer.PlayerGameObject = SpawnPlayerCursor (startPos, netPlayer);
+				netPlayer.StartPosition = GetStartPosition ();
+				netPlayer.PlayerGameObject = SpawnPlayerCursor (netPlayer);
+				netPlayer.Spawned = true;
 			}
-			netPlayer.StartPosition = startPos;
-			SpawnCubesForPlayer (startPos, netPlayer);
+			SpawnCubesForPlayer (netPlayer.StartPosition, netPlayer);
 		}
 
-		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer) {
+		private GameObject SpawnPlayerCursor (NetworkPlayer netPlayer) {
 			var player = (GameObject) GameObject.Instantiate (playerPrefab);
 			ConfigurePlayerCursor (player, netPlayer);
 			var device = netPlayer.DeviceConfig.Device;
 			NetworkServer.AddPlayerForConnection (device.Connection, player, device.ControllerId);
-			netPlayer.Spawned = true;
 			return player;
 		}
 
@@ -61,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			var cubeStartPoints = Instantiate (cubeStartPointsPrefab, startPos.position, startPos.rotation);
 
 			var i = 1;
-			foreach (Transform trans in cubeStartPointsPrefab.transform) {
+			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = netPlayer.Color;
@@ -69,12 +68,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				cube.name += i++;
 				NetworkServer.SpawnWithClientAuthority (cube, netPlayer.PlayerGameObject);
 			}
-
 			Destroy (cubeStartPoints);
 		}
 
 		private Transform GetStartPosition () {
-			return spawnPoints[nextSpawnPoint++ % spawnPoints.Length].transform;
+			var spawnPoint = spawnPoints[nextSpawnPoint].transform;
+			nextSpawnPoint = (nextSpawnPoint + 1) % spawnPoints.Length;
+			return spawnPoint;
 		}
 	}
 }

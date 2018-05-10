@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 	public class GravityOrientater : MonoBehaviour {
 
-#if UNITY_WSA && !UNITY_EDITOR
+//#if UNITY_WSA && !UNITY_EDITOR
 		private float gravityMagnitude;
 
 		void Awake () {
@@ -15,7 +15,6 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 		void Update () {
 			Physics.gravity = transform.up * -gravityMagnitude;
 		}
-#endif
-
+//#endif
 	}
 }

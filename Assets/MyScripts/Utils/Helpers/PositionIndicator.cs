@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cubes;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
@@ -28,21 +29,23 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 
 		void Update () {
 			if (ShouldBeShown()) {
-				Show ();
+				TryShow ();
 			} else {
 				Hide ();
 			}
 		}
 
-		private void Show () {
-			rend.enabled = true;
-			var ray = new Ray (boxCollider.bounds.center, Vector3.down);
+		private void TryShow () {
+			var ray = new Ray (boxCollider.bounds.center, TransformUtil.World.up * -1);
 			RaycastHit hitInfo;
 			if (Physics.Raycast (ray, out hitInfo, Mathf.Infinity, Layers.CubesAndTerrainMask)) {
 				transform.position = hitInfo.point;
+				transform.rotation = TransformUtil.World.rotation;
 				transform.localScale = CalcScale (hitInfo.distance);
+				rend.enabled = true;
+			} else {
+				rend.enabled = false;
 			}
-			transform.rotation = Quaternion.identity;
 		}
 
 		private void Hide () {

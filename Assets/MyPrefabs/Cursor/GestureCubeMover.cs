@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
-using CubeArena.Assets.MyScripts.Utils.Constants;
-using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Interaction.Util;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
@@ -45,10 +46,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 				if (TouchInput.NoPOCs ()) {
 					prevYPoint = null;
-					SetMoveState(MoveState.None);
+					SetMoveState (MoveState.None);
 				}
 
-				if (stateManager.IsMoving()) {
+				if (stateManager.IsMoving ()) {
 					if (StartingYMove (out cube)) {
 						SetMoveState (MoveState.Y);
 					} else if (!moveState.Equals (MoveState.XZ) && base.IsStartingMove (out cube)) {
@@ -66,7 +67,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				return Input.touchCount < 2 &&
 					(StartingYMove (out cube) || base.IsStartingMove (out cube));
 			} else {
-				return base.IsStartingMove(out cube);
+				return base.IsStartingMove (out cube);
 			}
 		}
 
@@ -114,7 +115,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private bool StartingYMove (out GameObject cube) {
 			cube = stateManager.HasSelection () ? stateManager.SelectedCube.Cube : null;
-			return !moveState.Equals(MoveState.Y) && stateManager.HasSelection () &&
+			return !moveState.Equals (MoveState.Y) && stateManager.HasSelection () &&
 				HoldingSinglePOC () && dragCubeTarget == null;
 		}
 
@@ -123,14 +124,16 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private void SetMoveState (MoveState moveState) {
-			if (moveState.Equals(this.moveState)) return;
+			if (moveState.Equals (this.moveState)) return;
 
 			if (moveState.Equals (MoveState.XZ)) {
 				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
-				TranslationPlane.transform.position = Vector3.up * cubeRb.transform.position.y;
+				TranslationPlane.transform.position =
+					TransformUtil.Transform (TransformDirection.ServerToLocal, Vector3.up * cubeRb.transform.position.y);
 			} else {
 				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCastMask;
-				TranslationPlane.transform.position = Vector3.zero;
+				TranslationPlane.transform.position =
+					TransformUtil.Transform (TransformDirection.ServerToLocal, Vector3.zero);
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;
 				}
