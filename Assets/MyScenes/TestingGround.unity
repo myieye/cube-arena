@@ -439,9 +439,9 @@ MonoBehaviour:
   forceDefaultUIMode: 0
   defaultHHDUIMode: 2
   defaultHMDUIMode: 6
-  dbActive: 0
-  resetDbOnStart: 0
   logMeasurementsToConsole: 0
+  logMeasurementsToDb: 0
+  resetDbOnStart: 0
   serverOnlyMeasurementLogging: 0
   rotationTimeout: 0.5
   minRotationVelocity: 1.5
@@ -10515,6 +10515,11 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -13878,7 +13883,6 @@ MonoBehaviour:
     KeyCode: 0
   - Keyword: Print World
     KeyCode: 0
-  recognitionConfidenceLevel: 1
 --- !u!1 &1524675350
 GameObject:
   m_ObjectHideFlags: 0
