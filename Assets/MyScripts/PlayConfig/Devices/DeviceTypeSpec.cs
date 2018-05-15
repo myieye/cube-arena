@@ -30,5 +30,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                     return false;
             }
         }
+
+        public static bool IsServerDeviceType (this DeviceTypeSpec deviceType) {
+            switch (deviceType) {
+                case DeviceTypeSpec.Desktop:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

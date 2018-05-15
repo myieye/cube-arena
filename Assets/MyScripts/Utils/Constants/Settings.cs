@@ -15,6 +15,25 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 			Instance = this;
 
+			if (forceUserStudySettings) {
+				//passToPlayerTime = userStudyPassToPlayerTime;
+				autoStartGame = false;
+				endlessRounds = false;
+				debugCursor = false;
+				forceTestUIMode = false;
+				forceDefaultUIMode = false;
+				serverOnlyMeasurementLogging = false;
+
+				if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
+					logMeasurementsToDb = true;
+					logDeviceConnections = true;
+					resetDbOnStart = false;
+					overrideAvailableDevices = false;
+				} else {
+					logMeasurementsToDb = false;
+					overrideAvailableDevices = true;
+				}
+
 #if UNITY_EDITOR
 			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
 #elif UNITY_STANDALONE
@@ -25,24 +44,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 #if !UNITY_EDITOR
 			logMeasurementsToDb = false;
-#endif
-
-			if (forceUserStudySettings) {
-				//passToPlayerTime = userStudyPassToPlayerTime;
-				autoStartGame = false;
-				overrideAvailableDevices = false;
-				endlessRounds = false;
-				debugCursor = false;
-				forceTestUIMode = false;
-				forceDefaultUIMode = false;
-				serverOnlyMeasurementLogging = false;
-
-#if UNITY_EDITOR //|| UNITY_STANDALONE
-				logMeasurementsToDb = true;
-				logDeviceConnections = true;
-				resetDbOnStart = false;
-#else
-				logMeasurementsToDb = false;
 #endif
 			}
 		}
