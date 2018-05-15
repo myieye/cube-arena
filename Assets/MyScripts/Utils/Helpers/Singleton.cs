@@ -13,7 +13,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
         public static T Instance {
             get {
                 if (_instance == null) {
-                    var constructor = typeof (T).GetConstructor (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+                    var constructor = typeof (T).GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)[0];
+                    // Method GetConstructor not found when building VS Project
+                    // var constructor = typeof (T).GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
                     _instance = (T) constructor.Invoke (null);
                 }
                 return _instance;

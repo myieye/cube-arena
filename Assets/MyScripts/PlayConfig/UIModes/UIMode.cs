@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
     public enum UIMode {
-        Mouse = 1, HHD1_Camera = 2, HHD2_TouchAndDrag = 3, HHD3_Gestures = 4,
+        None = 0, Mouse = 1, HHD1_Camera = 2, HHD2_TouchAndDrag = 3, HHD3_Gestures = 4,
         HMD4_GazeAndClicker = 5, HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate = 6, HMD6_Gaze = 7
     }
 
@@ -36,11 +36,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
             }
         }
 
-        internal static UIMode DeviceUIModeOrFirst (UIMode uiMode) {
+        internal static UIMode UIModeOrFirstCompatible (UIMode uiMode) {
             if (UIModesForCurrentDevice.Contains (uiMode)) {
                 return uiMode;
             } else {
-                return UIModesForCurrentDevice.First ();
+                return UIModesForCurrentDevice[1];
             }
         }
 
@@ -54,6 +54,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
                 case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
                 case UIMode.HMD6_Gaze:
                     return DeviceTypeSpec.HoloLens;
+                case UIMode.None:
+                    return DeviceTypeManager.DeviceType;
+                case UIMode.Mouse:
                 default:
                     return DeviceTypeSpec.Desktop;
             }
@@ -65,6 +68,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
         public static bool IsTestMode (this UIMode uiMode) {
             switch (uiMode) {
+                case UIMode.None:
                 case UIMode.Mouse:
                     return false;
                 default:

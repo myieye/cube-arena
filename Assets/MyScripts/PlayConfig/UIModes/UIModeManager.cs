@@ -6,7 +6,7 @@ using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
-using CubeArena.Assets.MyScripts.Interaction.HMD;
+using CubeArena.Assets.MyScripts.Interaction.HMD.Gestures;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -29,16 +29,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				return FindObjectOfType<GestureCubeMover> ();
 			}
 		}
-		
+
 #if (UNITY_WSA || UNITY_EDITOR)
-		public SelectAndAxesGestures SelectAndAxesGestures {
+		public HMD_UI1 SelectAndAxesGestures {
 			get {
-				return GameObjectUtil.FindObjectOfExactType<SelectAndAxesGestures> ();
+				return GameObjectUtil.FindObjectOfExactType<HMD_UI1> ();
 			}
 		}
-		public SelectAxesAndCursorPointerGestures SelectAxesAndCursorPointerGestures {
+		public HMD_UI2 SelectAxesAndCursorPointerGestures {
 			get {
-				return GameObjectUtil.FindObjectOfExactType<SelectAxesAndCursorPointerGestures> ();
+				return GameObjectUtil.FindObjectOfExactType<HMD_UI2> ();
 			}
 		}
 #endif
@@ -93,9 +93,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public CursorController.CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
-		
-		public void OnEnable() {
+
+		public void OnEnable () {
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
+			SetUIMode (UIMode.None);
 		}
 
 		private void TryRegisterUIModeMessageHandler () {
@@ -126,7 +127,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		public void OnUIModeChanged (int uiMode) {
-			Debug.Log ("OnUIModeChanged: " + UIModeHelpers.UIModesForCurrentDevice[uiMode]);
 			SetUIMode (UIModeHelpers.UIModesForCurrentDevice[uiMode], force : false);
 		}
 
@@ -147,6 +147,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
 
 			switch (mode) {
+				case UIMode.None:
+					Controls.SetActive (false);
+					break;
 				case UIMode.Mouse:
 					inputMethod = CrossPlatformInputManager.ActiveInputMethod.Hardware;
 					CurrentCursorMode = CursorController.CursorMode.Mouse;

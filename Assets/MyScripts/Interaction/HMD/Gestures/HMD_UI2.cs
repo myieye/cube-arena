@@ -11,8 +11,15 @@ using UnityEngine.Networking;
 using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace CubeArena.Assets.MyScripts.Interaction.HMD {
-    public class SelectAxesAndCursorPointerGestures : SelectAndAxesGestures, IManipulationHandler {
+namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
+    public class HMD_UI2 : ClickSelectionAndNavigationRotationGestures, IManipulationHandler {
+
+        protected override void OnEnable () {
+            base.OnEnable ();
+            SetEnabledFunctionKind (GestureFunction.Rotate, InteractionSourceKind.Controller);
+            SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Hand);
+            SetEnabledFunctionKind (GestureFunction.Point, InteractionSourceKind.Hand);
+        }
 
         private CursorController _cursorCtrl;
         private CursorController CursorController {
@@ -31,13 +38,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
                 }
                 return _stateManager;
             }
-        }
-
-        protected override void OnEnable () {
-            base.OnEnable ();
-            SetEnabledFunctionKind (GestureFunction.Axis, InteractionSourceKind.Controller);
-            SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Hand);
-            SetEnabledFunctionKind (GestureFunction.Point, InteractionSourceKind.Hand);
         }
 
         void IManipulationHandler.OnManipulationStarted (ManipulationEventData eventData) {

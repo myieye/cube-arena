@@ -65,7 +65,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void StartNewRound () {
-			UpdateModeAndRoundNumber ();
+			IncrementModeAndRoundNumber ();
 
 			if (!InFirstRound ()) {
 				ResetGameObjects ();
@@ -77,6 +77,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				if (InFirstRound ()) {
 					var numPlayers = PlayerManager.Instance.GenerateNewPlayers ();
 					if (!configGenerator.TryGenerateDeviceRoundConfigs (numPlayers, out deviceRoundConfigs)) {
+						DecrementModeAndRoundNumber ();
 						return;
 					}
 				}
@@ -94,12 +95,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
-		private void UpdateModeAndRoundNumber () {
-			// Toggle practice mode
+		private void IncrementModeAndRoundNumber () {
 			InPracticeMode = !InPracticeMode;
-			// If entering practice mode, a new round is starting
 			if (InPracticeMode) {
 				currRound++;
+			}
+		}
+
+		private void DecrementModeAndRoundNumber () {
+			InPracticeMode = !InPracticeMode;
+			if (!InPracticeMode) {
+				currRound--;
 			}
 		}
 
