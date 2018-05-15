@@ -19,6 +19,5 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         public static bool IsDeviceType (DeviceTypeSpec deviceType) {
             return DeviceType == deviceType;
         }
-
     }
 }
