@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
-	public class DeviceManager: Singleton<DeviceManager>, IDeviceManager {
+	public class DeviceManager : Singleton<DeviceManager>, IDeviceManager {
 
 		private DeviceManager () : base () {
 			ConnectedDevices = new Dictionary<string, ConnectedDevice> ();
@@ -72,8 +72,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 		}
 
 		public bool EnoughDevicesAvailable (int numPlayers) {
-			return DevicesByType.Count == 2 &&
-				DevicesByType.All (pair => pair.Value.Count >= numPlayers / 2f);
+			var allTestDeviceTypesPresent = DeviceTypeSpecHelpers.TestDeviceTypes.All (deviceType => DevicesByType.Keys.Contains (deviceType));
+			var enoughOfEachTestDeviceType = DevicesByType.All (
+				pair => !pair.Key.IsTestDeviceType () || pair.Value.Count >= numPlayers / 2f);
+			return allTestDeviceTypesPresent && enoughOfEachTestDeviceType;
 		}
 	}
 }

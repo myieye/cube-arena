@@ -16,11 +16,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 	public class PlayerSpawner : MonoBehaviourSingleton<PlayerSpawner> {
 
 		[SerializeField]
-		private GameObject cubeStartPointsPrefab;
+		private GameObject playerPrefab;
+		[SerializeField]
+		private GameObject cursorPrefab;
 		[SerializeField]
 		private GameObject cubePrefab;
 		[SerializeField]
-		private GameObject playerPrefab;
+		private GameObject cubeStartPointsPrefab;
 		[SerializeField]
 		private Vector3 spawnOffsetRatio;
 		[SerializeField]
@@ -32,45 +34,59 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			InitSpawnPoints (players);
 
 			foreach (var netPlayer in players) {
-				SpawnPlayerCubes (netPlayer);
+				SpawnPlayer (netPlayer);
 			}
 		}
 
-		private void SpawnPlayerCubes (NetworkPlayer netPlayer) {
-			if (!netPlayer.Spawned) {
+		private void SpawnPlayer (NetworkPlayer netPlayer) {
+			if (!netPlayer.AddedPlayer) {
 				netPlayer.StartPosition = GetStartPosition ();
-				netPlayer.PlayerGameObject = SpawnPlayerCursor (netPlayer);
-				netPlayer.Spawned = true;
+				netPlayer.PlayerGameObject = SpawnPlayerGameObject (netPlayer);
+				netPlayer.AddedPlayer = true;
 			}
-			SpawnPlayerCubes (netPlayer.StartPosition, netPlayer);
+			netPlayer.Cursor = SpawnPlayerCursor (netPlayer);
+			netPlayer.Cubes = SpawnPlayerCubes (netPlayer.StartPosition, netPlayer);
 		}
 
-		private GameObject SpawnPlayerCursor (NetworkPlayer netPlayer) {
-			var player = (GameObject) GameObject.Instantiate (playerPrefab);
+		private GameObject SpawnPlayerGameObject (NetworkPlayer netPlayer) {
+			var player = Instantiate (playerPrefab);
 
-			netPlayer.Color = materials[netPlayer.PlayerNum - 1].color;
-			var transparentColor = Highlight.ReduceTransparency (netPlayer.Color, Highlight.CursorTransparency);
-			player.GetComponent<Colourer> ().color = transparentColor;
-
-			player.GetComponent<PlayerId> ().Id = netPlayer.PlayerId;
+			player.AddComponent<PlayerId> ().Id = netPlayer.PlayerId;
 			var device = netPlayer.DeviceConfig.Device;
 			NetworkServer.AddPlayerForConnection (device.Connection, player, device.ControllerId);
+			
 			return player;
 		}
 
-		private void SpawnPlayerCubes (Transform startPos, NetworkPlayer netPlayer) {
+		private GameObject SpawnPlayerCursor (NetworkPlayer netPlayer) {
+			var cursor = Instantiate (cursorPrefab);
+
+			netPlayer.Color = materials[netPlayer.PlayerNum - 1].color;
+			var transparentColor = Highlight.ReduceTransparency (netPlayer.Color, Highlight.CursorTransparency);
+			cursor.GetComponent<Colourer> ().color = transparentColor;
+			cursor.AddComponent<PlayerId> ().Id = netPlayer.PlayerId;
+			NetworkServer.SpawnWithClientAuthority (cursor, netPlayer.PlayerGameObject);
+
+			return cursor;
+		}
+
+		private List<GameObject> SpawnPlayerCubes (Transform startPos, NetworkPlayer netPlayer) {
 			var cubeStartPoints = Instantiate (cubeStartPointsPrefab, startPos.position, startPos.rotation);
 
 			var i = 1;
+			var cubes = new List<GameObject> ();
 			foreach (Transform trans in cubeStartPoints.transform) {
 				var cube = Instantiate (cubePrefab, trans.position, trans.rotation);
 				cube.GetComponent<Rigidbody> ().maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 				cube.GetComponent<Colourer> ().color = netPlayer.Color;
-				cube.GetComponent<PlayerId> ().Id = netPlayer.PlayerNum;
+				cube.AddComponent<PlayerId> ().Id = netPlayer.PlayerId;
 				cube.name += i++;
 				NetworkServer.SpawnWithClientAuthority (cube, netPlayer.PlayerGameObject);
+				cubes.Add (cube);
 			}
 			Destroy (cubeStartPoints);
+
+			return cubes;
 		}
 
 		private void InitSpawnPoints (List<NetworkPlayer> players) {
@@ -78,7 +94,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 			Assert.IsTrue (players.Count > 0);
 			Assert.IsTrue (players.Count (p => p == null) == 0);
 
-			if (!players[0].Spawned) {
+			if (!players[0].AddedPlayer) {
 				nextSpawnPoint = 0;
 
 				if (spawnPoints == null || spawnPoints.Count != players.Count) {

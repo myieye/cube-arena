@@ -50,12 +50,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		public void Reset () {
+			if (!hasAuthority) return;
+
 			lastSpray = DateTime.Now.AddMilliseconds (-cooldown);
 			CurrAmount = capacity;
 		}
 
 		void Update () {
-			if (!isLocalPlayer) return;
+			if (!hasAuthority) return;
 
 			CurrAmount = Mathf.Min (CurrAmount + (rechargeSpeed * Time.deltaTime), capacity);
 

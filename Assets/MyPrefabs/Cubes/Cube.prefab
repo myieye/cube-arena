@@ -40,7 +40,6 @@ GameObject:
   - component: {fileID: 33566505348080082}
   - component: {fileID: 65187206114026326}
   - component: {fileID: 23031933148889960}
-  - component: {fileID: 114886604295704510}
   - component: {fileID: 114036797535019638}
   - component: {fileID: 114870904069057950}
   - component: {fileID: 114089573182895522}
@@ -443,17 +442,6 @@ MonoBehaviour:
   - UI
   - Fire
   touchedObjects: []
---- !u!114 &114886604295704510
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43ec84b93393d794a879336446259930, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114925533598605862
 MonoBehaviour:
   m_ObjectHideFlags: 1

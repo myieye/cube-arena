@@ -20,7 +20,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             TestDeviceTypes = DeviceTypes.Where (IsTestDeviceType).ToList ();
         }
 
-        private static bool IsTestDeviceType (DeviceTypeSpec deviceType) {
+        public static bool IsTestDeviceType (this DeviceTypeSpec deviceType) {
             switch (deviceType) {
                 case DeviceTypeSpec.Android:
                 case DeviceTypeSpec.HoloLens:

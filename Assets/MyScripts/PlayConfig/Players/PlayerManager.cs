@@ -72,15 +72,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             PlayerSpawner.Instance.SpawnPlayers (Players);
         }
 
-        public void ResetPlayers () {
-            foreach (var cube in GameObject.FindGameObjectsWithTag (Tags.Cube)) {
-                NetworkServer.Destroy (cube);
-            }
-        }
-
-        public void DestroyPlayers () {
-            foreach (var playerId in GameObject.FindObjectsOfType<PlayerId> ()) {
-                NetworkServer.Destroy (playerId.gameObject);
+        public void ClearPlayers () {
+            foreach (var netPlayer in Players) {
+                NetworkServer.Destroy (netPlayer.Cursor);
+                netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
             }
         }
     }

@@ -8,7 +8,7 @@ namespace CubeArena.Assets.MyScripts.Utils
 	public class DisableExtraAudioListeners : NetworkBehaviour {
 
 		void Start () {
-			if(!isLocalPlayer) {
+			if(!hasAuthority) {
 				GetComponent<AudioListener>().enabled = false;
 			}
 		}

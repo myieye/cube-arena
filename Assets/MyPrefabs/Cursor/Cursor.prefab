@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 54475806859779810}
   - component: {fileID: 114637218967109976}
   - component: {fileID: 114310889932926614}
-  - component: {fileID: 114429402525392466}
   - component: {fileID: 114587656176561424}
   - component: {fileID: 114009427241836548}
   - component: {fileID: 114861424286629492}
@@ -379,18 +378,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlapManager: {fileID: 114154341302727124}
---- !u!114 &114429402525392466
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43ec84b93393d794a879336446259930, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 0
 --- !u!114 &114459557905559330
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -65,7 +65,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		void FixedUpdate () {
-			if (!isLocalPlayer) return;
+			if (!hasAuthority) return;
 			
 			if (currRaycastSuccess) {
 				MoveTowardsLastHit ();
@@ -74,7 +74,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		void Update () {
-			if (!isLocalPlayer) return;
+			if (!hasAuthority) return;
 
 			prevRaycastSuccess = currRaycastSuccess;
 			SetRayCastHit ();

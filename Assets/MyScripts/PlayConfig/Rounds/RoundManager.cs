@@ -47,30 +47,31 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void TriggerNewRound () {
 			if (InLastRound ()) {
 				ResetRoundCounter ();
-				PlayerManager.Instance.DestroyPlayers ();
 			}
 
+			if (!InFirstRound ()) {
+				ResetGameObjects ();
+			}
+			
 			StartNewRound ();
 		}
 
 		public void OnRoundOver () {
 			if (Settings.Instance.EndlessRounds) return;
 
-			Measure.Instance.FlushMeasurements ();
+			//Measure.Instance.FlushMeasurements ();
 			if (!InLastRound ()) {
 				TriggerNewRound ();
 			} else {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				currRound = 0;
+				ResetGameObjects ();
+				ResetRoundCounter ();
 			}
 		}
 
 		private void StartNewRound () {
 			IncrementModeAndRoundNumber ();
-
-			if (!InFirstRound ()) {
-				ResetGameObjects ();
-			}
 
 			practiceModeIndicator.SetActive (InPracticeMode);
 
@@ -117,8 +118,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		private void ResetGameObjects () {
 			EnemyManager.Instance.ClearEnemies ();
-			PlayerManager.Instance.ResetPlayers ();
-			SprayManager.Instance.ResetSpray ();
+			PlayerManager.Instance.ClearPlayers ();
+			SprayManager.Instance<SprayManager> ().ResetSpray ();
 		}
 
 		private void ResetRoundCounter () {

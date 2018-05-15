@@ -58,7 +58,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             if (Instance) {
                 Destroy (this);
                 return;
-            } else if (isLocalPlayer) {
+            } else if (hasAuthority) {
                 Instance = this;
             }
             interactionArea = null;

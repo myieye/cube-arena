@@ -16,7 +16,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		}
 
 		protected virtual void Update () {
-			if (!isLocalPlayer) return;
+			if (!hasAuthority) return;
 			if (stateManager.IsSpraying ()) return;
 
 			var selection = CheckStartingNewSelect ();

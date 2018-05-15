@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 namespace CubeArena.Assets.Tests.MyScripts.Utils.Devices {
     public static class DeviceTestUtil {
         public static Dictionary<DeviceTypeSpec, List<ConnectedDevice>> GetDevicesByType (
-            int numAndroidDevices, int numHoloLensDevices) {
+            int numAndroidDevices = 0, int numHoloLensDevices = 0, int numDesktopDevices = 0) {
             var devicesByType = new Dictionary<DeviceTypeSpec, List<ConnectedDevice>> ();
 
             int id = 1;
@@ -22,8 +22,14 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Devices {
                 holoLensDevices.Add (Device (id++, DeviceTypeSpec.HoloLens));
             }
 
+            var desktopDevices = new List<ConnectedDevice> ();
+            for (int i = 0; i < numDesktopDevices; i++) {
+                desktopDevices.Add (Device (id++, DeviceTypeSpec.Desktop));
+            }
+
             devicesByType.Add (DeviceTypeSpec.Android, androidDevices);
             devicesByType.Add (DeviceTypeSpec.HoloLens, holoLensDevices);
+            devicesByType.Add (DeviceTypeSpec.Desktop, desktopDevices);
 
             return devicesByType;
         }
