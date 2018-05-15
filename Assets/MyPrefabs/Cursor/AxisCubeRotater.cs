@@ -22,7 +22,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override void Update () {
-			if (stateManager.InState (InteractionState.Rotating)) {
+			if (stateManager.IsRotating ()) {
 				rotationWaitTime += Time.deltaTime;
 			}
 			if (HasRotationInput ()) {

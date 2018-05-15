@@ -34,7 +34,7 @@ GameObject:
   - component: {fileID: 114384645145117268}
   - component: {fileID: 114783138639940740}
   - component: {fileID: 114687127541539586}
-  - component: {fileID: 114758858901104374}
+  - component: {fileID: 114989534829272560}
   - component: {fileID: 114154341302727124}
   - component: {fileID: 114149130840081820}
   - component: {fileID: 114383090961952712}
@@ -390,6 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ec84b93393d794a879336446259930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 0
 --- !u!114 &114459557905559330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -488,17 +489,6 @@ MonoBehaviour:
   capacity: 50
   rechargeSpeed: 2
   cooldown: 15
---- !u!114 &114758858901104374
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69fcf2fd1ea9be64e90a594b61883dec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114783138639940740
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -539,6 +529,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d652ae5bc7934e04f9ea184aab103eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114989534829272560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5579d0bce3b46a4e8dd54a0d25ac965, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!135 &135925918903204152

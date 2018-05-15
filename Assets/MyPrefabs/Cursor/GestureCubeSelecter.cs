@@ -3,6 +3,7 @@ using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
+using CubeArena.Assets.MyScripts.Interaction.State;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
 

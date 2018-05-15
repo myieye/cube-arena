@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
+using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 

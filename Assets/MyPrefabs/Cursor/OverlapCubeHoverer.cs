@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.Networking;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Interaction.State;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor
 {

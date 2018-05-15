@@ -1,56 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Logging;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace CubeArena.Assets.MyScripts.Interaction.Abstract
-{
+namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 	public abstract class AbstractCubeRotater : NetworkBehaviour {
 
 		protected InteractionStateManager stateManager;
-		
+
 		protected virtual void Start () {
-			stateManager = GetComponent<InteractionStateManager>();
+			stateManager = GetComponent<InteractionStateManager> ();
 		}
-		
+
 		protected virtual void Update () {
 			if (!isLocalPlayer) return;
-			if (stateManager.IsSpraying()) return;
+			if (stateManager.IsSpraying ()) return;
 
-			CheckStartRotating();
-			CheckEndRotating();
+			CheckStartRotating ();
+			CheckEndRotating ();
 		}
 
-		protected virtual void FixedUpdate() {
+		protected virtual void FixedUpdate () {
 			if (!isLocalPlayer) return;
-			if (stateManager.IsSpraying()) return;
-			
-			if (Rotating()) {
-				Rotate();
+			if (stateManager.IsSpraying ()) return;
+
+			if (Rotating ()) {
+				Rotate ();
 			}
 		}
 
-		void CheckStartRotating() {
-			if (!Rotating() && IsStartingRotate()) {
-				StartRotate();
-				stateManager.StartRotation();
+		void CheckStartRotating () {
+			if (!Rotating () && IsStartingRotate ()) {
+				StartRotate ();
+				stateManager.StartRotation ();
 			}
 		}
 
-		void CheckEndRotating() {
-			if (Rotating() && IsEndingRotate()) {
-				stateManager.EndRotation();
+		void CheckEndRotating () {
+			if (Rotating () && IsEndingRotate ()) {
+				stateManager.EndRotation ();
 			}
 		}
 
-		protected bool Rotating() {
-			return stateManager.InState(InteractionState.Rotating);
+		protected bool Rotating () {
+			return stateManager.IsRotating ();
 		}
 
-		protected abstract void Rotate();
-		protected abstract bool IsStartingRotate();
-		protected abstract bool IsEndingRotate();
-		protected abstract void StartRotate();
+		protected abstract void Rotate ();
+		protected abstract bool IsStartingRotate ();
+		protected abstract bool IsEndingRotate ();
+		protected abstract void StartRotate ();
 	}
 }

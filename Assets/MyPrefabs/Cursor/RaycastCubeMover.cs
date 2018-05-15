@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.Interaction.Listeners;
+using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
@@ -42,7 +43,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override bool IsStartingMove (out GameObject cube) {
-			cube = stateManager.HoveredCube != null ? stateManager.HoveredCube.Cube : null;
+			cube = stateManager.IsHovering () ? stateManager.HoveredCube.Cube : null;
 			return
 			//CrossPlatformInputManager.GetButton(Buttons.Select) &&
 			//stateManager.IsHovering() && (!stateManager.HasSelection() ||

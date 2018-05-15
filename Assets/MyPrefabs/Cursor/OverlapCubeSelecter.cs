@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using CubeArena.Assets.MyScripts.Interaction.State;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
     public class OverlapCubeSelecter : AbstractCubeSelecter {
