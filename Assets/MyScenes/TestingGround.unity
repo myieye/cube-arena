@@ -439,7 +439,7 @@ MonoBehaviour:
   forceDefaultUIMode: 0
   defaultHHDUIMode: 2
   defaultHMDUIMode: 6
-  dbActive: 0
+  logMeasurementsToDb: 0
   resetDbOnStart: 0
   logMeasurementsToConsole: 0
   serverOnlyMeasurementLogging: 0

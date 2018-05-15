@@ -24,7 +24,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 #endif
 
 #if !UNITY_EDITOR
-			dbActive = false;
+			logMeasurementsToDb = false;
 #endif
 
 			if (forceUserStudySettings) {
@@ -42,7 +42,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 				logDeviceConnections = true;
 				resetDbOnStart = false;
 #else
-				dbActive = false;
+				logMeasurementsToDb = false;
 #endif
 			}
 		}
