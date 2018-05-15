@@ -37,7 +37,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public int GenerateNewPlayers () {
-            numPlayers = DeviceManager.Instance.ConnectedDevices.Count;
+            //numPlayers = DeviceManager.Instance.ConnectedDevices.Count;
             Players = new List<NetworkPlayer> ();
             for (int i = 0; i < NumPlayers; i++) {
                 Players.Add (new NetworkPlayer {
