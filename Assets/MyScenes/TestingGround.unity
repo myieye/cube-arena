@@ -13883,7 +13883,6 @@ MonoBehaviour:
     KeyCode: 0
   - Keyword: Print World
     KeyCode: 0
-  recognitionConfidenceLevel: 1
 --- !u!1 &1524675350
 GameObject:
   m_ObjectHideFlags: 0
