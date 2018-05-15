@@ -27,9 +27,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private int numRounds;
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
+		private DeviceConfigurationGenerator configGenerator;
 
 		void Start () {
 			Init ();
+			configGenerator = new DeviceConfigurationGenerator (DeviceManager.Instance);
 		}
 
 		void OnEnable () {
@@ -46,14 +48,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (InLastRound ()) {
 				ResetRoundCounter ();
 				PlayerManager.Instance.DestroyPlayers ();
-			}
-
-			if (!DeviceManager.Instance<DeviceManager> ()
-				.EnoughDevicesAvailable (PlayerManager.Instance.NumPlayers)) {
-				Debug.LogError ("Not enough devices!");
-				if (!Settings.Instance.OverrideAvailableDevices) {
-					return;
-				}
 			}
 
 			StartNewRound ();
@@ -78,12 +72,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 
 			practiceModeIndicator.SetActive (InPracticeMode);
-			
+
 			if (InPracticeMode) {
 				if (InFirstRound ()) {
 					var numPlayers = PlayerManager.Instance.GenerateNewPlayers ();
-					deviceRoundConfigs = DeviceManager.Instance<DeviceManager> ()
-						.GenerateDeviceRoundConfigs (numPlayers);
+					if (!configGenerator.TryGenerateDeviceRoundConfigs (numPlayers, out deviceRoundConfigs)) {
+						return;
+					}
 				}
 
 				// Generate new PlayerRoundIds

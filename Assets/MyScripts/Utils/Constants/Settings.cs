@@ -5,31 +5,170 @@ using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
-	public class Settings : MonoBehaviour {
+	public class Settings : MonoBehaviour, ISettings {
+
+		void Awake () {
+			if (Instance != null) {
+				Destroy (this);
+				return;
+			}
+
+			Instance = this;
+
+#if UNITY_EDITOR
+			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
+#elif UNITY_STANDALONE
+			arEnabled = false;
+#else
+			arEnabled = true;
+#endif
+
+#if !UNITY_EDITOR
+			dbActive = false;
+#endif
+		}
+
+		public static ISettings Instance { get; set; }
+
 		[Header ("Device Management")]
-		public float PassToPlayerTime;
+		[SerializeField]
+		private float passToPlayerTime;
+
 		[Header ("AR")]
-		public bool AREnabledInEditor;
-		public bool AREnabled;
+		[SerializeField]
+		private bool arEnabledInEditor;
+		[SerializeField]
+		private bool arEnabled;
+
 		[Header ("Testing")]
-		public bool OverrideAvailableDevices;
-		public bool EndlessRounds;
+		[SerializeField]
+		private bool overrideAvailableDevices;
+		[SerializeField]
+		private bool endlessRounds;
 
 		[Header ("Debugging")]
-		public bool AutoStartGame;
-		public bool DebugCursor;
-		public bool LogInteractionStateChanges;
-		public bool LogCubeStateChanges;
-		public bool LogDeviceRoundConfig;
-		public bool LogUIMode;
-		public bool LogDeviceInfo;
-		public bool LogDeviceConnections;
+		[SerializeField]
+		private bool autoStartGame;
+		[SerializeField]
+		private bool debugCursor;
+		[SerializeField]
+		private bool logInteractionStateChanges;
+		[SerializeField]
+		private bool logCubeStateChanges;
+		[SerializeField]
+		private bool logDeviceRoundConfig;
+		[SerializeField]
+		private bool logUIMode;
+		[SerializeField]
+		private bool logDeviceInfo;
+		[SerializeField]
+		private bool logDeviceConnections;
 		[Header ("UI Modes")]
-		public bool ForceTestUIMode;
-		public UIMode TestUIMode;
-		public bool ForceDefaultUIMode;
-		public UIMode DefaultHHDUIMode;
-		public UIMode DefaultHMDUIMode;
+		[SerializeField]
+		private bool forceTestUIMode;
+		[SerializeField]
+		private UIMode testUIMode;
+		[SerializeField]
+		private bool forceDefaultUIMode;
+		[SerializeField]
+		private UIMode defaultHHDUIMode;
+		[SerializeField]
+		private UIMode defaultHMDUIMode;
+
+		[Header ("Measurements")]
+		[SerializeField]
+		private bool dbActive;
+		[SerializeField]
+		private bool resetDbOnStart;
+		[SerializeField]
+		private bool logMeasurementsToConsole;
+		[SerializeField]
+		private bool serverOnlyMeasurementLogging;
+
+		[Header ("Rotation")]
+		[SerializeField]
+		private float rotationTimeout;
+		[SerializeField]
+		private float minRotationVelocity;
+		[SerializeField]
+		private float maxRotationVelocity;
+		[SerializeField]
+		private float axisSensitivity;
+		[SerializeField]
+		private int[] areaRadiuses;
+		[SerializeField]
+		private float areaCenterPlayerStartPointOffset;
+
+		public float PassToPlayerTime {
+			get { return passToPlayerTime; }
+		}
+		public bool AREnabledInEditor {
+			get { return arEnabledInEditor; }
+		}
+		public bool AREnabled {
+			get { return arEnabled; }
+		}
+
+		public bool OverrideAvailableDevices {
+			get { return overrideAvailableDevices; }
+		}
+
+		public bool EndlessRounds {
+			get { return endlessRounds; }
+		}
+
+		public bool AutoStartGame {
+			get { return autoStartGame; }
+		}
+
+		public bool DebugCursor {
+			get { return debugCursor; }
+		}
+
+		public bool LogInteractionStateChanges {
+			get { return logInteractionStateChanges; }
+		}
+
+		public bool LogCubeStateChanges {
+			get { return logCubeStateChanges; }
+		}
+
+		public bool LogDeviceRoundConfig {
+			get { return logDeviceRoundConfig; }
+		}
+
+		public bool LogUIMode {
+			get { return logUIMode; }
+		}
+
+		public bool LogDeviceInfo {
+			get { return logDeviceInfo; }
+		}
+
+		public bool LogDeviceConnections {
+			get { return logDeviceConnections; }
+		}
+
+		public bool ForceTestUIMode {
+			get { return forceTestUIMode; }
+		}
+
+		public UIMode TestUIMode {
+			get { return testUIMode; }
+		}
+
+		public bool ForceDefaultUIMode {
+			get { return forceDefaultUIMode; }
+		}
+
+		public UIMode DefaultHHDUIMode {
+			get { return defaultHHDUIMode; }
+		}
+
+		public UIMode DefaultHMDUIMode {
+			get { return defaultHMDUIMode; }
+		}
+
 		public UIMode DefaultUIMode {
 			get {
 				if (ForceTestUIMode) {
@@ -47,41 +186,44 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 			}
 		}
 
-		[Header ("Measurements")]
-		public bool DbActive;
-		public bool ResetDbOnStart;
-		public bool LogMeasurementsToConsole;
-		public bool ServerOnlyMeasurementLogging;
+		public bool DbActive {
+			get { return dbActive; }
+		}
 
-		[Header ("Rotation")]
-		public float RotationTimeout;
-		public float MinRotationVelocity;
-		public float MaxRotationVelocity;
-		public float AxisSensitivity;
-		public int[] AreaRadiuses;
-		public float AreaCenterPlayerStartPointOffset;
+		public bool ResetDbOnStart {
+			get { return resetDbOnStart; }
+		}
 
-		public static Settings Instance { get; private set; }
+		public bool LogMeasurementsToConsole {
+			get { return logMeasurementsToConsole; }
+		}
 
-		void Awake () {
-			if (Instance != null) {
-				Destroy (this);
-				return;
-			}
+		public bool ServerOnlyMeasurementLogging {
+			get { return serverOnlyMeasurementLogging; }
+		}
 
-			Instance = this;
+		public float RotationTimeout {
+			get { return rotationTimeout; }
+		}
 
-#if UNITY_EDITOR
-			AREnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
-#elif UNITY_STANDALONE
-			AREnabled = false;
-#else
-			AREnabled = true;
-#endif
+		public float MinRotationVelocity {
+			get { return minRotationVelocity; }
+		}
 
-#if !UNITY_EDITOR
-			DbActive = false;
-#endif
+		public float MaxRotationVelocity {
+			get { return maxRotationVelocity; }
+		}
+
+		public float AxisSensitivity {
+			get { return axisSensitivity; }
+		}
+
+		public int[] AreaRadiuses {
+			get { return areaRadiuses; }
+		}
+
+		public float AreaCenterPlayerStartPointOffset {
+			get { return areaCenterPlayerStartPointOffset; }
 		}
 	}
 }

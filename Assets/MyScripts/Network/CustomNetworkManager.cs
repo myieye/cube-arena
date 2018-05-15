@@ -17,16 +17,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		public static bool IsServer { get; private set; }
 
-		private DeviceManager _deviceManager;
-		public DeviceManager DeviceManager {
-			get {
-				if (!_deviceManager) {
-					_deviceManager = FindObjectOfType<DeviceManager> ();
-				}
-				return _deviceManager;
-			}
-		}
-
 		public void Start () {
 #if (UNITY_WSA || UNITY_ANDROID) && !UNITY_EDITOR
 			networkAddress = "192.168.1.103";
@@ -34,7 +24,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		public override void OnServerDisconnect (NetworkConnection conn) {
-			DeviceManager.UnregisterDevice (conn);
+			DeviceManager.Instance.UnregisterDevice (conn);
 		}
 
 		public override void OnStartServer () {
@@ -43,14 +33,14 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		public override void OnStopServer () {
 			IsServer = false;
-			DeviceManager.ResetDevices ();
+			DeviceManager.Instance.ResetDevices ();
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId, NetworkReader msgReader) {
 			DeviceTypeMessage msg = new DeviceTypeMessage ();
 			msg.Deserialize (msgReader);
 
-			DeviceManager.RegisterConnectedDevice (
+			DeviceManager.Instance.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
 
 			if (Settings.Instance.AutoStartGame) {
@@ -60,7 +50,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
 			Debug.LogWarning ("OnServerAddPlayer called without device info");
-			if (DeviceManager.HasConnectedDevice (conn, playerControllerId)) {
+			if (DeviceManager.Instance.HasConnectedDevice (conn, playerControllerId)) {
 				Debug.LogError ("...with unregistered device!");
 			}
 		}
