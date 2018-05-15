@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CubeArena.Assets.MyScripts.Utils {
     static class ListUtil {
@@ -18,11 +18,16 @@ namespace CubeArena.Assets.MyScripts.Utils {
             }
             return list;
         }
-        
-		public static T RemoveFirst<T> (this IList<T> list, Func<T, bool> condition) {
-			var item = list.First (condition);
-			list.Remove (item);
-			return item;
-		}
+
+        public static bool RemoveFirst<T> (this IList<T> list, out T item, Func<T, bool> condition) {
+            if (list.Any (condition)) {
+                item = list.First (condition);
+                list.Remove (item);
+                return true;
+            } else {
+                item = default (T);
+                return false;
+            }
+        }
     }
 }

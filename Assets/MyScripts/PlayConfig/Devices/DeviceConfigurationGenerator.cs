@@ -53,12 +53,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                     var deviceConfig = config[r][p];
                     var deviceType = deviceConfig.Device.Type;
 
-                    var deviceTypeUiMode = mixedUiModes.RemoveFirst (
-                        uiMode => uiMode.IsForDeviceType (deviceType) ||
-                        Settings.Instance.OverrideAvailableDevices);
-
+                    UIMode deviceTypeUiMode;
+                    var foundUiMode = mixedUiModes.RemoveFirst (out deviceTypeUiMode, uiMode => uiMode.IsForDeviceType (deviceType));
                     if (Settings.Instance.OverrideAvailableDevices) {
                         deviceTypeUiMode = UIModeHelpers.UIModeOrFirstCompatible (deviceTypeUiMode);
+                    } else if (!foundUiMode) {
+                        throw new ArgumentException ("No remainging UIMode could be found for device type: " + deviceType);
                     }
 
                     deviceConfig.UIMode = deviceTypeUiMode;
