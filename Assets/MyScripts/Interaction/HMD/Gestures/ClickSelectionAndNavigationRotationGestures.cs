@@ -1,3 +1,5 @@
+#if (UNITY_WSA || UNITY_EDITOR)
+
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using HoloToolkit.Unity.InputModule;
 using UnityStandardAssets.CrossPlatformInput;
@@ -54,3 +56,5 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
     }
 }
+
+#endif
