@@ -4,5 +4,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
     public class UIModeMessage : MessageBase {
         public UIMode UIMode;
         public int PlayerNum;
+        public float PassToPlayerTime;
     }
 }

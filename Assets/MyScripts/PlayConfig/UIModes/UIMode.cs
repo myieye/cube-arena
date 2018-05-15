@@ -20,10 +20,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
                 .Where (mode => mode.IsForDeviceType (DeviceTypeManager.DeviceType))
                 //#endif
                 .ToList ();
+            ActiveUIModesForCurrentDevice = UIModesForCurrentDevice.Where (IsActiveMode).ToList ();
             TestUIModes = UIModes.Where (IsTestMode).ToList ();
         }
 
         public static List<UIMode> UIModesForCurrentDevice { get; private set; }
+        public static List<UIMode> ActiveUIModesForCurrentDevice { get; private set; }
         public static List<UIMode> UIModes { get; private set; }
         public static List<UIMode> TestUIModes { get; private set; }
 
@@ -37,10 +39,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
         }
 
         internal static UIMode UIModeOrFirstCompatible (UIMode uiMode) {
-            if (UIModesForCurrentDevice.Contains (uiMode)) {
+            if (ActiveUIModesForCurrentDevice.Contains (uiMode)) {
                 return uiMode;
             } else {
-                return UIModesForCurrentDevice[1];
+                return ActiveUIModesForCurrentDevice.First ();
             }
         }
 
@@ -70,6 +72,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
             switch (uiMode) {
                 case UIMode.None:
                 case UIMode.Mouse:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public static bool IsActiveMode (this UIMode uiMode) {
+            switch (uiMode) {
+                case UIMode.None:
                     return false;
                 default:
                     return true;

@@ -19,7 +19,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 return Instance<PlayerManager> ();
             }
         }
-        private List<NetworkPlayer> players;
+        public List<NetworkPlayer> Players { get; private set; }
         public int NumPlayers {
             get {
                 return numPlayers;
@@ -33,14 +33,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
         void Start () {
             dataService = DataService.Instance;
-            players = new List<NetworkPlayer> ();
+            Players = new List<NetworkPlayer> ();
         }
 
         public int GenerateNewPlayers () {
             numPlayers = DeviceManager.Instance.ConnectedDevices.Count;
-            players = new List<NetworkPlayer> ();
+            Players = new List<NetworkPlayer> ();
             for (int i = 0; i < NumPlayers; i++) {
-                players.Add (new NetworkPlayer {
+                Players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
                         PlayerNum = i + 1
                 });
@@ -49,27 +49,27 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public List<NetworkPlayer> ConfigurePlayersForRound (int roundNum, List<DeviceConfig> deviceRoundConfig) {
-            Assert.AreEqual (players.Count, deviceRoundConfig.Count);
+            Assert.AreEqual (Players.Count, deviceRoundConfig.Count);
 
-            for (int i = 0; i < players.Count; i++) {
-                players[i].DeviceConfig = deviceRoundConfig[i];
+            for (int i = 0; i < Players.Count; i++) {
+                Players[i].DeviceConfig = deviceRoundConfig[i];
             }
 
-            playerRoundIds = dataService.CreatePlayerRoundIds (players, roundNum);
-            return players;
+            playerRoundIds = dataService.CreatePlayerRoundIds (Players, roundNum);
+            return Players;
         }
 
         public int GetPlayerRoundId (int playerId) {
             return playerRoundIds != null ?
-                playerRoundIds[players.FindIndex (p => p.PlayerId == playerId)] : -1;
+                playerRoundIds[Players.FindIndex (p => p.PlayerId == playerId)] : -1;
         }
 
         public Color GetPlayerColor (PlayerId id) {
-            return players.Find (p => p.PlayerId == id.Id).Color;
+            return Players.Find (p => p.PlayerId == id.Id).Color;
         }
 
         public void SpawnPlayers () {
-            PlayerSpawner.Instance.SpawnPlayers (players);
+            PlayerSpawner.Instance.SpawnPlayers (Players);
         }
 
         public void ResetPlayers () {

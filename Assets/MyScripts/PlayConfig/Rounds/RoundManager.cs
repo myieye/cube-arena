@@ -60,6 +60,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (!InLastRound ()) {
 				TriggerNewRound ();
 			} else {
+				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				currRound = 0;
 			}
 		}

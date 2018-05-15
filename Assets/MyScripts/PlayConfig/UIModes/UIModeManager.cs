@@ -68,6 +68,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		[SerializeField]
 		private UIModeARObject twoDTranslationPlane;
+
 		private UIModeARObject TwoDTranslationPlane {
 			get {
 				if (!twoDTranslationPlane) {
@@ -119,7 +120,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			}
 			PassToPlayerText.enabled = true;
 			PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
-			StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, () => {
+			StartCoroutine (DelayUtil.Do (modeMsg.PassToPlayerTime, () => {
 				PassToPlayerText.text = "";
 				PassToPlayerText.enabled = false;
 			}));
@@ -192,13 +193,23 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
 			foreach (var player in players) {
-				var msg = new UIModeMessage {
-					UIMode = player.DeviceConfig.UIMode,
-						PlayerNum = player.PlayerNum
-				};
-				NetworkServer.SendToClient (player.DeviceConfig.Device.Connection.connectionId,
-					MessageIds.SetUIMode, msg);
+				SetPlayerUIMode (player, player.DeviceConfig.UIMode);
 			}
+		}
+
+		public void DisablePlayerUIs (List<Players.NetworkPlayer> players) {
+			foreach (var player in players) {
+				SetPlayerUIMode (player, UIMode.None);
+			}
+		}
+
+		private void SetPlayerUIMode (Players.NetworkPlayer player, UIMode uiMode) {
+			var msg = new UIModeMessage {
+				UIMode = uiMode, PlayerNum = player.PlayerNum,
+					PassToPlayerTime = Settings.Instance.PassToPlayerTime
+			};
+			NetworkServer.SendToClient (player.DeviceConfig.Device.Connection.connectionId,
+				MessageIds.SetUIMode, msg);
 		}
 
 		private void DisableAll () {

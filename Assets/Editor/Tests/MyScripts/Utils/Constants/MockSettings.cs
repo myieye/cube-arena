@@ -5,6 +5,8 @@ using CubeArena.Assets.MyScripts.Utils.Constants;
 namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
     public class MockSettings : ISettings {
 
+		public bool ForceUserStudySettings { get; set; }
+        public float UserStudyPassToPlayerTime { get; set; }
         public float PassToPlayerTime { get; set; }
         public bool AREnabledInEditor { get; set; }
         public bool AREnabled { get; set; }
@@ -33,7 +35,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
                 }
             }
         }
-        public bool DbActive { get; set; }
+        public bool LogMeasurementsToDb { get; set; }
         public bool ResetDbOnStart { get; set; }
         public bool LogMeasurementsToConsole { get; set; }
         public bool ServerOnlyMeasurementLogging { get; set; }

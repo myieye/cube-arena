@@ -26,9 +26,34 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 #if !UNITY_EDITOR
 			dbActive = false;
 #endif
+
+			if (forceUserStudySettings) {
+				//passToPlayerTime = userStudyPassToPlayerTime;
+				autoStartGame = false;
+				overrideAvailableDevices = false;
+				endlessRounds = false;
+				debugCursor = false;
+				forceTestUIMode = false;
+				forceDefaultUIMode = false;
+				serverOnlyMeasurementLogging = false;
+
+#if UNITY_EDITOR //|| UNITY_STANDALONE
+				logMeasurementsToDb = true;
+				logDeviceConnections = true;
+				resetDbOnStart = false;
+#else
+				dbActive = false;
+#endif
+			}
 		}
 
 		public static ISettings Instance { get; set; }
+
+		[Header ("User Study")]
+		[SerializeField]
+		private bool forceUserStudySettings;
+		[SerializeField]
+		private float userStudyPassToPlayerTime;
 
 		[Header ("Device Management")]
 		[SerializeField]
@@ -77,11 +102,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
 		[Header ("Measurements")]
 		[SerializeField]
-		private bool dbActive;
+		private bool logMeasurementsToConsole;
+		[SerializeField]
+		private bool logMeasurementsToDb;
 		[SerializeField]
 		private bool resetDbOnStart;
-		[SerializeField]
-		private bool logMeasurementsToConsole;
 		[SerializeField]
 		private bool serverOnlyMeasurementLogging;
 
@@ -99,6 +124,12 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		[SerializeField]
 		private float areaCenterPlayerStartPointOffset;
 
+		public bool ForceUserStudySettings {
+			get { return forceUserStudySettings; }
+		}
+		public float UserStudyPassToPlayerTime {
+			get { return userStudyPassToPlayerTime; }
+		}
 		public float PassToPlayerTime {
 			get { return passToPlayerTime; }
 		}
@@ -186,8 +217,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 			}
 		}
 
-		public bool DbActive {
-			get { return dbActive; }
+		public bool LogMeasurementsToDb {
+			get { return logMeasurementsToDb; }
 		}
 
 		public bool ResetDbOnStart {

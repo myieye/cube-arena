@@ -14,7 +14,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
 		private CubeArenaMeasurementsDb db;
 		private DataService () {
-			if (Settings.Instance.DbActive) {
+			if (Settings.Instance.LogMeasurementsToDb) {
 				db = new CubeArenaMeasurementsSQLiteDb ();
 			} else {
 				db = new CubeArenaMeasurementsMockDb ();

@@ -2,6 +2,8 @@ using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
 	public interface ISettings {
+		bool ForceUserStudySettings { get; }
+		float UserStudyPassToPlayerTime { get; }
 		float PassToPlayerTime  { get; }
 		bool AREnabledInEditor { get; }
 		bool AREnabled { get; }
@@ -21,7 +23,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		UIMode DefaultHHDUIMode { get; }
 		UIMode DefaultHMDUIMode { get; }
 		UIMode DefaultUIMode { get; }
-		bool DbActive { get; }
+		bool LogMeasurementsToDb { get; }
 		bool ResetDbOnStart { get; }
 		bool LogMeasurementsToConsole { get; }
 		bool ServerOnlyMeasurementLogging { get; }
