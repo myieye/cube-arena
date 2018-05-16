@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -25,10 +26,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 return false;
             }
 
-            var numRounds = UIModeHelpers.TestUIModes.Count;
             config = new List<List<DeviceConfig>> ();
 
-            for (var i = 0; i < numRounds; i++) {
+            for (var i = 0; i < RoundManager.Instance<RoundManager> ().NumberOfRounds; i++) {
                 config.Add (new List<DeviceConfig> ());
             }
 

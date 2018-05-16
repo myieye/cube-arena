@@ -11,19 +11,24 @@ using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
-	public class RoundManager : NetworkBehaviour, RoundOverListener {
+	public class RoundManager : NetworkBehaviourSingleton, RoundOverListener {
 
 		public bool InPracticeMode { get; private set; }
+		public int NumberOfRounds {
+			get {
+				return UIModeHelpers.TestUIModes.Count;
+			}
+		}
 		public GameObject practiceModeIndicator;
 
 		private TimeManager timeManager;
-		private int numRounds;
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 		private DeviceConfigurationGenerator configGenerator;
@@ -39,7 +44,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		private void Init () {
 			timeManager = FindObjectOfType<TimeManager> ();
-			numRounds = UIModeHelpers.UIModes.Count;
 			ResetRoundCounter ();
 		}
 
@@ -55,7 +59,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void OnRoundOver () {
 			if (Settings.Instance.EndlessRounds) return;
 
-			//Measure.Instance.FlushMeasurements ();
+			//Measure.Instance.FlushMeasurements (); // Only executed on server!
 			if (!InLastRound ()) {
 				TriggerNewRound ();
 			} else {
@@ -125,7 +129,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private bool InLastRound () {
-			return currRound == numRounds && !InPracticeMode;
+			return currRound == NumberOfRounds && !InPracticeMode;
 		}
 
 		private bool InFirstRound () {
