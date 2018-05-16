@@ -33,6 +33,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 					logMeasurementsToDb = false;
 					overrideAvailableDevices = true;
 				}
+			}
 
 #if UNITY_EDITOR
 			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
@@ -45,7 +46,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 #if !UNITY_EDITOR
 			logMeasurementsToDb = false;
 #endif
-			}
 		}
 
 		public static ISettings Instance { get; set; }
