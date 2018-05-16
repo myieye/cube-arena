@@ -1,9 +1,15 @@
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 
-namespace CubeArena.Assets.MyScripts.Utils.Constants {
+namespace CubeArena.Assets.MyScripts.Utils.Settings {
 	public interface ISettings {
 		bool ForceUserStudySettings { get; }
 		float UserStudyPassToPlayerTime { get; }
+		PlayerNumberMode PlayerNumberMode { get; }
+		int NumberOfPlayers { get; }
+		int PlayersPerEnemy { get; }
+		float RoundLength { get; }
+		float PracticeRoundLength { get; }
 		float PassToPlayerTime  { get; }
 		bool AREnabledInEditor { get; }
 		bool AREnabled { get; }

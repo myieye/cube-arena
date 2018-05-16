@@ -74,7 +74,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private bool AgentLostPath () {
-			return !agent.hasPath && !agent.pathPending && !AtDestination ();
+			return agent.isOnNavMesh && !agent.hasPath && !agent.pathPending && !AtDestination ();
 		}
 
 		private bool AtDestination () {

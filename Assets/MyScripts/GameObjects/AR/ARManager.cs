@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 #if !UNITY_STANDALONE
 using Vuforia;

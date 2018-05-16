@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 	public class EnemyManager : MonoBehaviourSingleton<EnemyManager> {
 
-		[SerializeField]
-		private int playersPerEnemy;
 		[SerializeField]
 		private GameObject[] enemyPrefabs;
 		
@@ -38,7 +37,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private void SpawnEnemies () {
-			while (enemyCount * playersPerEnemy < PlayerManager.Instance.NumPlayers) {
+			while (enemyCount * Settings.Instance.PlayersPerEnemy < PlayerManager.Instance.NumberOfPlayers) {
 				EnemySpawner.Instance.SpawnEnemy (enemyPrefabs[0]);
 				enemyCount++;
 			}

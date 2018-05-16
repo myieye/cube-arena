@@ -1,4 +1,5 @@
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.Tests.MyScripts.Utils.Constants;
 using NUnit.Framework;
 

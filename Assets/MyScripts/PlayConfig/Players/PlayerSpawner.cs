@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
-using CubeArena.Assets.MyScripts.Utils;
-using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Colors;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -16,8 +16,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 	public class PlayerSpawner : MonoBehaviourSingleton<PlayerSpawner> {
 
-		[SerializeField]
-		private GameObject playerPrefab;
 		[SerializeField]
 		private GameObject cursorPrefab;
 		[SerializeField]

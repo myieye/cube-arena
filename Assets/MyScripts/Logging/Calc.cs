@@ -10,6 +10,7 @@ using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging {

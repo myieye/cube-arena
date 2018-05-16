@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Attributes;
 using UnityEngine;
 
-namespace CubeArena.Assets.MyScripts.Utils.Constants {
+namespace CubeArena.Assets.MyScripts.Utils.Settings {
 	public class Settings : MonoBehaviour, ISettings {
 
 		void Awake () {
@@ -56,7 +57,22 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		[SerializeField]
 		private float userStudyPassToPlayerTime;
 
-		[Header ("Device Management")]
+		[Header ("Players")]
+		[SerializeField]
+		private PlayerNumberMode playerNumberMode;
+		[SerializeField]
+		[ConditionalField ("playerNumberMode", PlayerNumberMode.Custom)]
+		private int numberOfPlayers;
+
+		[Header ("Enemies")]
+		[SerializeField]
+		private int playersPerEnemy;
+
+		[Header ("Rounds")]
+		[SerializeField]
+		private float roundLength;
+		[SerializeField]
+		private float practiceRoundLength;
 		[SerializeField]
 		private float passToPlayerTime;
 
@@ -131,6 +147,21 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		public float UserStudyPassToPlayerTime {
 			get { return userStudyPassToPlayerTime; }
 		}
+		public PlayerNumberMode PlayerNumberMode {
+			get { return playerNumberMode; }
+		}
+		public int NumberOfPlayers {
+			get { return numberOfPlayers; }
+		}
+		public int PlayersPerEnemy {
+			get { return playersPerEnemy; }
+		}
+		public float RoundLength {
+			get { return roundLength; }
+		}
+		public float PracticeRoundLength {
+			get { return practiceRoundLength; }
+		}
 		public float PassToPlayerTime {
 			get { return passToPlayerTime; }
 		}
@@ -140,67 +171,51 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 		public bool AREnabled {
 			get { return arEnabled; }
 		}
-
 		public bool OverrideAvailableDevices {
 			get { return overrideAvailableDevices; }
 		}
-
 		public bool EndlessRounds {
 			get { return endlessRounds; }
 		}
-
 		public bool AutoStartGame {
 			get { return autoStartGame; }
 		}
-
 		public bool DebugCursor {
 			get { return debugCursor; }
 		}
-
 		public bool LogInteractionStateChanges {
 			get { return logInteractionStateChanges; }
 		}
-
 		public bool LogCubeStateChanges {
 			get { return logCubeStateChanges; }
 		}
-
 		public bool LogDeviceRoundConfig {
 			get { return logDeviceRoundConfig; }
 		}
-
 		public bool LogUIMode {
 			get { return logUIMode; }
 		}
-
 		public bool LogDeviceInfo {
 			get { return logDeviceInfo; }
 		}
-
 		public bool LogDeviceConnections {
 			get { return logDeviceConnections; }
 		}
-
 		public bool ForceTestUIMode {
 			get { return forceTestUIMode; }
 		}
-
 		public UIMode TestUIMode {
 			get { return testUIMode; }
 		}
-
 		public bool ForceDefaultUIMode {
 			get { return forceDefaultUIMode; }
 		}
-
 		public UIMode DefaultHHDUIMode {
 			get { return defaultHHDUIMode; }
 		}
-
 		public UIMode DefaultHMDUIMode {
 			get { return defaultHMDUIMode; }
 		}
-
 		public UIMode DefaultUIMode {
 			get {
 				if (ForceTestUIMode) {
@@ -217,43 +232,33 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 				}
 			}
 		}
-
 		public bool LogMeasurementsToDb {
 			get { return logMeasurementsToDb; }
 		}
-
 		public bool ResetDbOnStart {
 			get { return resetDbOnStart; }
 		}
-
 		public bool LogMeasurementsToConsole {
 			get { return logMeasurementsToConsole; }
 		}
-
 		public bool ServerOnlyMeasurementLogging {
 			get { return serverOnlyMeasurementLogging; }
 		}
-
 		public float RotationTimeout {
 			get { return rotationTimeout; }
 		}
-
 		public float MinRotationVelocity {
 			get { return minRotationVelocity; }
 		}
-
 		public float MaxRotationVelocity {
 			get { return maxRotationVelocity; }
 		}
-
 		public float AxisSensitivity {
 			get { return axisSensitivity; }
 		}
-
 		public int[] AreaRadiuses {
 			get { return areaRadiuses; }
 		}
-
 		public float AreaCenterPlayerStartPointOffset {
 			get { return areaCenterPlayerStartPointOffset; }
 		}

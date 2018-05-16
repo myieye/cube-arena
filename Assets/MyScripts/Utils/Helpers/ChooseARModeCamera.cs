@@ -15,7 +15,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 			Camera activeCamera;
 			Camera inactiveCamera;
 #if UNITY_EDITOR || !UNITY_WSA
-			if (Settings.Instance.AREnabled) {
+			if (Settings.Settings.Instance.AREnabled) {
 				activeCamera = arCamera;
 				inactiveCamera = nonArCamera;
 			} else {

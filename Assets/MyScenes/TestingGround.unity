@@ -416,11 +416,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 139995050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bf043b864f323244a6541b755342648, type: 3}
+  m_Script: {fileID: 11500000, guid: b07f84d4455b9804f96571526bbc28ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   forceUserStudySettings: 0
   userStudyPassToPlayerTime: 20
+  playerNumberMode: 0
+  numberOfPlayers: 2
+  playersPerEnemy: 1
+  roundLength: 0.1
+  practiceRoundLength: 0.15
   passToPlayerTime: 0
   arEnabledInEditor: 0
   arEnabled: 1
@@ -1077,7 +1082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f728e4f668ac24496f7ee44630d3bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playersPerEnemy: 1
   enemyPrefabs:
   - {fileID: 100000, guid: 5258d5446073656439036e9b6a204b4f, type: 2}
   - {fileID: 100000, guid: 145e9a3e182a06442bbb20106b211440, type: 2}
@@ -10605,6 +10609,141 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -11359,8 +11498,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60d350826993d2a4e9d1eac327bffd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundLength: 0.2
-  practiceRoundLength: 0.1
   practiceModeIndicator: {fileID: 1283187287}
 --- !u!114 &905986145
 MonoBehaviour:
@@ -13433,7 +13570,6 @@ MonoBehaviour:
   selectButton: {fileID: 992923507}
   touchpad: {fileID: 132796083}
   sprayMoveButton: {fileID: 317971901}
-  sprayBar: {fileID: 0}
   uiModeList: {fileID: 172322821}
   controls: {fileID: 1310735874}
   twoDTranslationPlane: {fileID: 1279607201}
@@ -14108,19 +14244,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98b12ab870f241443ba6f19d85f158a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1918795144520928, guid: d83c95aa0923cc14fa26f491f37964a1,
-    type: 2}
   cursorPrefab: {fileID: 1596389934492644, guid: 5e43870cca8059e4d8e29cbd089cd19f,
     type: 2}
   cubePrefab: {fileID: 1185236769734356, guid: a3dfb608897b4fb4eb8a2d8e94365716, type: 2}
   cubeStartPointsPrefab: {fileID: 1264262505288726, guid: 327d29fee47aead468ca992a01ebb34d,
     type: 2}
   spawnOffsetRatio: {x: 0, y: 0.2, z: -0.6}
-  materials:
-  - {fileID: 2100000, guid: b882c24fb23f54a4eb53c06f3a014d98, type: 2}
-  - {fileID: 2100000, guid: 200b1e89688840347be35a583ddd65b2, type: 2}
-  - {fileID: 2100000, guid: d322fea1a449dab47a3b81b225c9aaf5, type: 2}
-  - {fileID: 2100000, guid: 2879efc9b91303c4d998c47687cc7e09, type: 2}
+  colors:
+  - value: {r: 0.209, g: 0.39215687, b: 0.89705884, a: 1}
+    name: Blue
+  - value: {r: 0, g: 0.6911765, b: 0.17636906, a: 1}
+    name: Green
+  - value: {r: 1, g: 0.884, b: 0, a: 1}
+    name: Yellow
+  - value: {r: 0.86206913, g: 0, b: 1, a: 1}
+    name: Pink
 --- !u!114 &1541780353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14132,7 +14270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5049028a0888d41818e62cdb43de85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numPlayers: 1
 --- !u!114 &1541780354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14534,8 +14671,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1918795144520928, guid: d83c95aa0923cc14fa26f491f37964a1,
-    type: 2}
+  m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 0
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 

@@ -7,6 +7,7 @@ using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
@@ -20,14 +21,20 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             }
         }
         public List<NetworkPlayer> Players { get; private set; }
-        public int NumPlayers {
+        public int NumberOfPlayers {
             get {
-                return numPlayers;
+                switch (Settings.Instance.PlayerNumberMode) {
+                    case PlayerNumberMode.NumberOfDevices:
+                        return DeviceManager.Instance.ConnectedDevices.Count;
+                    case PlayerNumberMode.NumberOfTestDevices:
+                        return DeviceManager.Instance.ConnectedDevices.Where (
+                            device => device.Value.Type.IsTestDeviceType ()).Count ();
+                    case PlayerNumberMode.Custom:
+                    default:
+                        return Settings.Instance.NumberOfPlayers;
+                }
             }
         }
-
-        [SerializeField]
-        private int numPlayers;
         private List<int> playerRoundIds;
         private DataService dataService;
 
@@ -37,15 +44,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public int GenerateNewPlayers () {
-            //numPlayers = DeviceManager.Instance.ConnectedDevices.Count;
             Players = new List<NetworkPlayer> ();
-            for (int i = 0; i < NumPlayers; i++) {
+            for (int i = 0; i < NumberOfPlayers; i++) {
                 Players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
                         PlayerIndex = i, PlayerNum = i + 1
                 });
             }
-            return NumPlayers;
+            return NumberOfPlayers;
         }
 
         public List<NetworkPlayer> ConfigurePlayersForRound (int roundNum, List<DeviceConfig> deviceRoundConfig) {

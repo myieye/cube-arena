@@ -11,6 +11,7 @@ using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -18,8 +19,6 @@ using UnityEngine.SceneManagement;
 namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 	public class RoundManager : NetworkBehaviour, RoundOverListener {
 
-		public float roundLength;
-		public float practiceRoundLength;
 		public bool InPracticeMode { get; private set; }
 		public GameObject practiceModeIndicator;
 
@@ -86,10 +85,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 					currRound, deviceRoundConfigs[currRound - 1]);
 				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
 
-				timeManager.StartRound (practiceRoundLength, Settings.Instance.PassToPlayerTime, this);
+				timeManager.StartRound (Settings.Instance.PracticeRoundLength, Settings.Instance.PassToPlayerTime, this);
 				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
 			} else {
-				timeManager.StartRound (roundLength, 0, this);
+				timeManager.StartRound (Settings.Instance.RoundLength, 0, this);
 				SpawnGameObjects ();
 			}
 		}

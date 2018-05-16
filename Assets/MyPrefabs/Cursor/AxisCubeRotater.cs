@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;

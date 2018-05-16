@@ -1,6 +1,7 @@
 #if (UNITY_WSA || UNITY_EDITOR)
 
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using HoloToolkit.Unity.InputModule;
 using UnityStandardAssets.CrossPlatformInput;
 

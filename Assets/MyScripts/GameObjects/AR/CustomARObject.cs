@@ -1,4 +1,5 @@
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {

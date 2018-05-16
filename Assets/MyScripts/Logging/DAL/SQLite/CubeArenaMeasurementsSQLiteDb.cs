@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {

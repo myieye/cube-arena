@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Colors;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using ProgressBar;
 using UnityEngine;
