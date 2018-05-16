@@ -49,10 +49,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				ResetRoundCounter ();
 			}
 
-			if (!InFirstRound ()) {
-				ResetGameObjects ();
-			}
-			
+			ResetGameObjects ();
 			StartNewRound ();
 		}
 
