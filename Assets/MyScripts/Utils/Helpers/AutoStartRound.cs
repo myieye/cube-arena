@@ -14,7 +14,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 			if (delay > 0) {
 				delay -= Time.deltaTime;
 
-				if (Settings.Instance.AutoStartGame && delay <= 0) {
+				if (Settings.Settings.Instance.AutoStartGame && delay <= 0) {
 					FindObjectOfType<NetworkManager> ().StartHost ();
 				}
 			}
