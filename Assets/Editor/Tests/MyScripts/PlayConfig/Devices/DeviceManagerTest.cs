@@ -62,7 +62,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			var devicesByType = DeviceTestUtil.GetDevicesByType (numAndroidDevices, numHoloLensDevices, numDesktopDevices);
 			DeviceTestUtil.RegisterDevices (deviceManager, devicesByType);
 
-			var enoughDevices = deviceManager.EnoughDevicesAvailable (numPlayers);
+			var enoughDevices = deviceManager.EnoughDevicesAvailableForUserStudy (numPlayers);
 
 			Assert.That (enoughDevices, Is.EqualTo (validConfig));
 		}

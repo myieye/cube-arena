@@ -70,13 +70,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         }
 
         private bool CheckEnoughDevicesAvailable (int numPlayers) {
-            if (!deviceManager.EnoughDevicesAvailable (numPlayers)) {
-                Debug.LogError ("Not enough devices!");
-                if (!Settings.Instance.OverrideAvailableDevices) {
+            if (deviceManager.EnoughDevicesAvailableForUserStudy (numPlayers)) {
+                return true;
+            } else {
+                Debug.LogError ("Not enough devices for user study!");
+                if (Settings.Instance.OverrideAvailableDevices && numPlayers <= deviceManager.ConnectedDevices.Count) {
+                    return true;
+                } else {
                     return false;
                 }
             }
-            return true;
         }
 
         private bool AddNextDeviceRecursive (List<List<DeviceConfig>> config, int roundI, int playerI, int numPlayers) {

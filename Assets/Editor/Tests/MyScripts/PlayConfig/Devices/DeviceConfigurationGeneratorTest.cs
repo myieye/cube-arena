@@ -32,7 +32,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			List<List<DeviceConfig>> config;
 			int numPlayers = 1;
 
-			deviceManager.Stub (dm => dm.EnoughDevicesAvailable (numPlayers)).Return (false);
+			deviceManager.Stub (dm => dm.EnoughDevicesAvailableForUserStudy (numPlayers)).Return (false);
 
 			LogAssert.Expect (LogType.Error, "Not enough devices!");
 			var success = configGenerator.TryGenerateDeviceRoundConfigs (numPlayers, out config);
@@ -77,7 +77,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			var devicesByType = DeviceTestUtil.GetDevicesByType (numAndroidDevices, numHoloLensDevices, numDesktopDevices);
 			//settings.LogDeviceRoundConfig = true;
 
-			deviceManager.Stub (dm => dm.EnoughDevicesAvailable (numPlayers)).Return (true);
+			deviceManager.Stub (dm => dm.EnoughDevicesAvailableForUserStudy (numPlayers)).Return (true);
 			deviceManager.Stub (dm => dm.DevicesByType).Return (devicesByType);
 
 			var success = configGenerator.TryGenerateDeviceRoundConfigs (numPlayers, out config);

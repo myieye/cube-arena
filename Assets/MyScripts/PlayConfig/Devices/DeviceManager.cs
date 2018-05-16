@@ -72,7 +72,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			return string.Format ("{0}:{1}:{2}", conn.connectionId, conn.address, playerControllerId);
 		}
 
-		public bool EnoughDevicesAvailable (int numPlayers) {
+		public bool EnoughDevicesAvailableForUserStudy (int numPlayers) {
 			var allTestDeviceTypesPresent = DeviceTypeSpecHelpers.TestDeviceTypes.All (deviceType => DevicesByType.Keys.Contains (deviceType));
 			var enoughOfEachTestDeviceType = DevicesByType.All (
 				pair => !pair.Key.IsTestDeviceType () || pair.Value.Count >= numPlayers / 2f);

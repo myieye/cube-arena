@@ -11,6 +11,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         void UnregisterDevice (NetworkConnection conn);
         void ResetDevices ();
         bool HasConnectedDevice (NetworkConnection conn, short controllerId);
-        bool EnoughDevicesAvailable (int numPlayers);
+        bool EnoughDevicesAvailableForUserStudy (int numPlayers);
     }
 }
