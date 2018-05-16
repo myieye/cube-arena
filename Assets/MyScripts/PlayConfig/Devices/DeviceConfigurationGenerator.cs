@@ -20,7 +20,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         }
 
         public bool TryGenerateDeviceRoundConfigs (int numPlayers, out List<List<DeviceConfig>> config) {
-            if (!CheckEnoughDevicesAvailable (numPlayers)) {
+            if (!CheckEnoughDevicesAvailable (numPlayers) || numPlayers < 1) {
                 config = null;
                 return false;
             }
