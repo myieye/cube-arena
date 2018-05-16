@@ -22,7 +22,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 			var selection = CheckStartingNewSelect ();
 			var deselecting = CheckEndingSelect (selection);
 			if (!selection && !deselecting && !stateManager.HasSelection () && IsPressingSelect ()) {
-				Measure.Instance.MadeSelection (SelectionActionType.Miss);
+				Measure.LocalInstance.MadeSelection (SelectionActionType.Miss);
 			}
 		}
 

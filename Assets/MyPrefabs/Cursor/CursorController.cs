@@ -188,17 +188,17 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private void MeasureUserInteractionArea () {
 			if (currRaycastSuccess) {
-				Measure.Instance.UpdateInteractionArea (lastHit.point);
+				Measure.LocalInstance.UpdateInteractionArea (lastHit.point);
 			} else if (!InTouchMode) {
-				Measure.Instance.UpdateInteractionArea (null);
+				Measure.LocalInstance.UpdateInteractionArea (null);
 			} else {
 				lastTouch = Vector3.Lerp (lastTouch, screenCenter, Time.deltaTime * 100);
 				Ray ray = Camera.main.ScreenPointToRay (lastTouch);
 				RaycastHit rayHit;
 				if (Physics.Raycast (ray, out rayHit)) {
-					Measure.Instance.UpdateInteractionArea (rayHit.point);
+					Measure.LocalInstance.UpdateInteractionArea (rayHit.point);
 				} else {
-					Measure.Instance.UpdateInteractionArea (null);
+					Measure.LocalInstance.UpdateInteractionArea (null);
 				}
 			}
 		}

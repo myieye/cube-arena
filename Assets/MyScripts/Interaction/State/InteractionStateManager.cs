@@ -31,9 +31,9 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			}
 
 			if (IsMoving ()) {
-				Measure.Instance.UpdateMove (SelectedCube.Cube);
+				Measure.LocalInstance.UpdateMove (SelectedCube.Cube);
 			} else if (IsRotating ()) {
-				Measure.Instance.UpdateRotation (SelectedCube.Cube);
+				Measure.LocalInstance.UpdateRotation (SelectedCube.Cube);
 			} else if (State.IsSelectionState () && !HasSelection ()) {
 				State = InteractionState.Idle;
 			}
@@ -65,11 +65,11 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		public void Select (GameObject cube) {
 			var reselecting = HasSelection () && !IsSelected (cube);
 			if (reselecting) {
-				Measure.Instance.MadeSelection (SelectionActionType.Reselect);
+				Measure.LocalInstance.MadeSelection (SelectionActionType.Reselect);
 			}
 			Deselect (reselecting);
 			if (!reselecting) {
-				Measure.Instance.MadeSelection (SelectionActionType.Select);
+				Measure.LocalInstance.MadeSelection (SelectionActionType.Select);
 			}
 			if (IsHovered (cube)) {
 				SelectedCube = HoveredCube;
@@ -86,7 +86,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			FinishAnyMeasurements ();
 			if (HasSelection ()) {
 				if (!reselecting) {
-					Measure.Instance.MadeSelection (SelectionActionType.Deselect);
+					Measure.LocalInstance.MadeSelection (SelectionActionType.Deselect);
 				}
 				SelectedCube.StateManager.Deselect ();
 				onCubeDeselectedListeners.ForEach (l => l.OnCubeDeselected (SelectedCube.Cube));
@@ -104,12 +104,12 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 				State = InteractionState.Moving;
 			}
 			SelectedCube.StateManager.StartDrag ();
-			Measure.Instance.StartMove (SelectedCube.Cube);
+			Measure.LocalInstance.StartMove (SelectedCube.Cube);
 		}
 
 		public void EndMove () {
 			SelectedCube.StateManager.EndDrag ();
-			Measure.Instance.EndMove (SelectedCube.Cube);
+			Measure.LocalInstance.EndMove (SelectedCube.Cube);
 			State = InteractionState.Selected;
 		}
 
@@ -124,14 +124,14 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			}
 			if (HasSelection ()) {
 				State = InteractionState.Rotating;
-				Measure.Instance.StartRotation (SelectedCube.Cube);
+				Measure.LocalInstance.StartRotation (SelectedCube.Cube);
 				SelectedCube.StateManager.CmdStartRotation ();
 			}
 		}
 
 		public void EndRotation () {
 			SelectedCube.StateManager.CmdEndRotation ();
-			Measure.Instance.EndRotation (SelectedCube.Cube);
+			Measure.LocalInstance.EndRotation (SelectedCube.Cube);
 			State = InteractionState.Selected;
 		}
 
@@ -204,10 +204,10 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 
 		private void FinishAnyMeasurements () {
 			if (InState (InteractionState.Moving)) {
-				Measure.Instance.EndMove (SelectedCube.Cube);
+				Measure.LocalInstance.EndMove (SelectedCube.Cube);
 				Debug.LogWarning ("FinishAnyMeasurements.EndMove");
 			} else if (IsRotating ()) {
-				Measure.Instance.EndRotation (SelectedCube.Cube);
+				Measure.LocalInstance.EndRotation (SelectedCube.Cube);
 			}
 		}
 	}

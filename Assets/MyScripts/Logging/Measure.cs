@@ -52,16 +52,10 @@ namespace CubeArena.Assets.MyScripts.Logging {
             }
         }
 
-        public static Measure Instance { get; private set; }
+        public static Measure LocalInstance { get; private set; }
 
-        void Start () {
-            if (Instance) {
-                Destroy (this);
-                return;
-            } else if (hasAuthority) {
-                Instance = this;
-            }
-            interactionArea = null;
+        public override void OnStartAuthority () {
+            LocalInstance = this;
         }
 
         public void StartMove (GameObject obj) {

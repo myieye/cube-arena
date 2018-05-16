@@ -51,7 +51,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 					EndMove ();
 					stateManager.EndMove ();
 				} else {
-					Measure.Instance.MadeSelection (SelectionActionType.Disallowed);
+					Measure.LocalInstance.MadeSelection (SelectionActionType.Disallowed);
 				}
 			}
 		}
