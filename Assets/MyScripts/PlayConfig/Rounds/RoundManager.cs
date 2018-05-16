@@ -69,15 +69,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void StartNewRound () {
 			IncrementModeAndRoundNumber ();
 
-			practiceModeIndicator.SetActive (InPracticeMode);
-
 			if (InPracticeMode) {
 				if (InFirstRound ()) {
-					var numPlayers = PlayerManager.Instance.GenerateNewPlayers ();
-					if (!configGenerator.TryGenerateDeviceRoundConfigs (numPlayers, out deviceRoundConfigs)) {
+					if (!configGenerator.TryGenerateDeviceRoundConfigs (
+							PlayerManager.Instance.NumberOfPlayers, out deviceRoundConfigs)) {
 						DecrementModeAndRoundNumber ();
 						return;
 					}
+					PlayerManager.Instance.GenerateNewPlayers ();
 				}
 
 				// Generate new PlayerRoundIds
@@ -91,6 +90,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				timeManager.StartRound (Settings.Instance.RoundLength, 0, this);
 				SpawnGameObjects ();
 			}
+
+			practiceModeIndicator.SetActive (InPracticeMode);
 		}
 
 		private void IncrementModeAndRoundNumber () {
