@@ -421,7 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forceUserStudySettings: 0
   userStudyPassToPlayerTime: 20
-  playerNumberMode: 2
+  playerNumberMode: 2 
   numberOfPlayers: 1
   playersPerEnemy: 1
   roundLength: 0.1
@@ -7563,6 +7563,31 @@ Prefab:
         type: 2}
       propertyPath: ShapeModule.radiusThickness
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
       objectReference: {fileID: 0}
     - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
         type: 2}
