@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
@@ -36,6 +37,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             var success = AddNextDeviceRecursive (config, 0, 0, numPlayers);
 
             if (success) {
+                if (Settings.Instance.OptimizeDeviceRoundConfig) {
+                    // Minimizing unnecessary passing
+                    OptimizeDeviceRoundConfig (config);
+                }
+
                 // Assign random UI modes
                 AssignUIModesToDeviceRoundConfig (config, numPlayers);
 
@@ -45,6 +51,35 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             }
 
             return success;
+        }
+
+        private void OptimizeDeviceRoundConfig (List<List<DeviceConfig>> config) {
+            var usedDevices = new List<ConnectedDevice> ();
+            for (int r = 1; r < config.Count; r++) {
+                usedDevices.Clear ();
+
+                var prevConfig = config[r - 1];
+                var currConfig = config[r];
+
+                for (int d = 0; d < currConfig.Count; d++) {
+                    var prevDevice = prevConfig[d].Device;
+                    var currDevice = currConfig[d].Device;
+                    if (prevDevice.Type == currDevice.Type && prevDevice != currDevice &&
+                        !usedDevices.Contains (prevDevice)) {
+                        SwapDevices (prevConfig[d], currConfig[d], currConfig);
+                        usedDevices.Add (prevDevice);
+                    }
+                }
+            }
+        }
+
+        private void SwapDevices (DeviceConfig deviceIn, DeviceConfig deviceOut, List<DeviceConfig> config) {
+            var i = config.FindIndex (dc => dc == deviceOut);
+            var o = config.FindIndex (dc => dc == deviceIn);
+            if (o >= 0) {
+                config[o] = deviceOut;
+            }
+            config[i] = deviceIn;
         }
 
         private void AssignUIModesToDeviceRoundConfig (List<List<DeviceConfig>> config, int numPlayers) {
@@ -134,7 +169,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 device = deviceManager.DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused (d, round));
             }
             if (device == null && Settings.Instance.OverrideAvailableDevices) {
-                device = deviceManager.ConnectedDevices.First (d => DeviceIsUnused (d.Value, round)).Value;
+                var unusedDevices = deviceManager.ConnectedDevices.Values.Where (d => DeviceIsUnused (d, round)).ToList ();
+                device = unusedDevices.Random (d => d.Type.IsTestDeviceType ());
+                if (device == null) {
+                    device = unusedDevices.Random ();
+                }
             }
             return device;
         }

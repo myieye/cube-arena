@@ -6,16 +6,17 @@ using CubeArena.Assets.MyScripts.Utils.Settings;
 namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
     public class MockSettings : ISettings {
 
-		public bool ForceUserStudySettings { get; set; }
+        public bool ForceUserStudySettings { get; set; }
         public float UserStudyPassToPlayerTime { get; set; }
         public PlayerNumberMode PlayerNumberMode { get; set; }
         public int NumberOfPlayers { get; set; }
         public int PlayersPerEnemy { get; set; }
-		public float RoundLength { get; set; }
-		public float PracticeRoundLength { get; set; }
+        public float RoundLength { get; set; }
+        public float PracticeRoundLength { get; set; }
         public float PassToPlayerTime { get; set; }
         public bool AREnabledInEditor { get; set; }
         public bool AREnabled { get; set; }
+        public bool OptimizeDeviceRoundConfig { get; set; }
         public bool OverrideAvailableDevices { get; set; }
         public bool EndlessRounds { get; set; }
         public bool AutoStartGame { get; set; }

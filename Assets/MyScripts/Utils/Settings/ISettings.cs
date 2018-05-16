@@ -13,6 +13,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float PassToPlayerTime  { get; }
 		bool AREnabledInEditor { get; }
 		bool AREnabled { get; }
+        bool OptimizeDeviceRoundConfig { get; }
 		bool OverrideAvailableDevices { get; }
 		bool EndlessRounds { get; }
 		bool AutoStartGame { get; }
@@ -39,5 +40,5 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float AxisSensitivity { get; }
 		int[] AreaRadiuses { get; }
 		float AreaCenterPlayerStartPointOffset { get; }
-	}
+    }
 }

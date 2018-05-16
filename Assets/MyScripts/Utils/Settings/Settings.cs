@@ -84,6 +84,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 		[Header ("Testing")]
 		[SerializeField]
+		private bool optimizeDeviceRoundConfig;
+		[SerializeField]
 		private bool overrideAvailableDevices;
 		[SerializeField]
 		private bool endlessRounds;
@@ -170,6 +172,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public bool AREnabled {
 			get { return arEnabled; }
+		}
+		public bool OptimizeDeviceRoundConfig {
+			get { return optimizeDeviceRoundConfig; }
 		}
 		public bool OverrideAvailableDevices {
 			get { return overrideAvailableDevices; }

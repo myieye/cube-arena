@@ -29,5 +29,12 @@ namespace CubeArena.Assets.MyScripts.Utils {
                 return false;
             }
         }
+
+        public static T Random<T> (this IList<T> list, Func<T, bool> condition = null) {
+            if (condition != null) {
+                list = list.Where (condition).ToList ();
+            }
+            return list.Shuffle ().FirstOrDefault ();
+        }
     }
 }
