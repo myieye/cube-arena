@@ -125,7 +125,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 var deviceType = mixedDevicesTypes[i];
                 if (Fits (config, deviceType, roundI, playerI)) {
                     config[roundI].Insert (playerI, new DeviceConfig {
-                        Device = GetFirstAvailableDevice (config[roundI], deviceType)
+                        Device = GetFirstAvailableDevice (config[roundI], deviceType, numPlayers)
                     });
 
                     if (IsLastSlot (config, roundI, playerI, numPlayers)) {
@@ -163,15 +163,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             return numAlreadyNeededInRound < totalNum;
         }
 
-        private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceTypeSpec deviceType) {
+        private ConnectedDevice GetFirstAvailableDevice (List<DeviceConfig> round, DeviceTypeSpec deviceType, int numPlayers) {
             ConnectedDevice device = null;
             if (deviceManager.DevicesByType.ContainsKey (deviceType)) {
                 device = deviceManager.DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused (d, round));
             }
             if (device == null && Settings.Instance.OverrideAvailableDevices) {
                 var unusedDevices = deviceManager.ConnectedDevices.Values.Where (d => DeviceIsUnused (d, round)).ToList ();
-                device = unusedDevices.Random (d => d.Type.IsTestDeviceType ());
-                if (device == null) {
+                var testDevices = deviceManager.ConnectedDevices.Values.Where (d => d.Type.IsTestDeviceType ());
+                if (testDevices.Count () >= numPlayers) {
+                    device = unusedDevices.Random (d => d.Type.IsTestDeviceType ());
+                } else {
                     device = unusedDevices.Random ();
                 }
             }
