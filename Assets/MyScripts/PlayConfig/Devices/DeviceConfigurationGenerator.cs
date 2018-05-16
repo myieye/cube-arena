@@ -130,7 +130,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 device = deviceManager.DevicesByType[deviceType].FirstOrDefault (d => DeviceIsUnused (d, round));
             }
             if (device == null && Settings.Instance.OverrideAvailableDevices) {
-                device = deviceManager.ConnectedDevices.First ().Value; //d => DeviceIsUnused (d.Value, round)).Value;
+                device = deviceManager.ConnectedDevices.First (d => DeviceIsUnused (d.Value, round)).Value;
             }
             return device;
         }
