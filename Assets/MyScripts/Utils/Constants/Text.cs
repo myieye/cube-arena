@@ -1,3 +1,5 @@
+using CubeArena.Assets.MyScripts.PlayConfig.Players;
+
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
     public static class Text {
         public static string Spray { get; private set; }
@@ -10,6 +12,14 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
         public static string PassToPlayerText (int playerNum) {
             return string.Format ("Pass device to player: <size=60>{0}</size>", playerNum);
+        }
+
+        public static string CubeName (NetworkPlayer player, int cubeNum) {
+            return string.Format ("Cube [{0}:{1}:{2}]", player.PlayerId, player.Color.name, cubeNum);
+        }
+
+        public static string CursorName (NetworkPlayer player) {
+            return string.Format ("Cursor [{0}:{1}]", player.PlayerId, player.Color.name);
         }
 
         private static string InactiveText (string text) {

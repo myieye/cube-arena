@@ -42,7 +42,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             for (int i = 0; i < NumPlayers; i++) {
                 Players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
-                        PlayerNum = i + 1
+                        PlayerIndex = i, PlayerNum = i + 1
                 });
             }
             return NumPlayers;
@@ -65,7 +65,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public Color GetPlayerColor (PlayerId id) {
-            return Players.Find (p => p.PlayerId == id.Id).Color;
+            return Players.Find (p => p.PlayerId == id.Id).Color.value;
         }
 
         public void SpawnPlayers () {
