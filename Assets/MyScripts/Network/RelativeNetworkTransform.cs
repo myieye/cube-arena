@@ -60,11 +60,8 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private void TryInit () {
-            if (!hasAuthority || TransformUtil.IsCentered || Init()) {
+            if (TransformUtil.IsCentered || Init()) {
                 CancelInvoke ("TryInit");
-                if (mode == NetworkTransformMode.Agent) {
-                    agent.enabled = true;
-                }
             }
         }
 
@@ -76,6 +73,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                     //agent.enabled = false;
                     agent.Warp (startPosition.ToLocal ());
                     transform.rotation = startRotation.ToLocal ();
+                    agent.enabled = true;
                     break;
                 default:
                     transform.position = startPosition.ToLocal ();
@@ -108,7 +106,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientRpc]
         private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
-            if (IsSender/* || !isInitialized*/) return;
+            if (IsSender || !isInitialized) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
 
