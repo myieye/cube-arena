@@ -35,7 +35,6 @@ namespace CubeArena.Assets.MyScripts.Network {
                 return hasAuthority || (!localPlayerAuthority && isServer);
             }
         }
-        
         private Vector3 startPosition;
         private Quaternion startRotation;
 
@@ -58,14 +57,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         protected virtual void Start () {
             InvokeRepeating ("TryInit", 0, 0.1f);
-        }
-
-        public override void OnStartAuthority () {
-            Debug.Log ("OnStartAuthority: " + hasAuthority);
-        }
-
-        public override void OnStopAuthority () {
-            Debug.Log ("OnStopAuthority: " + hasAuthority);
         }
 
         private void TryInit () {
