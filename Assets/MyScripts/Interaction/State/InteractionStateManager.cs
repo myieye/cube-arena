@@ -115,12 +115,15 @@ public bool IsManipulating {
 			}
 
 			FinishAnyMeasurements ();
+			
+			// TODO clean up redundant logic
 			if (HasSelection () && !InState (InteractionState.Disallowed)) {
 				State = InteractionState.Moving;
 			} else if (IsHovering ()) {
 				Select (HoveredCube.Cube);
 				State = InteractionState.Moving;
 			}
+
 			SelectedCube.StateManager.StartDrag ();
 			Measure.LocalInstance.StartMove (SelectedCube.Cube);
 
