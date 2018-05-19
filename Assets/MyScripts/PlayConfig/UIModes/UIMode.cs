@@ -7,8 +7,9 @@ using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
     public enum UIMode {
-        None = 0, Mouse = 1, HHD1_Camera = 2, HHD2_TouchAndDrag = 3, HHD3_Gestures = 4,
-        HMD4_GazeAndClicker = 5, HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate = 6, HMD6_Gaze = 7
+        None = 0, Mouse = 1,
+        HHD1_Camera = 2, HHD2_Touch = 3, HHD3_Gestures = 4,
+        HMD1_Gaze = 5, HMD2_Point = 6, HMD3_Translate = 7
     }
 
     public static class UIModeHelpers {
@@ -16,16 +17,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
         static UIModeHelpers () {
             UIModes = Enum.GetValues (typeof (UIMode)).Cast<UIMode> ().ToList ();
             UIModesForCurrentDevice = UIModes
-                //#if !UNITY_EDITOR
+#if !UNITY_EDITOR
                 .Where (mode => mode.IsForDeviceType (DeviceTypeManager.DeviceType))
-                //#endif
+#endif
                 .ToList ();
-            ActiveUIModesForCurrentDevice = UIModesForCurrentDevice.Where (IsActiveMode).ToList ();
+            ActiveUIModes = UIModes.Where (IsActiveMode).ToList ();
             TestUIModes = UIModes.Where (IsTestMode).ToList ();
         }
 
         public static List<UIMode> UIModesForCurrentDevice { get; private set; }
-        public static List<UIMode> ActiveUIModesForCurrentDevice { get; private set; }
+        public static List<UIMode> ActiveUIModes { get; private set; }
         public static List<UIMode> UIModes { get; private set; }
         public static List<UIMode> TestUIModes { get; private set; }
 
@@ -38,23 +39,24 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
             }
         }
 
-        internal static UIMode UIModeOrFirstCompatible (UIMode uiMode) {
-            if (ActiveUIModesForCurrentDevice.Contains (uiMode)) {
+        internal static UIMode UIModeOrFirstCompatible (UIMode uiMode, DeviceTypeSpec deviceType) {
+            var compatibleUIModes = ActiveUIModes.Where (mode => mode.IsForDeviceType (deviceType));
+            if (compatibleUIModes.Contains (uiMode)) {
                 return uiMode;
             } else {
-                return ActiveUIModesForCurrentDevice.First ();
+                return compatibleUIModes.First ();
             }
         }
 
         public static DeviceTypeSpec GetDeviceType (this UIMode uiMode) {
             switch (uiMode) {
                 case UIMode.HHD1_Camera:
-                case UIMode.HHD2_TouchAndDrag:
+                case UIMode.HHD2_Touch:
                 case UIMode.HHD3_Gestures:
                     return DeviceTypeSpec.Android;
-                case UIMode.HMD4_GazeAndClicker:
-                case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
-                case UIMode.HMD6_Gaze:
+                case UIMode.HMD1_Gaze:
+                case UIMode.HMD2_Point:
+                case UIMode.HMD3_Translate:
                     return DeviceTypeSpec.HoloLens;
                 case UIMode.None:
                     return DeviceTypeManager.DeviceType;

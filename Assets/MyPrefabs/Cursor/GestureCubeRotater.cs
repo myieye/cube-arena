@@ -13,7 +13,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}*/
 
         protected override Vector3 CalculateRotationTorque () {
-            if (!UIModeManager.InMode (UIMode.HHD3_Gestures)) {
+            if (!UIModeManager.InUIMode (UIMode.HHD3_Gestures)) {
                 return base.CalculateRotationTorque ();
             } else if (Input.touchCount < 2) {
                 return Vector3.zero;
@@ -29,7 +29,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
         }
 
         protected override void StartRotate () {
-            if (UIModeManager.InMode (UIMode.HMD4_GazeAndClicker)) {
+            if (UIModeManager.InUIMode (UIMode.HMD1_Gaze)) {
                 stateManager.LockRotation ();
             }
             base.StartRotate ();

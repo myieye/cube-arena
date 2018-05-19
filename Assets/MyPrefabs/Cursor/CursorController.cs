@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,12 +14,29 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 	[RequireComponent (typeof (CustomARObject))]
 	public class CursorController : NetworkBehaviour {
 
-		public enum CursorMode { Camera, Mouse, Touch, Pointer }
+		public enum CursorMode {
+			Camera,
+			Mouse,
+			Touch,
+			Pointer,
+			Translate
+		}
+
 		public Vector3? Position {
 			get {
 				return currRaycastSuccess ? (Vector3?) transform.position : null;
 			}
 		}
+		public Vector3? PointerDirection { get; set; }
+		private bool _raycastingEnabled;
+		public bool Raycasting {
+			get { return _raycastingEnabled || InARaycastingMode; }
+			set { _raycastingEnabled = value; }
+		}
+		public bool Translating {
+			get { return !Raycasting; }
+		}
+		public Vector3 TranslationPosition { get; set; }
 
 		[SerializeField]
 		private float speed;
@@ -36,15 +54,39 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private bool currRaycastSuccess;
 		private Vector3 screenCenter;
 		private Vector2 currTouchOffset = Vector2.zero;
-		private Vector3 currPointerOffset = Vector3.zero;
 		private Vector2 lastTouch;
 		public LayerMask raycastLayerMask;
 		private bool touchOffsetActive;
 		private CustomARObject arObj;
+		private Vector3 TargetPosition {
+			get { return Raycasting ? lastHit.point : TranslationPosition; }
+		}
+		private Quaternion TargetRotation {
+			get {
+				return Raycasting ?
+					Quaternion.FromToRotation (Vector3.up, lastHit.normal) :
+					Quaternion.identity.ToLocal ();
+			}
+		}
 
+		private bool IsActive {
+			get {
+				return currRaycastSuccess || Translating;
+			}
+		}
 		private bool InTouchMode {
 			get {
-				return CursorMode.Touch.Equals (UIModeManager.Instance<UIModeManager> ().CurrentCursorMode);
+				return UIModeManager.InCursorMode (CursorMode.Touch);
+			}
+		}
+		private bool InPointerMode {
+			get {
+				return UIModeManager.InCursorMode (CursorMode.Pointer);
+			}
+		}
+		private bool InARaycastingMode {
+			get {
+				return !UIModeManager.InCursorMode (CursorMode.Translate);
 			}
 		}
 		private bool ShowCursor {
@@ -67,30 +109,35 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		void FixedUpdate () {
 			if (!hasAuthority) return;
-			
-			if (currRaycastSuccess) {
-				MoveTowardsLastHit ();
-				AlignWithLastHit ();
+
+			if (IsActive) {
+				MoveTowardsTarget ();
+				AlignWithTarget ();
 			}
 		}
 
 		void Update () {
 			if (!hasAuthority) return;
 
-			prevRaycastSuccess = currRaycastSuccess;
-			SetRayCastHit ();
-			ShowHideCursor ();
+			if (Raycasting) {
+				prevRaycastSuccess = currRaycastSuccess;
+				SetRayCastHit ();
+				ShowHideCursor ();
 
-			if (!prevRaycastSuccess && currRaycastSuccess) {
-				cursorRb.velocity = Vector3.zero;
-				cursorRb.position = lastHit.point;
-			} else if (!currRaycastSuccess) {
-				cursorRb.velocity = Vector3.zero;
-			}
+				if (!prevRaycastSuccess && currRaycastSuccess) {
+					cursorRb.velocity = Vector3.zero;
+					cursorRb.position = lastHit.point;
+				} else if (!currRaycastSuccess) {
+					cursorRb.velocity = Vector3.zero;
+				}
 
-			if (InTouchMode) {
-				AdjustVelocityForTouch ();
-				AdjustOffsetForTouch ();
+				if (InTouchMode) {
+					AdjustVelocityForTouch ();
+					AdjustOffsetForTouch ();
+				}
+			} else { // Translating
+				currRaycastSuccess = false;
+				ShowHideCursor ();
 			}
 
 			MeasureUserInteractionArea ();
@@ -119,13 +166,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			return GetVelocityFromTo (from, lastHit.point + lastHit.normal * offset);
 		}
 
-		void MoveTowardsLastHit () {
-			cursorRb.velocity = GetVelocityFromTo (cursorRb.position, lastHit.point);
+		void MoveTowardsTarget () {
+			cursorRb.velocity = GetVelocityFromTo (cursorRb.position, TargetPosition);
 		}
 
-		void AlignWithLastHit () {
-			cursorRb.rotation = Quaternion.Lerp (cursorRb.rotation,
-				Quaternion.FromToRotation (Vector3.up, lastHit.normal), Time.deltaTime * speed);
+		void AlignWithTarget () {
+			cursorRb.rotation = Quaternion.Lerp (cursorRb.rotation, TargetRotation, Time.deltaTime * speed);
 		}
 
 		void SetRayCastHit () {
@@ -137,38 +183,52 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private Vector3? GetRaycastOrigin () {
 			switch (UIModeManager.Instance<UIModeManager> ().CurrentCursorMode) {
-				case CursorMode.Camera:
-					return screenCenter;
 				case CursorMode.Mouse:
 					return Input.mousePosition;
-				case CursorMode.Pointer:
-					return screenCenter + currPointerOffset;
 				case CursorMode.Touch:
 					if (Input.touchCount > 0) {
 						lastTouch = Input.GetTouch (0).position;
 						return lastTouch + currTouchOffset;
 					}
-					break;
+					return null;
+				case CursorMode.Camera:
+				case CursorMode.Pointer:
+				case CursorMode.Translate:
+				default:
+					return screenCenter;
 			}
-			return null;
 		}
 
 		private void TryCastRay (Vector3? rayCastOrigin) {
 			if (rayCastOrigin.HasValue) {
-				Ray ray = Camera.main.ScreenPointToRay (rayCastOrigin.Value);
+				Ray ray;
+				if (InPointerMode && PointerDirection.HasValue) {
+					ray = new Ray (Camera.main.ScreenToWorldPoint (rayCastOrigin.Value), PointerDirection.Value);
+				} else {
+					ray = Camera.main.ScreenPointToRay (rayCastOrigin.Value);
+				}
+
 				currRaycastSuccess = Physics.Raycast (ray, out lastHit, float.MaxValue, raycastLayerMask);
 			} else {
 				currRaycastSuccess = false;
 			}
 		}
 
+		/*
 		internal bool IsUpwardsAligned () {
 			var mag = Quaternion.FromToRotation (Vector3.up, lastHit.normal).eulerAngles.magnitude;
 			return currRaycastSuccess && mag < 10;
 		}
+		 */
 
 		internal GameObject GetAlignedWith () {
-			return currRaycastSuccess ? lastHit.collider.gameObject : null;
+			if (currRaycastSuccess) {
+				return lastHit.collider.gameObject;
+			} else if (Translating) {
+				return GetObjectBelow (TranslationPosition);
+			} else {
+				return null;
+			}
 		}
 
 		Vector3 GetVelocityFromTo (Vector3 from, Vector3 to) {
@@ -180,16 +240,13 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private void ShowHideCursor () {
-			cursorRenderer.enabled = ShowCursor && arObj.ARActive && currRaycastSuccess;
-		}
-
-		public void SetPointerOffset (Vector3 pointerOffset) {
-			currPointerOffset = pointerOffset;
+			cursorRenderer.enabled = (Translating ||
+				(ShowCursor && currRaycastSuccess)) && arObj.ARActive;
 		}
 
 		private void MeasureUserInteractionArea () {
-			if (currRaycastSuccess) {
-				Measure.LocalInstance.UpdateInteractionArea (lastHit.point);
+			if (IsActive) {
+				Measure.LocalInstance.UpdateInteractionArea (TargetPosition);
 			} else if (!InTouchMode) {
 				Measure.LocalInstance.UpdateInteractionArea (null);
 			} else {
@@ -202,6 +259,13 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 					Measure.LocalInstance.UpdateInteractionArea (null);
 				}
 			}
+		}
+
+		private GameObject GetObjectBelow (Vector3 point) {
+			Ray ray = new Ray (point, TransformUtil.World.up * -1);
+			RaycastHit hit;
+			var success = Physics.Raycast (ray, out hit, float.MaxValue, raycastLayerMask);
+			return success ? hit.collider.gameObject : null;
 		}
 	}
 }

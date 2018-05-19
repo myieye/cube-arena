@@ -32,14 +32,24 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 #if (UNITY_WSA || UNITY_EDITOR)
-		public HMD_UI1 SelectAndAxesGestures {
+		public HMD_UI1 HMD_UI1 {
 			get {
-				return GameObjectUtil.FindObjectOfExactType<HMD_UI1> ();
+				return FindObjectOfType<HMD_UI1> ();
 			}
 		}
-		public HMD_UI2 SelectAxesAndCursorPointerGestures {
+		public HMD_UI2 HMD_UI2 {
 			get {
-				return GameObjectUtil.FindObjectOfExactType<HMD_UI2> ();
+				return FindObjectOfType<HMD_UI2> ();
+			}
+		}
+		public HMD_UI3 HMD_UI3 {
+			get {
+				return FindObjectOfType<HMD_UI3> ();
+			}
+		}
+		public HMD_SprayToggle HMD_SprayToggle {
+			get {
+				return FindObjectOfType<HMD_SprayToggle> ();
 			}
 		}
 #endif
@@ -48,6 +58,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		private GameObject joystick;
 		[SerializeField]
 		private GameObject selectButton;
+
 		[SerializeField]
 		private GameObject touchpad;
 		[SerializeField]
@@ -153,42 +164,63 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				case UIMode.Mouse:
 					inputMethod = CrossPlatformInputManager.ActiveInputMethod.Hardware;
 					CurrentCursorMode = CursorController.CursorMode.Mouse;
-					sprayMoveButton.SetActive (true);
+					//sprayMoveButton.SetActive (true);
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD1_Camera:
 					joystick.SetActive (true);
 					selectButton.SetActive (true);
-					sprayMoveButton.SetActive (true);
+					//sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Camera;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
 					break;
-				case UIMode.HHD2_TouchAndDrag:
+				case UIMode.HHD2_Touch:
 					joystick.SetActive (true);
 					touchpad.SetActive (true);
-					sprayMoveButton.SetActive (true);
+					//sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD3_Gestures:
 					touchpad.SetActive (true);
-					sprayMoveButton.SetActive (true);
+					//sprayMoveButton.SetActive (true);
 					CurrentCursorMode = CursorController.CursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #if (UNITY_WSA || UNITY_EDITOR)
-				case UIMode.HMD4_GazeAndClicker:
-					SelectAndAxesGestures.enabled = true;
+				case UIMode.HMD1_Gaze:
+					HMD_UI1.enabled = true;
+					HMD_SprayToggle.enabled = true;
 					CurrentCursorMode = CursorController.CursorMode.Camera;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
-				case UIMode.HMD5_Gaze__AirTap_Drag_And_Clicker_Rotate:
-					SelectAxesAndCursorPointerGestures.enabled = true;
+				case UIMode.HMD2_Point:
+					HMD_UI2.enabled = true;
+					HMD_SprayToggle.enabled = true;
 					CurrentCursorMode = CursorController.CursorMode.Pointer;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
+					break;
+				case UIMode.HMD3_Translate:
+					HMD_UI3.enabled = true;
+					HMD_SprayToggle.enabled = true;
+					CurrentCursorMode = CursorController.CursorMode.Translate;
+					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #endif
 			}
 			CrossPlatformInputManager.SwitchActiveInputMethod (inputMethod);
 		}
+
+		/*
+		public bool InManipulationMode () {
+			switch (CurrentUIMode) {
+				case UIMode.HMD2_Point:
+				case UIMode.HMD3_Translate:
+					return true;
+				default:
+					return false;
+			}
+		} */
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
 			foreach (var player in players) {
@@ -221,22 +253,32 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (touchpad) {
 				touchpad.SetActive (false);
 			}
-			if (sprayMoveButton) {
-				sprayMoveButton.SetActive (false);
-			}
+			//if (sprayMoveButton) {
+			//	sprayMoveButton.SetActive (false);
+			//}
 
 #if (UNITY_WSA || UNITY_EDITOR)
-			if (SelectAndAxesGestures) {
-				SelectAndAxesGestures.enabled = false;
+			if (HMD_UI1) {
+				HMD_UI1.enabled = false;
 			}
-			if (SelectAxesAndCursorPointerGestures) {
-				SelectAxesAndCursorPointerGestures.enabled = false;
+			if (HMD_UI2) {
+				HMD_UI2.enabled = false;
+			}
+			if (HMD_UI3) {
+				HMD_UI3.enabled = false;
+			}
+			if (HMD_SprayToggle) {
+				HMD_SprayToggle.enabled = false;
 			}
 #endif
 		}
 
-		public static bool InMode (UIMode mode) {
+		public static bool InUIMode (UIMode mode) {
 			return Instance<UIModeManager> ().CurrentUIMode.Equals (mode);
+		}
+
+		public static bool InCursorMode (CursorController.CursorMode cursorMode) {
+			return Instance<UIModeManager> ().CurrentCursorMode == cursorMode;
 		}
 	}
 }

@@ -208,6 +208,7 @@ namespace HoloToolkit.Unity.InputModule
             GestureRecognizer.ManipulationCanceledEvent += GestureRecognizer_ManipulationCanceled;
 #endif
             GestureRecognizer.SetRecognizableGestures(GestureSettings.Tap |
+                                                      GestureSettings.DoubleTap | // EDIT_TIM
                                                       GestureSettings.ManipulationTranslate |
                                                       GestureSettings.Hold);
 

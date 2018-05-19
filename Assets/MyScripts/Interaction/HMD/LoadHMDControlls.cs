@@ -9,8 +9,10 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD {
 
 		void Awake () {
 #if (UNITY_WSA || UNITY_EDITOR)
-			gameObject.AddComponent<HMD_UI1> ();
-			gameObject.AddComponent<HMD_UI2> ();
+			gameObject.AddComponent<HMD_UI1> ().enabled = false;
+			gameObject.AddComponent<HMD_UI2> ().enabled = false;
+			gameObject.AddComponent<HMD_UI3> ().enabled = false;
+			gameObject.AddComponent<HMD_SprayToggle> ().enabled = false;
 #endif
 #if UNITY_WSA && !UNITY_EDITOR
 			gameObject.AddComponent<SetGlobalListener> ();

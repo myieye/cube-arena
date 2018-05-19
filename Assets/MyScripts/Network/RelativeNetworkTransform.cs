@@ -35,10 +35,17 @@ namespace CubeArena.Assets.MyScripts.Network {
                 return hasAuthority || (!localPlayerAuthority && isServer);
             }
         }
+        
+        private Vector3 startPosition;
+        private Quaternion startRotation;
 
         protected virtual void Awake () {
             agent = GetComponent<NavMeshAgent> ();
             rb = GetComponent<Rigidbody> ();
+
+            startPosition = transform.position;
+            startRotation = transform.rotation;
+
             if (agent) {
                 mode = NetworkTransformMode.Agent;
                 agent.enabled = false;
@@ -53,9 +60,20 @@ namespace CubeArena.Assets.MyScripts.Network {
             InvokeRepeating ("TryInit", 0, 0.1f);
         }
 
+        public override void OnStartAuthority () {
+            Debug.Log ("OnStartAuthority: " + hasAuthority);
+        }
+
+        public override void OnStopAuthority () {
+            Debug.Log ("OnStopAuthority: " + hasAuthority);
+        }
+
         private void TryInit () {
-            if (Init ()) {
+            if (!hasAuthority || TransformUtil.IsCentered || Init()) {
                 CancelInvoke ("TryInit");
+                if (mode == NetworkTransformMode.Agent) {
+                    agent.enabled = true;
+                }
             }
         }
 
@@ -64,12 +82,13 @@ namespace CubeArena.Assets.MyScripts.Network {
 
             switch (mode) {
                 case NetworkTransformMode.Agent:
-                    agent.enabled = false;
-                    agent.Warp (TransformUtil.Transform (TransformDirection.ServerToLocal, transform.position));
-                    agent.enabled = true;
+                    //agent.enabled = false;
+                    agent.Warp (startPosition.ToLocal ());
+                    transform.rotation = startRotation.ToLocal ();
                     break;
                 default:
-                    TransformUtil.MoveToLocalCoordinates (transform);
+                    transform.position = startPosition.ToLocal ();
+                    transform.rotation = startRotation.ToLocal ();
                     break;
             }
 
@@ -77,8 +96,10 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Update () {
+            if (!IsSender) return;
+
             wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
-            if (IsSender && PastThreshold ()) {
+            if (PastThreshold ()) {
                 TransmitSync ();
                 SaveState ();
             }
@@ -96,7 +117,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         [ClientRpc]
         private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
-            if (IsSender || !isInitialized) return;
+            if (IsSender/* || !isInitialized*/) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
 
@@ -114,15 +135,16 @@ namespace CubeArena.Assets.MyScripts.Network {
                     break;
                 case NetworkTransformMode.Agent:
                     agent.Move (rigidbodyState.position - transform.position);
+                    agent.transform.rotation = rigidbodyState.rotation;
                     break;
             }
         }
 
         private RigidbodyState CalcStateInServerCoordinates () {
             if (mode == NetworkTransformMode.Rigidbody) {
-                return TransformUtil.Transform (TransformDirection.LocalToServer, rb);
+                return rb.ToServer ();
             } else {
-                return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
+                return transform.ToServer ();
             }
         }
 

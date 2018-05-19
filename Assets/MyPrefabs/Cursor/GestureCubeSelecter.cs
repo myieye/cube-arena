@@ -17,7 +17,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
         }
 
         protected override bool IsDeselecting () {
-            if (!UIModeManager.InMode (UIMode.HHD3_Gestures)) {
+            if (!UIModeManager.InUIMode (UIMode.HHD3_Gestures)) {
                 return base.IsDeselecting ();
             } else {
                 return !selecting && tapDetecter.Tapped &&

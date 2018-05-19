@@ -161,6 +161,13 @@ namespace CubeArena.Assets.MyScripts.Logging {
             areaInteractionStart = DateTime.Now;
         }
 
+        [ClientRpc]
+        public void RpcFlushMeasurements () {
+            if (hasAuthority && logger) {
+                FlushMeasurements ();
+            }
+        }
+
         public void FlushMeasurements () {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 

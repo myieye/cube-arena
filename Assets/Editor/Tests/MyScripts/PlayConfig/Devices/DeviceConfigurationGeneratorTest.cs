@@ -93,7 +93,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 				// All modes are used the right number of times
 				foreach (var uiMode in UIModeHelpers.TestUIModes) {
 					int numUiModeUsages = CountUIModeUsagesInConfig (config, uiMode);
-					numUiModeUsages = numPlayers;
+					Assert.That (numUiModeUsages, Is.EqualTo (numPlayers));
 				}
 
 				// Each player uses each ui mode exactly once

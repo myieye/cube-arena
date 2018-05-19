@@ -6,6 +6,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
     public class ARRelativeNetworkTransform : RelativeNetworkTransform {
 
+        /*
         // Prevents base.Start
         protected override void Start () { }
 
@@ -15,6 +16,6 @@ namespace CubeArena.Assets.MyScripts.Network {
             } else if (ARManager.WorldEnabled) {
                 Init ();
             }
-        }
+        }*/
     }
 }

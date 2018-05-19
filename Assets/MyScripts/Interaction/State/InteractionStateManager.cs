@@ -6,6 +6,7 @@ using CubeArena.Assets.MyPrefabs.Cubes;
 using CubeArena.Assets.MyScripts.Interaction.Listeners;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.Models;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
@@ -20,6 +21,16 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		private List<OnCubeDeselectedListener> onCubeDeselectedListeners;
 		private InteractionState prevState = InteractionState.Idle;
 		private bool rotationIsLocked = false;
+		/*
+		private bool _isManipulating;
+		public bool IsManipulating {
+			get {
+				return UIModeManager.Instance<UIModeManager> ().InManipulationMode () &&
+					_isManipulating;
+			} set {
+				_isManipulating = value;
+			}
+		} */
 
 		public void Awake () {
 			onCubeDeselectedListeners = new List<OnCubeDeselectedListener> ();

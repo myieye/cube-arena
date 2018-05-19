@@ -85,14 +85,14 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 		}
 
 		protected override void OnTrackingFound () {
-#if UNITY_WSA// && !UNITY_EDITOR
+#if UNITY_WSA && !UNITY_EDITOR
 			if (CustomNetworkManager.IsServer) {
 				var behaviour = FindObjectOfType<Vuforia.ImageTargetBehaviour> ();
 				var t = behaviour.Trackable;
 				Debug.Log (t.Name);
 				var it = t as Vuforia.ImageTarget;
-				it.StartExtendedTracking ();
-				Debug.Log ("Starting extended tracking");
+				var success = it.StartExtendedTracking ();
+				Debug.Log ("Starting extended tracking: " + success);
 			}
 #endif
 			WorldEnabled = true;

@@ -17,14 +17,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		[SyncVar (hook = "OnNewDestination")]
 		private Vector3 destination;
 		private Vector3 localDestination;
-		private ARRelativeNetworkTransform arNetworkTransform;
 		[SyncVar]
 		private bool movingOnServer;
 
 		void Start () {
 			agent = GetComponent<NavMeshAgent> ();
 			animator = GetComponent<Animator> ();
-			arNetworkTransform = GetComponent<ARRelativeNetworkTransform> ();
 		}
 
 		void Update () {
@@ -47,15 +45,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 				destination = newDestination;
 			}
 
-			localDestination = TransformUtil.Transform (TransformDirection.ServerToLocal, newDestination);
+			localDestination = newDestination.ToLocal ();
 			var navMeshDestination = TransformUtil.ToNavMeshPosition (localDestination);
 			if (agent != null) {
 				agent.SetDestination (navMeshDestination);
 			}
-		}
-
-		void SetAgentDestination (Vector3 destination) {
-
 		}
 
 		bool IsMoving () {

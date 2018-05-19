@@ -22,7 +22,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                 return IsInitialized && !IsCentered;
             }
         }
-        private static bool IsCentered {
+        public static bool IsCentered {
             get {
                 return World && World.position == Vector3.zero &&
                     World.rotation == Quaternion.identity;
@@ -206,16 +206,10 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
         private static Quaternion TransformToServerCoordinates (Quaternion rot) {
             rot = Quaternion.Inverse (World.transform.rotation) * rot;
-#if UNITY_WSA && !UNITY_EDITOR
-            rot = Quaternion.Inverse (rot);
-#endif
             return rot;
         }
 
         private static Quaternion TransformToLocalCoordinates (Quaternion rot) {
-#if UNITY_WSA && !UNITY_EDITOR
-            rot = Quaternion.Inverse (rot);
-#endif
             return World.rotation * rot;
         }
 
@@ -249,6 +243,57 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     velocity = rigidbody.velocity,
                     angularVelocity = rigidbody.angularVelocity
             };
+        }
+    }
+
+    public static class TransformUtilHelpers {
+
+        public static Vector3 Transform (this Vector3 point, TransformDirection direction) {
+            return TransformUtil.Transform (direction, point);
+        }
+
+        public static Quaternion Transform (this Quaternion rotation, TransformDirection direction) {
+            return TransformUtil.Transform (direction, rotation);
+        }
+
+        public static RigidbodyState Transform (this Transform transform, TransformDirection direction) {
+            return TransformUtil.Transform (direction, transform);
+        }
+
+        public static RigidbodyState Transform (this Rigidbody rigidbody, TransformDirection direction) {
+            return TransformUtil.Transform (direction, rigidbody);
+        }
+        
+        public static Vector3 ToServer (this Vector3 point) {
+            return TransformUtil.Transform (TransformDirection.LocalToServer, point);
+        }
+
+        public static Vector3 ToLocal (this Vector3 point) {
+            return TransformUtil.Transform (TransformDirection.ServerToLocal, point);
+        }
+        
+        public static Quaternion ToServer (this Quaternion rotation) {
+            return TransformUtil.Transform (TransformDirection.LocalToServer, rotation);
+        }
+
+        public static Quaternion ToLocal (this Quaternion rotation) {
+            return TransformUtil.Transform (TransformDirection.ServerToLocal, rotation);
+        }
+        
+        public static RigidbodyState ToServer (this Transform transform) {
+            return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
+        }
+
+        public static RigidbodyState ToLocal (this Transform transform) {
+            return TransformUtil.Transform (TransformDirection.ServerToLocal, transform);
+        }
+        
+        public static RigidbodyState ToServer (this Rigidbody rigidbody) {
+            return TransformUtil.Transform (TransformDirection.LocalToServer, rigidbody);
+        }
+
+        public static RigidbodyState ToLocal (this Rigidbody rigidbody) {
+            return TransformUtil.Transform (TransformDirection.ServerToLocal, rigidbody);
         }
     }
 }

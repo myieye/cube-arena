@@ -29,7 +29,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private bool InGestureMode {
 			get {
-				return UIModeManager.InMode (UIMode.HHD3_Gestures);
+				return UIModeManager.InUIMode (UIMode.HHD3_Gestures);
 			}
 		}
 
@@ -128,12 +128,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 			if (moveState.Equals (MoveState.XZ)) {
 				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
-				TranslationPlane.transform.position =
-					TransformUtil.Transform (TransformDirection.ServerToLocal, Vector3.up * cubeRb.transform.position.y);
+				TranslationPlane.transform.position = (Vector3.up * cubeRb.transform.position.y).ToLocal ();
 			} else {
 				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCastMask;
-				TranslationPlane.transform.position =
-					TransformUtil.Transform (TransformDirection.ServerToLocal, Vector3.zero);
+				TranslationPlane.transform.position = (Vector3.zero).ToLocal ();
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;
 				}

@@ -15,13 +15,19 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyPrefabs.Cursor {
 	public class RaycastCubeMover : AbstractCubeMover, OnCubeDeselectedListener {
 
-		public float cubeOffset = 0.5f;
+		[SerializeField]
+		[SyncVar]
+		private float dragDistanceThreshold = 1f;
+		[SerializeField]
+		private float cubeOffset = 0.5f;
 		private float currOffset;
 		protected Rigidbody cubeRb;
 		private NavMeshObstacle cubeNavObstacle;
 		private OverlapManager overlapManager;
 		protected CursorController cursorCtrl;
+
 		protected GameObject dragCubeTarget;
+		protected Vector3 dragStartPosition;
 
 		protected override void Start () {
 			base.Start ();
@@ -37,19 +43,19 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			}
 			if (CrossPlatformInputManager.GetButtonDown (Buttons.Select) && stateManager.IsHovering ()) {
 				dragCubeTarget = stateManager.HoveredCube.Cube;
+				dragStartPosition = transform.position;
 			} else if (CrossPlatformInputManager.GetButtonUp (Buttons.Select)) {
 				dragCubeTarget = null;
 			}
 		}
 
 		protected override bool IsStartingMove (out GameObject cube) {
-			cube = stateManager.IsHovering () ? stateManager.HoveredCube.Cube : null;
-			return
-			//CrossPlatformInputManager.GetButton(Buttons.Select) &&
-			//stateManager.IsHovering() && (!stateManager.HasSelection() ||
-			//	stateManager.IsSelected(stateManager.HoveredCube.Cube)) &&
-			stateManager.IsHovering () &&
-				IsMoving () && DragWasStartedOnCube (stateManager.HoveredCube.Cube);
+			cube = dragCubeTarget;
+			//cube = stateManager.IsHovering () ? stateManager.HoveredCube.Cube : null;
+			return //stateManager.IsHovering () &&
+				dragCubeTarget &&
+				//DragWasStartedOnCube (stateManager.HoveredCube.Cube) &&
+				(HasMoved ()/* || stateManager.IsManipulating*/);
 		}
 
 		protected override void StartMove (GameObject cube) {
@@ -143,8 +149,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				overlapManager.HasOverlapWith (cursorCtrl.GetAlignedWith ());
 		}
 
-		bool IsMoving () {
-			return cursorCtrl.IsMoving ();
+		bool HasMoved () {
+			return (transform.position - dragStartPosition).magnitude > dragDistanceThreshold;
 		}
 
 		bool DragWasStartedOnCube (GameObject cube) {

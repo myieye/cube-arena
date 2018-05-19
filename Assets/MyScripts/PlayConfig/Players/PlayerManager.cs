@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.DAL;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
@@ -20,6 +21,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 return Instance<PlayerManager> ();
             }
         }
+
         public List<NetworkPlayer> Players { get; private set; }
         public int NumberOfPlayers {
             get {
@@ -71,7 +73,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public Color GetPlayerColor (PlayerId id) {
-            return Players.Find (p => p.PlayerId == id.Id).Color.value;
+            return FindPlayer (id).Color.value;
+        }
+
+        public List<GameObject> GetPlayerCubes (PlayerId id) {
+            return FindPlayer (id).Cubes;
+        }
+
+        internal NetworkConnection GetPlayerConnection (PlayerId playerId) {
+            return FindPlayer (playerId).DeviceConfig.Device.Connection;
         }
 
         public void SpawnPlayers () {
@@ -80,9 +90,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
         public void ClearPlayers () {
             foreach (var netPlayer in Players) {
+                if (netPlayer.Cursor) {
+                    var measure = netPlayer.Cursor.GetComponent<Measure> ();
+                    if (measure) {
+                        measure.RpcFlushMeasurements ();
+                    }
+                }
                 NetworkServer.Destroy (netPlayer.Cursor);
                 netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
             }
+        }
+
+        private NetworkPlayer FindPlayer (PlayerId playerId) {
+            return Players.First (player => player.PlayerId == playerId.Id);
         }
     }
 }

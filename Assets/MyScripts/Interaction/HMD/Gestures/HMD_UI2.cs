@@ -1,66 +1,100 @@
 ﻿#if (UNITY_WSA || UNITY_EDITOR)
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using CubeArena.Assets.MyPrefabs.Cursor;
-using CubeArena.Assets.MyScripts.Interaction.State;
-using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.XR.WSA.Input;
-using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
     public class HMD_UI2 : ClickSelectionAndNavigationRotationGestures, IManipulationHandler {
+
+        private float pointerDistance = 10f;
+
+        private Vector3 absoluteRaycastTarget;
+        private bool isManipulatingCube;
+        private bool resetAfterMove;
 
         protected override void OnEnable () {
             base.OnEnable ();
             SetEnabledFunctionKind (GestureFunction.Rotate, InteractionSourceKind.Controller);
             SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Hand);
             SetEnabledFunctionKind (GestureFunction.Point, InteractionSourceKind.Hand);
+            Reset ();
         }
 
-        private CursorController _cursorCtrl;
-        private CursorController CursorController {
-            get {
-                if (!_cursorCtrl) {
-                    _cursorCtrl = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
-                }
-                return _cursorCtrl;
-            }
+        private void Start() {
+            Reset ();
         }
-        private InteractionStateManager _stateManager;
-        private InteractionStateManager StateManager {
-            get {
-                if (!_stateManager) {
-                    _stateManager = GameObjectUtil.FindLocalAuthoritativeObject<InteractionStateManager> ();
-                }
-                return _stateManager;
+
+        private void Update () {
+            if (resetAfterMove && (!StateManager || !StateManager.IsMoving ())) {
+                Reset ();
             }
         }
 
-        void IManipulationHandler.OnManipulationStarted (ManipulationEventData eventData) {
-            // Nothing to do
+        private void OnDisable () {
+            Reset ();
         }
 
-        void IManipulationHandler.OnManipulationUpdated (ManipulationEventData eventData) {
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
-                CursorController.SetPointerOffset (eventData.CumulativeDelta);
+        private void Reset () {
+            if (CursorController) {
+                CursorController.PointerDirection = null;
             }
+            isManipulatingCube = false;
+            resetAfterMove = false;
+            /*if (StateManager) {
+                StateManager.IsManipulating = false;
+            }*/
         }
 
-        void IManipulationHandler.OnManipulationCompleted (ManipulationEventData eventData) {
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
-                CursorController.SetPointerOffset (Vector3.zero);
+        public override void OnManipulationStarted (ManipulationEventData eventData) {
+            if (StateManager.IsHovering () && IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
+                //StateManager.IsManipulating = true;
+                absoluteRaycastTarget = CalcPointerPosition (CursorController.transform.position).ToServer ();
+                isManipulatingCube = true;
             }
+            base.OnManipulationStarted (eventData);
         }
 
-        void IManipulationHandler.OnManipulationCanceled (ManipulationEventData eventData) {
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Point)) {
-                CursorController.SetPointerOffset (Vector3.zero);
+        public override void OnManipulationUpdated (ManipulationEventData eventData) {
+            if (isManipulatingCube && IsOfEnabledFunctionKind (eventData, GestureFunction.Point, probably: true)) {
+                var relativeRaycastTarget = absoluteRaycastTarget.ToLocal ();
+                relativeRaycastTarget = CalcPointerPosition (
+                    //*
+                        relativeRaycastTarget +
+                    //*/ CursorController.transform.position +
+                    (eventData.CumulativeDelta * TransformUtil.LocalRadius));
+
+                //absoluteRaycastTarget = relativeRaycastTarget.ToServer ();
+
+                var direction = relativeRaycastTarget - Camera.main.transform.position;
+                CursorController.PointerDirection = direction;
             }
+            base.OnManipulationUpdated (eventData);
+        }
+
+        public override void OnManipulationCompleted (ManipulationEventData eventData) {
+            if (isManipulatingCube && IsOfEnabledFunctionKind (eventData, GestureFunction.Point, probably: true)) {
+                resetAfterMove = true;
+            }
+            base.OnManipulationCompleted (eventData);
+        }
+
+        public override void OnManipulationCanceled (ManipulationEventData eventData) {
+            if (isManipulatingCube && IsOfEnabledFunctionKind (eventData, GestureFunction.Point, probably: true)) {
+                resetAfterMove = true;
+            }
+            base.OnManipulationCanceled (eventData);
+        }
+
+        private Vector3 CalcPointerPosition (Vector3 currPosition) {
+            return Camera.main.transform.position + (GetDirectionFromCamera(currPosition) * pointerDistance);
+        }
+
+        private Vector3 GetDirectionFromCamera (Vector3 position) {
+            var camPosition = Camera.main.transform.position;
+            return (position - camPosition).normalized;
         }
     }
 }

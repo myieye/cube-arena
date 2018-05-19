@@ -26,8 +26,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				return UIModeHelpers.TestUIModes.Count;
 			}
 		}
-		public GameObject practiceModeIndicator;
-
 		private TimeManager timeManager;
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
@@ -59,14 +57,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void OnRoundOver () {
 			if (Settings.Instance.EndlessRounds) return;
 
-			//Measure.Instance.FlushMeasurements (); // Only executed on server!
-			if (!InLastRound ()) {
-				TriggerNewRound ();
-			} else {
+			if (InLastRound ()) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				currRound = 0;
 				ResetGameObjects ();
 				ResetRoundCounter ();
+			} else {
+				TriggerNewRound ();
 			}
 		}
 
@@ -88,14 +85,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 					currRound, deviceRoundConfigs[currRound - 1]);
 				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
 
-				timeManager.StartRound (Settings.Instance.PracticeRoundLength, Settings.Instance.PassToPlayerTime, this);
+				timeManager.StartRound (Settings.Instance.PracticeRoundLength, Settings.Instance.PassToPlayerTime, this, InPracticeMode);
 				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
 			} else {
-				timeManager.StartRound (Settings.Instance.RoundLength, 0, this);
+				timeManager.StartRound (Settings.Instance.RoundLength, 0, this, InPracticeMode);
 				SpawnGameObjects ();
 			}
-
-			practiceModeIndicator.SetActive (InPracticeMode);
 		}
 
 		private void IncrementModeAndRoundNumber () {

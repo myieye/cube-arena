@@ -116,7 +116,8 @@ namespace HoloToolkit.Unity
             {
                 if (valueType.GetCustomAttributes(typeof(FlagsAttribute), true).Length > 0)
                 {
-                    objValue = EditorGUI.EnumMaskField(position, label, (Enum)objValue);
+                    objValue = EditorGUI.EnumFlagsField(position, label, (Enum)objValue);
+                    //objValue = EditorGUI.EnumMaskField(position, label, (Enum)objValue);
                 }
                 else
                 {

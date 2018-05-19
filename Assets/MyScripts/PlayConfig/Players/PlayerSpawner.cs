@@ -70,7 +70,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				cube.GetComponent<Colourer> ().color = netPlayer.Color.value;
 				cube.GetComponent<PlayerId> ().Id = netPlayer.PlayerId;
 				cube.name = Text.CubeName (netPlayer, i++);
-				NetworkServer.SpawnWithClientAuthority (cube, netPlayer.DeviceConfig.Device.Connection);
+				//NetworkServer.SpawnWithClientAuthority (cube, netPlayer.DeviceConfig.Device.Connection);
+				NetworkServer.Spawn (cube);
 				cubes.Add (cube);
 			}
 			Destroy (cubeStartPoints);

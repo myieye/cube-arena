@@ -42,7 +42,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected override bool IsStartingRotate () {
 			return stateManager.HasSelection () && HasRotationInput () &&
 				!stateManager.IsMoving () && (!CrossPlatformInputManager.GetButton (Buttons.Select) ||
-                UIModeManager.InMode(UIMode.HMD4_GazeAndClicker));
+                UIModeManager.InUIMode(UIMode.HMD1_Gaze));
 		}
 
 		protected override void StartRotate () {
