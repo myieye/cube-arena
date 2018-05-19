@@ -12,20 +12,18 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
         [SyncVar]
         private bool cubesHaveAuthority;
-        private PlayerId playerId;
         private NetworkConnection authoratativeConnection;
-        private NetworkIdentity[] cubeNetworkIds;
+        private IEnumerable<NetworkIdentity> cubeNetworkIds;
 
         private void Start () {
-            if (isServer) {
-                playerId = GetComponent<PlayerId> ();
-                authoratativeConnection = PlayerManager.Instance.GetPlayerConnection (playerId);// GetComponent<NetworkIdentity> ().clientAuthorityOwner;
-                cubeNetworkIds = PlayerManager.Instance.GetPlayerCubes (playerId)
-                    .Select (cube => cube.GetComponent<NetworkIdentity> ()).ToArray ();
-            } else {
-                
+            if (!isServer) return;
+
+            authoratativeConnection = GetComponent<NetworkIdentity> ().clientAuthorityOwner;
+            cubeNetworkIds = PlayerManager.Instance.GetPlayerCubes (GetComponent<PlayerId> ())
+                .Select (cube => cube.GetComponent<NetworkIdentity> ());
+            foreach (var netId in cubeNetworkIds) {
+                netId.localPlayerAuthority = false;
             }
-            
         }
 
         private void Update () {
@@ -39,22 +37,20 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
         }
 
         [Command]
-        private void CmdSetCubeLocalAuthority (bool takeLocalAuthority) {
-            if (takeLocalAuthority == cubesHaveAuthority) return;
+        private void CmdSetCubeLocalAuthority (bool takeAuthority) {
+            if (takeAuthority == cubesHaveAuthority) return;
 
             foreach (var cubeNetworkId in cubeNetworkIds) {
-                if (takeLocalAuthority) {
+                if (takeAuthority) {
                     cubeNetworkId.localPlayerAuthority = true;
-                    var success = cubeNetworkId.AssignClientAuthority (authoratativeConnection);
-                    Debug.LogFormat ("Giving Authority of {0} to {1} [{2}]", cubeNetworkId.gameObject.name, authoratativeConnection.connectionId, success);
+                    cubeNetworkId.AssignClientAuthority (authoratativeConnection);
                 } else {
-                    var success = cubeNetworkId.RemoveClientAuthority (authoratativeConnection);
+                    cubeNetworkId.RemoveClientAuthority (authoratativeConnection);
                     cubeNetworkId.localPlayerAuthority = false;
-                    Debug.LogFormat ("Remvoing Authority of {0} from {1} [{2}]", cubeNetworkId.gameObject.name, authoratativeConnection.connectionId, success);
                 }
             }
 
-            cubesHaveAuthority = takeLocalAuthority;
+            cubesHaveAuthority = takeAuthority;
         }
     }
 }
