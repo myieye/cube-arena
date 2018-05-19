@@ -9,7 +9,7 @@ using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
-    public class HMD_SprayToggle : FunctionBasedGestureHandler, IInputClickHandler {
+    public class HMD_SprayToggle : MonoBehaviour, IInputClickHandler {
 
         private HHDSprayToggle sprayToggle;
 
@@ -17,13 +17,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             sprayToggle = FindObjectOfType<HHDSprayToggle> ();
         }
 
-        protected override void OnEnable () {
-            base.OnEnable ();
-            SetEnabledFunctionKind (GestureFunction.ToggleSpray, InteractionSourceKind.Controller);
-        }
-
         public virtual void OnInputClicked (InputClickedEventData eventData) {
-            if (eventData.TapCount == 2 && IsOfEnabledFunctionKind (eventData, GestureFunction.ToggleSpray)) {
+            if (eventData.TapCount == 2) {
                 sprayToggle.ToggleState ();
             }
         }
