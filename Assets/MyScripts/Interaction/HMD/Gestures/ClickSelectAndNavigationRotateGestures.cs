@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
-    public class ClickSelectionAndNavigationRotationGestures : FunctionBasedGestureHandler, IInputHandler, INavigationHandler, IManipulationHandler, IInputClickHandler {
+    public class ClickSelectAndNavigationRotateGestures : FunctionBasedGestureHandler, IInputHandler, INavigationHandler, IManipulationHandler, IInputClickHandler {
 
         private CursorController _cursorCtrl;
         protected CursorController CursorController {
@@ -31,42 +31,47 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             }
         }
 
+        private bool isRotatingCube;
+        
+        protected override void OnEnable () {
+            base.OnEnable ();
+            Reset ();
+        }
+
+        private void Start() {
+            Reset ();
+        }
+
+        private void OnDisable () {
+            Reset ();
+        }
+
+        private void Reset () {
+            isRotatingCube = false;
+        }
+
         public override void OnInputDown (InputEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Select)) {
+            if (IsOfEnabledGestureFunctionKind (eventData, GestureFunction.Select)) {
                 CrossPlatformInputManager.SetButtonDown (Buttons.Select);
             }
             base.OnInputDown (eventData);
         }
 
         public override void OnInputUp (InputEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Select)) {
+            if (IsOfEnabledGestureFunctionKind (eventData, GestureFunction.Select)) {
                 CrossPlatformInputManager.SetButtonUp (Buttons.Select);
             }
             base.OnInputUp (eventData);
         }
 
         public virtual void OnNavigationStarted (NavigationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
+            if (IsDetectedGestureFunction (GestureFunction.Rotate)) {
+                isRotatingCube = true;
             }
-            // Nothing to do
         }
 
         public virtual void OnNavigationUpdated (NavigationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Rotate)) {
+            if (isRotatingCube) {
                 //Debug.Log ("NormalizedOffset: " + eventData.NormalizedOffset);
                 var horizontal = eventData.NormalizedOffset.x * Settings.Instance.AxisSensitivity;
                 var vertical = -(eventData.NormalizedOffset.y * Settings.Instance.AxisSensitivity);
@@ -76,57 +81,26 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
 
         public virtual void OnNavigationCompleted (NavigationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            //if (IsOfEnabledFunctionKind (eventData, GestureFunction.Rotate, probably : true)) {
+            if (isRotatingCube) {
                 ResetAxes ();
-            //}
+            }
         }
 
         public virtual void OnNavigationCanceled (NavigationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            //if (IsOfEnabledFunctionKind (eventData, GestureFunction.Rotate, probably : true)) {
+            if (isRotatingCube) {
                 ResetAxes ();
-            //}
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Select, probably : true)) {
-                CrossPlatformInputManager.SetButtonUp (Buttons.Select);
             }
+            CrossPlatformInputManager.SetButtonUp (Buttons.Select);
         }
 
-        public virtual void OnManipulationStarted (ManipulationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-        }
+        public virtual void OnManipulationStarted (ManipulationEventData eventData) { }
 
-        public virtual void OnManipulationUpdated (ManipulationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-        }
+        public virtual void OnManipulationUpdated (ManipulationEventData eventData) { }
 
-        public virtual void OnManipulationCompleted (ManipulationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-        }
+        public virtual void OnManipulationCompleted (ManipulationEventData eventData) { }
 
         public virtual void OnManipulationCanceled (ManipulationEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-            if (IsOfEnabledFunctionKind (eventData, GestureFunction.Select, probably : true)) {
-                CrossPlatformInputManager.SetButtonUp (Buttons.Select);
-            }
+            CrossPlatformInputManager.SetButtonUp (Buttons.Select);
         }
 
         public void OnInputClicked (InputClickedEventData eventData) {

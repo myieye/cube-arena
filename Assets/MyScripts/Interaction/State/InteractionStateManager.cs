@@ -21,16 +21,18 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		private List<OnCubeDeselectedListener> onCubeDeselectedListeners;
 		private InteractionState prevState = InteractionState.Idle;
 		private bool rotationIsLocked = false;
+		public bool MovingDisabled { get; set; }
+
 		/*
-		private bool _isManipulating;
-		public bool IsManipulating {
-			get {
-				return UIModeManager.Instance<UIModeManager> ().InManipulationMode () &&
-					_isManipulating;
-			} set {
-				_isManipulating = value;
-			}
-		} */
+private bool _isManipulating;
+public bool IsManipulating {
+    get {
+        return UIModeManager.Instance<UIModeManager> ().InManipulationMode () &&
+            _isManipulating;
+    } set {
+        _isManipulating = value;
+    }
+} */
 
 		public void Awake () {
 			onCubeDeselectedListeners = new List<OnCubeDeselectedListener> ();
@@ -107,7 +109,11 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			State = InteractionState.Idle;
 		}
 
-		public void StartMove () {
+		public bool StartMove () {
+			if (MovingDisabled) {
+				return false;
+			}
+
 			FinishAnyMeasurements ();
 			if (HasSelection () && !InState (InteractionState.Disallowed)) {
 				State = InteractionState.Moving;
@@ -117,6 +123,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			}
 			SelectedCube.StateManager.StartDrag ();
 			Measure.LocalInstance.StartMove (SelectedCube.Cube);
+
+			return true;
 		}
 
 		public void EndMove () {

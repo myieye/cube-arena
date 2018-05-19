@@ -8,46 +8,13 @@ using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
-    public class HMD_UI1 : ClickSelectionAndNavigationRotationGestures {
-
-        [SerializeField]
-        [SyncVar]
-        private float manipulationThreshold = 200f;
-        private float currWait = 0;
+    public class HMD_UI1 : ClickSelectAndNavigationRotateGestures {
 
         protected override void OnEnable () {
             base.OnEnable ();
-            SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceKind.Controller);
-            SetEnabledFunctionKind (GestureFunction.Rotate, InteractionSourceKind.Controller);
+            SetEnabledFunctionKind (GestureFunction.Select, InteractionSourceInfo.Controller);
+            SetEnabledFunctionKind (GestureFunction.Rotate, InteractionSourceInfo.Controller);
         }
-
-        /*
-        private void Start () {
-            Reset ();
-        }
-
-        private void OnDisable () {
-            Reset ();
-        }
-
-        private void Reset () {
-            currWait = 0;
-            if (StateManager) {
-                StateManager.IsManipulating = false;
-            }
-        }
-
-        private void Update () {
-            if (CrossPlatformInputManager.GetButton (Buttons.Select)) {
-                currWait += Time.deltaTime;
-
-                if (currWait > manipulationThreshold) {
-                    StateManager.IsManipulating = true;
-                }
-            } else {
-                Reset ();
-            }
-        } */
     }
 }
 #endif

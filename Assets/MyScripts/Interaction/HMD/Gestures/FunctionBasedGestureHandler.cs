@@ -9,18 +9,18 @@ using UnityEngine.Networking;
 using UnityEngine.XR.WSA.Input;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
-    public abstract class FunctionBasedGestureHandler : NetworkBehaviour, IInputHandler {
-        private Dictionary<InteractionSourceKind, bool> detectedKinds;
-        private Dictionary<GestureFunction, InteractionSourceKind> functionToEnabledKind;
+    public abstract class FunctionBasedGestureHandler : MonoBehaviour, IInputHandler {
+        private Dictionary<InteractionSourceInfo, bool> detectedKinds;
+        private Dictionary<GestureFunction, InteractionSourceInfo> functionToEnabledKind;
 
         protected virtual void OnEnable () {
             InitDetectedKinds ();
-            functionToEnabledKind = new Dictionary<GestureFunction, InteractionSourceKind> ();
+            functionToEnabledKind = new Dictionary<GestureFunction, InteractionSourceInfo> ();
         }
 
         private void InitDetectedKinds () {
-            detectedKinds = new Dictionary<InteractionSourceKind, bool> ();
-            foreach (var kind in Enum.GetValues (typeof (InteractionSourceKind)).Cast<InteractionSourceKind> ()) {
+            detectedKinds = new Dictionary<InteractionSourceInfo, bool> ();
+            foreach (var kind in Enum.GetValues (typeof (InteractionSourceInfo)).Cast<InteractionSourceInfo> ()) {
                 detectedKinds.Add (kind, false);
             }
         }
@@ -30,11 +30,11 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
 
         public virtual void OnInputUp (InputEventData eventData) {
-            var kind = GetInteractionSourceKind (eventData, GestureFunction.Select);
+            var kind = GetInteractionSourceKind (eventData);
             ClearDetectedSourceKind (kind);
         }
 
-        protected void SetEnabledFunctionKind (GestureFunction gestureFunction, InteractionSourceKind kind) {
+        protected void SetEnabledFunctionKind (GestureFunction gestureFunction, InteractionSourceInfo kind) {
             if (!functionToEnabledKind.ContainsKey (gestureFunction)) {
                 functionToEnabledKind.Add (gestureFunction, kind);
             } else {
@@ -42,52 +42,43 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             }
         }
 
-        protected bool IsOfEnabledFunctionKind (BaseInputEventData eventData, GestureFunction function, bool probably = false) {
-            var kind = GetInteractionSourceKind (eventData, function);
-            return IsEnabledFunctionKind (kind, function) ||
-                (!kind.HasValue && FunctionHasUndetectableKind (function) && probably);
+        protected bool IsOfEnabledGestureFunctionKind (BaseInputEventData eventData, GestureFunction function) {
+            var kind = GetInteractionSourceKind (eventData);
+            return IsEnabledFunctionKind (kind, function);
         }
 
-        private bool FunctionHasUndetectableKind (GestureFunction function) {
+        protected bool IsDetectedGestureFunction (GestureFunction function) {
             return functionToEnabledKind.ContainsKey (function) &&
-                functionToEnabledKind[function] == InteractionSourceKind.Hand;
+                detectedKinds[functionToEnabledKind[function]];
         }
 
-        private bool IsEnabledFunctionKind (InteractionSourceKind? kind, GestureFunction function) {
+        private bool IsEnabledFunctionKind (InteractionSourceInfo? kind, GestureFunction function) {
             return kind.HasValue && functionToEnabledKind.ContainsKey (function) &&
-                functionToEnabledKind[function] == (kind.Value);
+                functionToEnabledKind[function] == kind.Value;
         }
 
-        private InteractionSourceKind? GetAndSaveInteractionSourceKind (BaseInputEventData eventData) {
-            var kind = GetInteractionSourceKind (eventData, null);
+        private InteractionSourceInfo? GetAndSaveInteractionSourceKind (BaseInputEventData eventData) {
+            var kind = GetInteractionSourceKind (eventData);
             if (kind.HasValue) {
                 detectedKinds[kind.Value] = true;
             }
             return kind;
         }
 
-        private void ClearDetectedSourceKind (InteractionSourceKind? kind) {
+        private void ClearDetectedSourceKind (InteractionSourceInfo? kind) {
             if (kind.HasValue) {
                 detectedKinds[kind.Value] = false;
             }
         }
 
-        private InteractionSourceKind? GetInteractionSourceKind (BaseInputEventData eventData, GestureFunction? function) {
+        private InteractionSourceInfo? GetInteractionSourceKind (BaseInputEventData eventData) {
             InteractionSourceInfo kind;
             if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                return (InteractionSourceKind) kind;
-            } else if (FunctionKindHasBeenDetected (function)) {
-                return functionToEnabledKind[function.Value];
+                return kind;
             } else {
                 Debug.LogError ("Couldn't get source kind");
                 return null;
             }
-        }
-
-        private bool FunctionKindHasBeenDetected (GestureFunction? function) {
-            return function.HasValue &&
-                functionToEnabledKind.ContainsKey (function.Value) &&
-                detectedKinds[functionToEnabledKind[function.Value]];
         }
     }
 }

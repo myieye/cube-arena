@@ -3,7 +3,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         Select,
         Rotate,
         Point,
-        Translate,
-        ToggleSpray
+        Translate
     }
 }
