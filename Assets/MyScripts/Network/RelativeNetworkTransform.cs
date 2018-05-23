@@ -60,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private void TryInit () {
-            if (TransformUtil.IsCentered || Init()) {
+            if (Init()) {
                 CancelInvoke ("TryInit");
             }
         }
