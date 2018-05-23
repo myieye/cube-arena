@@ -1,3 +1,5 @@
+#if (UNITY_WSA || UNITY_EDITOR)
+
 using System;
 using HoloToolkit.Unity.InputModule;
 
@@ -67,3 +69,5 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
     }
 }
+
+#endif
