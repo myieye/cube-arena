@@ -41,7 +41,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
                     "manipulationFunction must be set before manipulation events occur");
             }
 
-            if (StateManager.IsHovering () && IsDetectedGestureFunction (manipulationFunction.Value)) {
+            if ((StateManager.IsHovering () && IsDetectedGestureFunction (manipulationFunction.Value)) ||
+                (StateManager.IsSpraying () && IsDetectedGestureFunction (GestureFunction.Select))) {
                 isManipulating = true;
                 StateManager.MovingDisabled = false;
             }

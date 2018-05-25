@@ -11,10 +11,28 @@ using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging {
     public static class Calc {
+
+        private static float _areaSize;
+        private static float _prevServerRadius;
+        private static float AreaSize {
+            get {
+                if (_prevServerRadius != TransformUtil.ServerRadius) {
+                    _prevServerRadius = TransformUtil.ServerRadius;
+
+                    var worldSize = TransformUtil.ServerRadius * 2;
+                    _areaSize = worldSize / Settings.Instance.InteractionAreaGridSize;
+                }
+                return _areaSize;
+            }
+        }
+
+        private static readonly Vector3 sixOclock = Vector3.forward * -1;
+
         public static Move CalcMove (float cumulativeDistance, GameObjectState from, GameObjectState to) {
             return new Move {
                 Distance = Vector3.Distance (from.Position, to.Position),
@@ -56,6 +74,14 @@ namespace CubeArena.Assets.MyScripts.Logging {
         public static Kill BuildKill (Enemy enemy) {
             return new Kill {
                 Level = enemy.level
+            };
+        }
+
+        public static CloudMeasurement BuildCloudMeasurement (float overlapTime, float multipleOverlapTime, int numOverlaps) {
+            return new CloudMeasurement {
+                OverlapTime = overlapTime,
+                    MultipleOverlapTime = multipleOverlapTime,
+                    NumOverlaps = numOverlaps
             };
         }
 
@@ -136,8 +162,14 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
         public static int CalcArea (Vector3? interactionPoint, Vector3 playerStartPos) {
             if (interactionPoint.HasValue) {
-                var intPoint = interactionPoint.Value;
-                var maxMagnitude = playerStartPos.magnitude + Settings.Instance.AreaCenterPlayerStartPointOffset;
+                var aip = GetAreaInteractionPoint (interactionPoint.Value, playerStartPos);
+
+                var col = Mathf.FloorToInt (aip.x / AreaSize);
+                var row = Mathf.FloorToInt (aip.z / AreaSize);
+
+                return col + (row * Settings.Instance.InteractionAreaGridSize) + 1;
+
+                /*var maxMagnitude = playerStartPos.magnitude + Settings.Instance.AreaCenterPlayerStartPointOffset;
                 intPoint.y = playerStartPos.y = 0;
                 var areaCenter = Vector3.ClampMagnitude (playerStartPos * 1000, maxMagnitude);
                 var distance = Vector3.Distance (areaCenter, intPoint);
@@ -146,10 +178,18 @@ namespace CubeArena.Assets.MyScripts.Logging {
                     return areaIndex + 1;
                 } else {
                     return Settings.Instance.AreaRadiuses.Length + 1;
-                }
+                }*/
             } else {
                 return 0;
             }
+        }
+
+        private static Vector3 GetAreaInteractionPoint (Vector3 interactionPoint, Vector3 playerStartPos) {
+            playerStartPos.y = 0;
+            var startPointRotation = Quaternion.FromToRotation (playerStartPos, sixOclock);
+            var serverPoint = interactionPoint.ToServer ();
+            var serverIntPoint = startPointRotation * serverPoint;
+            return serverIntPoint + new Vector3 (TransformUtil.ServerRadius, 0, TransformUtil.ServerRadius);
         }
 
         public static AreaInteraction CalcAreaInteraction (DateTime from,

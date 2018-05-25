@@ -53,9 +53,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			cube = dragCubeTarget;
 			//cube = stateManager.IsHovering () ? stateManager.HoveredCube.Cube : null;
 			return //stateManager.IsHovering () &&
-				dragCubeTarget &&
+			dragCubeTarget &&
 				//DragWasStartedOnCube (stateManager.HoveredCube.Cube) &&
-				(HasMoved ()/* || stateManager.IsManipulating*/);
+				(HasMoved () /* || stateManager.IsManipulating*/ );
 		}
 
 		protected override void StartMove (GameObject cube) {

@@ -69,6 +69,10 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			Log (SaveToDb (db.InsertAreaInteraction, areaInteraction));
 		}
 
+		public void SaveCloudMeasurement (CloudMeasurement cloudMeasurement) {
+			Log (SaveToDb (db.InsertCloudMeasurement, cloudMeasurement));
+		}
+
 		public void SaveDeviceIfNewModel (Device device) {
 			var d = db.GetDeviceByModel (device.Model);
 			if (d == null) {

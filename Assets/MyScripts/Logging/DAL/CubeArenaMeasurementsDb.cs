@@ -22,6 +22,8 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
         Rotation InsertRotation (Rotation rotation);
 
         AreaInteraction InsertAreaInteraction (AreaInteraction areaInteraction);
+        
+        CloudMeasurement InsertCloudMeasurement (CloudMeasurement cloudMeasurement);
 
         Device GetDeviceByModel (string model);
 

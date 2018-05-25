@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.Models;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
@@ -18,12 +20,24 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		protected virtual void Update () {
 			if (!hasAuthority) return;
 			if (stateManager.IsSpraying ()) return;
+#if UNITY_EDITOR
+			if (IsOnGUI ()) return;
+#endif
 
 			var selection = CheckStartingNewSelect ();
 			var deselecting = CheckEndingSelect (selection);
 			if (!selection && !deselecting && !stateManager.HasSelection () && IsPressingSelect ()) {
-				Measure.LocalInstance.MadeSelection (SelectionActionType.Miss);
+				Measure.LocalInstance.MadeTentativeSelection (SelectionActionType.Miss);
 			}
+		}
+
+		private bool IsOnGUI () {
+#if !UNITY_EDITOR && UNITY_ANDROID
+			const int pointerId = 0;
+#else
+			const int pointerId = -1;
+#endif
+			return EventSystem.current.IsPointerOverGameObject (pointerId);
 		}
 
 		private GameObject CheckStartingNewSelect () {

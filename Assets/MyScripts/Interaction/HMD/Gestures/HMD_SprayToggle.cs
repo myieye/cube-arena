@@ -1,6 +1,7 @@
 ﻿#if (UNITY_WSA || UNITY_EDITOR)
 
-using CubeArena.Assets.MyScripts.Interaction.HHD;
+using CubeArena.Assets.MyScripts.Interaction.Abstract;
+using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
@@ -9,17 +10,22 @@ using UnityEngine.XR.WSA.Input;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
-    public class HMD_SprayToggle : MonoBehaviour, IInputClickHandler {
+    public class HMD_SprayToggle : FunctionBasedGestureHandler, IInputClickHandler {
 
-        private HHDSprayToggle sprayToggle;
-
-        private void Start () {
-            sprayToggle = FindObjectOfType<HHDSprayToggle> ();
+        private AbstractSprayToggle _sprayToggle;
+        private AbstractSprayToggle SprayToggle {
+            get {
+                if (!_sprayToggle) {
+                    _sprayToggle = GameObject.FindObjectOfType<AbstractSprayToggle> ();
+                }
+                return _sprayToggle;
+            }
         }
 
         public virtual void OnInputClicked (InputClickedEventData eventData) {
-            if (eventData.TapCount == 2) {
-                sprayToggle.ToggleState ();
+            if (eventData.TapCount == 2 && LastInteractionSourceKindWas (InteractionSourceInfo.Controller)) {
+                Measure.LocalInstance.CancelTentativeSelection ();
+                SprayToggle.ToggleState ();
             }
         }
     }

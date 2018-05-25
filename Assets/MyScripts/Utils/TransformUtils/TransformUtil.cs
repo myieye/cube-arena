@@ -13,7 +13,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
         [SyncVar (hook = "OnServerRadiusChange")]
         private float _serverRadius;
-        private static float ServerRadius { get; set; }
+        public static float ServerRadius { get; private set; }
         public static float LocalRadius { get; private set; }
 
         public static bool IsInitialized { get; private set; }
@@ -94,7 +94,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             };
 
             if (transformVelocity) {
-                CalcNewVelocity (direction, ref fromRbs, ref toRbs);
+                toRbs.velocity = TransformVector (direction, fromRbs.velocity);
+                toRbs.angularVelocity = TransformVector (direction, fromRbs.angularVelocity);
             }
             return toRbs;
         }
@@ -213,17 +214,13 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             return World.rotation * rot;
         }
 
-        private static void CalcNewVelocity (TransformDirection direction, ref RigidbodyState from, ref RigidbodyState to) {
+        public static Vector3 TransformVector (TransformDirection direction, Vector3 vector) {
             CheckTransformMatricesReady ();
             switch (direction) {
                 case TransformDirection.LocalToServer:
-                    to.velocity = worldToLocalMatrix.MultiplyVector (from.velocity);
-                    to.angularVelocity = worldToLocalMatrix.MultiplyVector (from.angularVelocity);
-                    break;
+                    return worldToLocalMatrix.MultiplyVector (vector);
                 case TransformDirection.ServerToLocal:
-                    to.velocity = localToWorldMatrix.MultiplyVector (from.velocity);
-                    to.angularVelocity = localToWorldMatrix.MultiplyVector (from.angularVelocity);
-                    break;
+                    return localToWorldMatrix.MultiplyVector (vector);
                 default:
                     throw new InvalidTransformDirectionException (direction);
             }
@@ -244,56 +241,20 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     angularVelocity = rigidbody.angularVelocity
             };
         }
-    }
 
-    public static class TransformUtilHelpers {
-
-        public static Vector3 Transform (this Vector3 point, TransformDirection direction) {
-            return TransformUtil.Transform (direction, point);
-        }
-
-        public static Quaternion Transform (this Quaternion rotation, TransformDirection direction) {
-            return TransformUtil.Transform (direction, rotation);
+        public static bool IsValid (Vector3 pos) {
+            return !(
+                float.IsNaN (pos.x) || float.IsInfinity (pos.x) ||
+                float.IsNaN (pos.y) || float.IsInfinity (pos.y) ||
+                float.IsNaN (pos.z) || float.IsInfinity (pos.z));
         }
 
-        public static RigidbodyState Transform (this Transform transform, TransformDirection direction) {
-            return TransformUtil.Transform (direction, transform);
-        }
-
-        public static RigidbodyState Transform (this Rigidbody rigidbody, TransformDirection direction) {
-            return TransformUtil.Transform (direction, rigidbody);
-        }
-        
-        public static Vector3 ToServer (this Vector3 point) {
-            return TransformUtil.Transform (TransformDirection.LocalToServer, point);
-        }
-
-        public static Vector3 ToLocal (this Vector3 point) {
-            return TransformUtil.Transform (TransformDirection.ServerToLocal, point);
-        }
-        
-        public static Quaternion ToServer (this Quaternion rotation) {
-            return TransformUtil.Transform (TransformDirection.LocalToServer, rotation);
-        }
-
-        public static Quaternion ToLocal (this Quaternion rotation) {
-            return TransformUtil.Transform (TransformDirection.ServerToLocal, rotation);
-        }
-        
-        public static RigidbodyState ToServer (this Transform transform) {
-            return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
-        }
-
-        public static RigidbodyState ToLocal (this Transform transform) {
-            return TransformUtil.Transform (TransformDirection.ServerToLocal, transform);
-        }
-        
-        public static RigidbodyState ToServer (this Rigidbody rigidbody) {
-            return TransformUtil.Transform (TransformDirection.LocalToServer, rigidbody);
-        }
-
-        public static RigidbodyState ToLocal (this Rigidbody rigidbody) {
-            return TransformUtil.Transform (TransformDirection.ServerToLocal, rigidbody);
+        public static bool IsValid (Quaternion rotation) {
+            return !(
+                float.IsNaN (rotation.w) || float.IsInfinity (rotation.w) ||
+                float.IsNaN (rotation.x) || float.IsInfinity (rotation.x) ||
+                float.IsNaN (rotation.y) || float.IsInfinity (rotation.y) ||
+                float.IsNaN (rotation.z) || float.IsInfinity (rotation.z));
         }
     }
 }

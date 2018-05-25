@@ -8,6 +8,7 @@ using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
@@ -23,11 +24,13 @@ namespace CubeArena.Assets.MyScripts.Logging {
         private GameObjectState movingObjCurrState;
         private GameObjectState rotatingObjStartState;
         private GameObjectState rotatingObjCurrState;
+
         private float cumulativeMoveDistance;
         private float cumulativeRotationAngle;
         private DateTime selectionStart;
         private int? interactionArea;
         private DateTime areaInteractionStart;
+        private Coroutine tentativeSelectionCoroutine;
         /*private static UIModeManager _uiModeManager;
         private static int UIMode {
             get {
@@ -126,6 +129,26 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
             MeasureSelection (type);
             logger.CmdLogSelectionAction (Calc.BuildSelectionAction (type));
+        }
+
+        public void MadeTentativeSelection (SelectionActionType type) {
+            tentativeSelectionCoroutine =
+                StartCoroutine (DelayUtil.Do (0.5f, () => {
+                    MadeSelection (type);
+                    tentativeSelectionCoroutine = null;
+                }));
+        }
+        
+        public void CancelTentativeSelection () {
+            if (tentativeSelectionCoroutine != null) {
+                StopCoroutine (tentativeSelectionCoroutine);
+            }
+        }
+
+        public void CloudDestroyed (float overlapTime, float multipleOverlapTime, int numOverlaps) {
+            if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
+
+            logger.CmdLogCloudMeasurement (Calc.BuildCloudMeasurement (overlapTime, multipleOverlapTime, numOverlaps));
         }
 
         private void MeasureSelection (SelectionActionType type) {

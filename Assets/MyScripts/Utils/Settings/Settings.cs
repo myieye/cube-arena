@@ -128,6 +128,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private bool resetDbOnStart;
 		[SerializeField]
 		private bool serverOnlyMeasurementLogging;
+		[SerializeField]
+		private int interactionAreaGridSize;
 
 		[Header ("Rotation")]
 		[SerializeField]
@@ -138,10 +140,12 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private float maxRotationVelocity;
 		[SerializeField]
 		private float axisSensitivity;
-		[SerializeField]
+
+
+		/*[SerializeField]
 		private int[] areaRadiuses;
 		[SerializeField]
-		private float areaCenterPlayerStartPointOffset;
+		private float areaCenterPlayerStartPointOffset;*/
 
 		public bool ForceUserStudySettings {
 			get { return forceUserStudySettings; }
@@ -249,6 +253,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		public bool ServerOnlyMeasurementLogging {
 			get { return serverOnlyMeasurementLogging; }
 		}
+		public int InteractionAreaGridSize {
+			get { return interactionAreaGridSize; }
+		}
 		public float RotationTimeout {
 			get { return rotationTimeout; }
 		}
@@ -261,11 +268,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		public float AxisSensitivity {
 			get { return axisSensitivity; }
 		}
-		public int[] AreaRadiuses {
+		/*public int[] AreaRadiuses {
 			get { return areaRadiuses; }
 		}
 		public float AreaCenterPlayerStartPointOffset {
 			get { return areaCenterPlayerStartPointOffset; }
-		}
+		}*/
 	}
 }

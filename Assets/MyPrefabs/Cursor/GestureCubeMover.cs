@@ -106,11 +106,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private Vector3 CalcYVelocity (Vector2 from, Vector2 to) {
-			return Vector3.up * (to.y - from.y) * Time.deltaTime * speed * GetDistanceFromCamera ();
-		}
-
-		private float GetDistanceFromCamera () {
-			return Vector3.Distance (cubeRb.transform.position, Camera.main.transform.position);
+			return Vector3.up * (to.y - from.y) * Time.deltaTime *
+				speed * CameraUtils.DistanceFromCamera (cubeRb.transform);
 		}
 
 		private bool StartingYMove (out GameObject cube) {

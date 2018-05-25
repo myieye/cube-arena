@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.State;
+using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Colors;
@@ -98,6 +100,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			spray.transform.rotation = UnityEngine.Random.rotation;
 			spray.transform.position = position;
 			spray.GetComponent<Colourer> ().color = playerColour;
+
+			spray.GetComponent <CloudEffectivenessMeasurer> ().PlayerMeasuerer = GetComponent <Measure> ();
+
 			return spray;
 		}
 	}

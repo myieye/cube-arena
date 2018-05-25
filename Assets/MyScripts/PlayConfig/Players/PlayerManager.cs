@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.DAL;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
@@ -88,7 +89,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             PlayerSpawner.Instance.SpawnPlayers (Players);
         }
 
-        public void ClearPlayers () {
+        public void ClearPlayers (float time) {
             foreach (var netPlayer in Players) {
                 if (netPlayer.Cursor) {
                     var measure = netPlayer.Cursor.GetComponent<Measure> ();
@@ -96,7 +97,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                         measure.RpcFlushMeasurements ();
                     }
                 }
-                NetworkServer.Destroy (netPlayer.Cursor);
+                StartCoroutine (DelayUtil.Do (time - 0.2f, () => NetworkServer.Destroy (netPlayer.Cursor)));
                 netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
             }
         }

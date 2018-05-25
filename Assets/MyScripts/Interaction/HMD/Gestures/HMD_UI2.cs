@@ -30,7 +30,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         public override void OnManipulationStarted (ManipulationEventData eventData) {
             base.OnManipulationStarted (eventData);
             if (isManipulating) {
-                absoluteRaycastTarget = CalcPointerPosition (CursorController.transform.position).ToServer ();
+                absoluteRaycastTarget = CursorController.transform.position.ToServer ();
             }
         }
 
@@ -38,11 +38,14 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             base.OnManipulationUpdated (eventData);
             if (isManipulating) {
                 var relativeRaycastTarget = absoluteRaycastTarget.ToLocal ();
-                relativeRaycastTarget = CalcPointerPosition (
+                relativeRaycastTarget = 
+                    //CalcPointerPosition (
                     //*
                         relativeRaycastTarget +
                     //*/ CursorController.transform.position +
-                    (eventData.CumulativeDelta * TransformUtil.LocalRadius));
+                    (eventData.CumulativeDelta * TransformUtil.LocalRadius * 2)
+                    //)
+                    ;
 
                 //absoluteRaycastTarget = relativeRaycastTarget.ToServer ();
 

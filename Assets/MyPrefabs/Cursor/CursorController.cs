@@ -163,7 +163,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		public Vector3 GetVelocityFromToOffset (Vector3 from, float offset) {
-			return GetVelocityFromTo (from, lastHit.point + lastHit.normal * offset);
+			var to = TargetPosition;
+			if (Raycasting) {
+				to += lastHit.normal * offset;
+			}
+			return GetVelocityFromTo (from, to);
 		}
 
 		void MoveTowardsTarget () {

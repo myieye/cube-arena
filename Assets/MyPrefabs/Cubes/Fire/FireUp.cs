@@ -14,6 +14,8 @@ namespace CubeArena.Assets.MyPrefabs.Cubes {
 		}
 
 		void Update () {
+			if (!TransformUtil.IsInitialized) return;
+
 			// Keep at vertical offset and pointed up
 			transform.rotation = Quaternion.Lerp (transform.rotation, TransformUtil.World.rotation, Time.deltaTime);
 			transform.position = Vector3.Lerp (

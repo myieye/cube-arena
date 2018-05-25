@@ -12,10 +12,16 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
     public abstract class FunctionBasedGestureHandler : MonoBehaviour, IInputHandler {
         private Dictionary<InteractionSourceInfo, bool> detectedKinds;
         private Dictionary<GestureFunction, InteractionSourceInfo> functionToEnabledKind;
+        private InteractionSourceInfo? lastInteractionSourceKind;
 
         protected virtual void OnEnable () {
             InitDetectedKinds ();
             functionToEnabledKind = new Dictionary<GestureFunction, InteractionSourceInfo> ();
+        }
+
+        protected bool LastInteractionSourceKindWas (InteractionSourceInfo kind) {
+            return lastInteractionSourceKind.HasValue &&
+                lastInteractionSourceKind.Value == kind;
         }
 
         private void InitDetectedKinds () {
@@ -61,6 +67,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             var kind = GetInteractionSourceKind (eventData);
             if (kind.HasValue) {
                 detectedKinds[kind.Value] = true;
+                lastInteractionSourceKind = kind.Value;
             }
             return kind;
         }

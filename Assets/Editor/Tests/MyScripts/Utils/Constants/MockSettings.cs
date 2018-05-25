@@ -46,11 +46,12 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public bool ResetDbOnStart { get; set; }
         public bool LogMeasurementsToConsole { get; set; }
         public bool ServerOnlyMeasurementLogging { get; set; }
+		public int InteractionAreaGridSize { get; set; }
         public float RotationTimeout { get; set; }
         public float MinRotationVelocity { get; set; }
         public float MaxRotationVelocity { get; set; }
         public float AxisSensitivity { get; set; }
-        public int[] AreaRadiuses { get; set; }
-        public float AreaCenterPlayerStartPointOffset { get; set; }
+        //public int[] AreaRadiuses { get; set; }
+        //public float AreaCenterPlayerStartPointOffset { get; set; }
     }
 }

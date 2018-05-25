@@ -50,8 +50,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				ResetRoundCounter ();
 			}
 
-			ResetGameObjects ();
-			StartNewRound ();
+			ResetGameObjects (0.5f);
+			StartCoroutine (DelayUtil.Do (0.5f, StartNewRound));
 		}
 
 		public void OnRoundOver () {
@@ -60,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (InLastRound ()) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				currRound = 0;
-				ResetGameObjects ();
+				ResetGameObjects (0.5f);
 				ResetRoundCounter ();
 			} else {
 				TriggerNewRound ();
@@ -112,10 +112,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			PlayerManager.Instance.SpawnPlayers ();
 		}
 
-		private void ResetGameObjects () {
-			EnemyManager.Instance.ClearEnemies ();
-			PlayerManager.Instance.ClearPlayers ();
+		private void ResetGameObjects (float time) {
 			SprayManager.Instance<SprayManager> ().ResetSpray ();
+			EnemyManager.Instance.ClearEnemies ();
+			PlayerManager.Instance.ClearPlayers (time);
 		}
 
 		private void ResetRoundCounter () {

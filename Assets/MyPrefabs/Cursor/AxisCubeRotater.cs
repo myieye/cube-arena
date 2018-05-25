@@ -6,6 +6,7 @@ using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
@@ -35,7 +36,22 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected override void Rotate () {
 			if (selectedRigidbody != null) {
-				selectedRigidbody.AddTorque (CalculateRotationTorque (), ForceMode.VelocityChange);
+				var torque = CalculateRotationTorque ();
+				selectedRigidbody.AddTorque (torque, ForceMode.VelocityChange);
+				CmdApplyTorqueOnNetwork (selectedRigidbody.gameObject, torque.ToServerDirection());
+			}
+		}
+
+		[Command]
+		protected void CmdApplyTorqueOnNetwork (GameObject cube, Vector3 torque) {
+			RpcApplyTorqueOnOtherClients (cube, torque);
+		}
+
+		[ClientRpc]
+		void RpcApplyTorqueOnOtherClients (GameObject cube, Vector3 torque) {
+			if (!hasAuthority) {
+				cube.GetComponent <Rigidbody> ().AddTorque (
+					torque.ToLocalDirection (), ForceMode.VelocityChange);
 			}
 		}
 
@@ -51,6 +67,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		private void SelectCube (GameObject cube) {
 			selectedRigidbody = cube.GetComponent<Rigidbody> ();
+			selectedRigidbody.maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
 			rotationWaitTime = 0;
 		}
 

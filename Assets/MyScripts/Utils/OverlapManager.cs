@@ -13,7 +13,7 @@ namespace CubeArena.Assets.MyScripts.Utils {
 		[SerializeField]
 		private List<string> ignoreList = new List<string> { "UI" };
 		[SerializeField]
-		private List<GameObject> touchedObjects = new List<GameObject> ();
+		public List<GameObject> touchedObjects = new List<GameObject> ();
 		private Collider[] colliders;
 		
 		public virtual void Awake () {
@@ -21,7 +21,7 @@ namespace CubeArena.Assets.MyScripts.Utils {
 		}
 
 		public virtual void OnTriggerEnter (Collider col) {
-			if (!OwnCollider(col) && HasMatchingTag (col.gameObject)) {
+			if (!OwnCollider(col) && HasMatchingTag (col.gameObject) && !touchedObjects.Contains (col.gameObject)) {
 				touchedObjects.Add (col.gameObject);
 			}
 		}

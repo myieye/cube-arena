@@ -109,12 +109,16 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             return Insert (areaInteraction);
         }
 
+        public CloudMeasurement InsertCloudMeasurement (CloudMeasurement cloudMeasurement) {
+            return Insert (cloudMeasurement);
+        }
+
         public Device GetDeviceByModel (string model) {
             return conn.Table<Device> ().Where (d => d.Model.Equals (model)).FirstOrDefault ();
         }
 
         public Device InsertDevice (Device device) {
-            return Insert (device, typeof(Device));
+            return Insert (device, typeof (Device));
         }
 
         private void PrintTable<T> () where T : new () {

@@ -9,8 +9,8 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
     public class CubeArenaMeasurementsMockDb : CubeArenaMeasurementsDb {
 
         private int nextPlayerId = 1;
-        private Dictionary<Type, List<object>> entities = new Dictionary<Type, List<object>>();
-        private Dictionary<Type, int> nextIds = new Dictionary<Type, int>();
+        private Dictionary<Type, List<object>> entities = new Dictionary<Type, List<object>> ();
+        private Dictionary<Type, int> nextIds = new Dictionary<Type, int> ();
 
         public int GetNextPlayerId () {
             return nextPlayerId++;
@@ -52,30 +52,34 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
             return Insert (areaInteraction);
         }
 
+        public CloudMeasurement InsertCloudMeasurement (CloudMeasurement cloudMeasurement) {
+            return Insert (cloudMeasurement);
+        }
+
         public Device InsertDevice (Device device) {
             return Insert (device);
         }
 
         public Device GetDeviceByModel (string model) {
-            var t = typeof(Device);
-            CheckLists(t);
-            return (Device) entities[t].Where(d => ((Device) d).Model.Equals(model)).FirstOrDefault();
+            var t = typeof (Device);
+            CheckLists (t);
+            return (Device) entities[t].Where (d => ((Device) d).Model.Equals (model)).FirstOrDefault ();
         }
 
         private T Insert<T> (T entity) where T : BaseEntity {
-            var t = typeof(T);
-            CheckLists(t);
-            entities[t].Add(entity);
+            var t = typeof (T);
+            CheckLists (t);
+            entities[t].Add (entity);
             entity.Id = nextIds[t]++;
             return entity;
         }
 
-        private void CheckLists(Type type) {
-            if (!entities.ContainsKey(type)) {
-                entities.Add(type, new List<object>());
+        private void CheckLists (Type type) {
+            if (!entities.ContainsKey (type)) {
+                entities.Add (type, new List<object> ());
             }
-            if (!nextIds.ContainsKey(type)) {
-                nextIds.Add(type, 1);
+            if (!nextIds.ContainsKey (type)) {
+                nextIds.Add (type, 1);
             }
         }
     }

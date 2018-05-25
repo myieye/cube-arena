@@ -60,7 +60,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private void TryInit () {
-            if (Init()) {
+            if (Init ()) {
                 CancelInvoke ("TryInit");
             }
         }
@@ -109,6 +109,7 @@ namespace CubeArena.Assets.MyScripts.Network {
             if (IsSender || !isInitialized) return;
 
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
+            if (!IsValid (rigidbodyState)) return;
 
             switch (mode) {
                 case NetworkTransformMode.Rigidbody:
@@ -127,6 +128,18 @@ namespace CubeArena.Assets.MyScripts.Network {
                     agent.transform.rotation = rigidbodyState.rotation;
                     break;
             }
+        }
+
+        private bool IsValid (RigidbodyState rigidbodyState) {
+            var isValid = TransformUtil.IsValid (rigidbodyState.position) &&
+                TransformUtil.IsValid (rigidbodyState.rotation);
+
+            if (mode == NetworkTransformMode.Rigidbody) {
+                isValid = isValid && TransformUtil.IsValid (rigidbodyState.velocity) &&
+                    TransformUtil.IsValid (rigidbodyState.angularVelocity);
+            }
+
+            return isValid;
         }
 
         private RigidbodyState CalcStateInServerCoordinates () {

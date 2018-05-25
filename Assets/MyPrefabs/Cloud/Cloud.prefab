@@ -27,6 +27,8 @@ GameObject:
   - component: {fileID: 114329840223434536}
   - component: {fileID: 114179868910915594}
   - component: {fileID: 114006062455942474}
+  - component: {fileID: 114545610818790046}
+  - component: {fileID: 114175545592717510}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Slower
@@ -129,6 +131,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &114175545592717510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1321071089660636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8601844810d6bec4b930d429167cbafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114179868910915594
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -184,3 +197,19 @@ MonoBehaviour:
     i15: 46
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114545610818790046
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1321071089660636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9650936114072c94bb0df7ae967771fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagList:
+  - Enemy
+  ignoreList:
+  - UI
+  touchedObjects: []

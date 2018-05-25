@@ -15,7 +15,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
 		private DataService dataService;
 		private RoundManager roundManager;
-		
+
 		private PlayerId _playerId;
 		private int PlayerId {
 			get {
@@ -74,6 +74,11 @@ namespace CubeArena.Assets.MyScripts.Logging {
 		[Command]
 		public void CmdLogAreaInteraction (AreaInteraction areaInteraction) {
 			dataService.SaveAreaInteraction (AddDbInfo (areaInteraction));
+		}
+
+		[Command]
+		public void CmdLogCloudMeasurement (CloudMeasurement cloudMeasurement) {
+			dataService.SaveCloudMeasurement (AddDbInfo (cloudMeasurement));
 		}
 
 		private T AddDbInfo<T> (T measurement, bool setPlayerRoundId = true) where T : Measurement {

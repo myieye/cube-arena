@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Utils.Colors;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
@@ -28,8 +29,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 		public PlayerColor[] colors;
 		private List<Transform> spawnPoints;
 		private int nextSpawnPoint;
+		private Dictionary<Device, GameObject> deviceCursors;
 
 		public void SpawnPlayers (List<NetworkPlayer> players) {
+			deviceCursors = new Dictionary<Device, GameObject> ();
 			InitSpawnPoints (players);
 
 			foreach (var netPlayer in players) {
@@ -43,12 +46,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				netPlayer.Color = colors[netPlayer.PlayerIndex];
 				netPlayer.AddedPlayer = true;
 			}
-			netPlayer.Cursor = SpawnPlayerCursor (netPlayer);
+			var device = netPlayer.DeviceConfig.Device;
+			if (!deviceCursors.ContainsKey (device)) {
+				netPlayer.Cursor = SpawnPlayerCursor (netPlayer.StartPosition, netPlayer);
+				deviceCursors.Add (device, netPlayer.Cursor);
+			} else {
+				netPlayer.Cursor = deviceCursors[device];
+			}
 			netPlayer.Cubes = SpawnPlayerCubes (netPlayer.StartPosition, netPlayer);
 		}
 
-		private GameObject SpawnPlayerCursor (NetworkPlayer netPlayer) {
-			var cursor = Instantiate (cursorPrefab);
+		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer) {
+			// The start position is used for calculating area interactions
+			var cursor = Instantiate (cursorPrefab, startPos.position, startPos.rotation);
 
 			var transparentColor = Highlight.ReduceTransparency (netPlayer.Color.value, Highlight.CursorTransparency);
 			cursor.GetComponent<Colourer> ().color = transparentColor;

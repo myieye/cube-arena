@@ -33,7 +33,8 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Spray {
         public void ResetSpray () {
             RpcResetSpray ();
 
-            foreach (var cloud in FindObjectsOfType<Cloud> ()) {
+            foreach (var cloud in FindObjectsOfType<CloudEffectivenessMeasurer> ()) {
+                cloud.Flush ();
                 NetworkServer.Destroy (cloud.gameObject);
             }
         }

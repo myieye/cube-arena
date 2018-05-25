@@ -87,7 +87,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 var mixedUiModes = new List<UIMode> (UIModeHelpers.TestUIModes).Shuffle ();
                 for (int r = 0; r < config.Count; r++) {
                     var deviceConfig = config[r][p];
-                    var deviceType = deviceConfig.Device.Type;
+                    
+                    var device = deviceConfig.Device;
+                    var deviceType = device.Type;
+                    //var deviceType = deviceConfig.Device.Type;
 
                     UIMode deviceTypeUiMode;
                     var foundUiMode = mixedUiModes.RemoveFirst (out deviceTypeUiMode, uiMode => uiMode.IsForDeviceType (deviceType));
@@ -109,7 +112,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 return true;
             } else {
                 Debug.LogError ("Not enough devices for user study!");
-                if (Settings.Instance.OverrideAvailableDevices && numPlayers <= deviceManager.ConnectedDevices.Count) {
+                if (Settings.Instance.OverrideAvailableDevices /* && numPlayers <= deviceManager.ConnectedDevices.Count*/) {
                     return true;
                 } else {
                     return false;
@@ -173,8 +176,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 var testDevices = deviceManager.ConnectedDevices.Values.Where (d => d.Type.IsTestDeviceType ());
                 if (testDevices.Count () >= numPlayers) {
                     device = unusedDevices.Random (d => d.Type.IsTestDeviceType ());
-                } else {
+                } else if (unusedDevices.Any ()) {
                     device = unusedDevices.Random ();
+                } else {
+                    device = deviceManager.ConnectedDevices.Values.ToList ().Random ();
                 }
             }
             return device;
