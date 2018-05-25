@@ -14,30 +14,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 	[RequireComponent (typeof (CustomARObject))]
 	public class CursorController : NetworkBehaviour {
 
-		public enum CursorMode {
-			Camera,
-			Mouse,
-			Touch,
-			Pointer,
-			Translate
-		}
-
-		public Vector3? Position {
-			get {
-				return currRaycastSuccess ? (Vector3?) transform.position : null;
-			}
-		}
-		public Vector3? PointerDirection { get; set; }
-		private bool _raycastingEnabled;
-		public bool Raycasting {
-			get { return _raycastingEnabled || InARaycastingMode; }
-			set { _raycastingEnabled = value; }
-		}
-		public bool Translating {
-			get { return !Raycasting; }
-		}
-		public Vector3 TranslationPosition { get; set; }
-
 		[SerializeField]
 		private float speed;
 		[SerializeField]
@@ -58,6 +34,18 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		public LayerMask raycastLayerMask;
 		private bool touchOffsetActive;
 		private CustomARObject arObj;
+
+		public Vector3? Position {
+			get {
+				if (IsActive) {
+					return transform.position;
+				} else {
+					return null;
+				}
+			}
+		}
+
+		// Movement ---
 		private Vector3 TargetPosition {
 			get { return Raycasting ? lastHit.point : TranslationPosition; }
 		}
@@ -68,7 +56,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 					Quaternion.identity.ToLocal ();
 			}
 		}
+		// ---
 
+		// Sugar ---
 		private bool IsActive {
 			get {
 				return currRaycastSuccess || Translating;
@@ -94,6 +84,23 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				return Settings.Instance.DebugCursor || !InTouchMode;
 			}
 		}
+		// ---
+
+		// HMD2
+		public Vector3? PointerDirection { get; set; }
+		// ---
+
+		// HMD3 ---
+		private bool _raycastingEnabled;
+		public bool Raycasting {
+			get { return _raycastingEnabled || InARaycastingMode; }
+			set { _raycastingEnabled = value; }
+		}
+		public bool Translating {
+			get { return !Raycasting; }
+		}
+		public Vector3 TranslationPosition { get; set; }
+		// ---
 
 		void Start () {
 			cursorRenderer = GetComponent<Renderer> ();
@@ -218,18 +225,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			}
 		}
 
-		/*
-		internal bool IsUpwardsAligned () {
-			var mag = Quaternion.FromToRotation (Vector3.up, lastHit.normal).eulerAngles.magnitude;
-			return currRaycastSuccess && mag < 10;
-		}
-		 */
-
 		internal GameObject GetAlignedWith () {
 			if (currRaycastSuccess) {
 				return lastHit.collider.gameObject;
 			} else if (Translating) {
-				return GetObjectBelow (TranslationPosition);
+				return GetObjectBelow (transform.position);
 			} else {
 				return null;
 			}

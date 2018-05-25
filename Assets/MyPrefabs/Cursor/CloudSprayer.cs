@@ -100,7 +100,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			spray.transform.rotation = UnityEngine.Random.rotation;
 			spray.transform.position = position;
 			spray.GetComponent<Colourer> ().color = playerColour;
-
 			spray.GetComponent <CloudEffectivenessMeasurer> ().PlayerMeasuerer = GetComponent <Measure> ();
 
 			return spray;

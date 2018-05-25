@@ -23,17 +23,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		private bool rotationIsLocked = false;
 		public bool MovingDisabled { get; set; }
 
-		/*
-private bool _isManipulating;
-public bool IsManipulating {
-    get {
-        return UIModeManager.Instance<UIModeManager> ().InManipulationMode () &&
-            _isManipulating;
-    } set {
-        _isManipulating = value;
-    }
-} */
-
 		public void Awake () {
 			onCubeDeselectedListeners = new List<OnCubeDeselectedListener> ();
 		}

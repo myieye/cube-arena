@@ -102,7 +102,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			}
 		}
 
-		public CursorController.CursorMode CurrentCursorMode { get; private set; }
+		public CursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
 
 		public void OnEnable () {
@@ -163,7 +163,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					break;
 				case UIMode.Mouse:
 					inputMethod = CrossPlatformInputManager.ActiveInputMethod.Hardware;
-					CurrentCursorMode = CursorController.CursorMode.Mouse;
+					CurrentCursorMode = CursorMode.Mouse;
 					//sprayMoveButton.SetActive (true);
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
@@ -171,39 +171,39 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					joystick.SetActive (true);
 					selectButton.SetActive (true);
 					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorController.CursorMode.Camera;
+					CurrentCursorMode = CursorMode.Camera;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
 					break;
 				case UIMode.HHD2_Touch:
 					joystick.SetActive (true);
 					touchpad.SetActive (true);
 					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorController.CursorMode.Touch;
+					CurrentCursorMode = CursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD3_Gestures:
 					touchpad.SetActive (true);
 					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorController.CursorMode.Touch;
+					CurrentCursorMode = CursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #if (UNITY_WSA || UNITY_EDITOR)
 				case UIMode.HMD1_Gaze:
 					HMD_UI1.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorController.CursorMode.Camera;
+					CurrentCursorMode = CursorMode.Camera;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HMD2_Point:
 					HMD_UI2.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorController.CursorMode.Pointer;
+					CurrentCursorMode = CursorMode.Pointer;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HMD3_Translate:
 					HMD_UI3.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorController.CursorMode.Translate;
+					CurrentCursorMode = CursorMode.Translate;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #endif
@@ -277,7 +277,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			return Instance<UIModeManager> ().CurrentUIMode.Equals (mode);
 		}
 
-		public static bool InCursorMode (CursorController.CursorMode cursorMode) {
+		public static bool InCursorMode (CursorMode cursorMode) {
 			return Instance<UIModeManager> ().CurrentCursorMode == cursorMode;
 		}
 	}
