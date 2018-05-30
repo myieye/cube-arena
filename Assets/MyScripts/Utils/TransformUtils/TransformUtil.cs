@@ -184,10 +184,10 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         }
 
         public static Vector3 GetRandomNavMeshPosition () {
-            return ToNavMeshPosition (GetRandomLocalPosition ());
+            return ToNavMeshPosition (GetRandomLocalPosition ()).Value;
         }
 
-        public static Vector3 ToNavMeshPosition (Vector3 position) {
+        public static Vector3? ToNavMeshPosition (Vector3 position) {
             NavMeshHit hit;
             if (!NavMesh.SamplePosition (position, out hit, 1.0f, NavMesh.AllAreas)) {
                 Debug.LogWarning ("Failed to sample position");

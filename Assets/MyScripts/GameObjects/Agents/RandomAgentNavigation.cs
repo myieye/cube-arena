@@ -51,8 +51,8 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 			localDestination = newDestination.ToLocal ();
 			var navMeshDestination = TransformUtil.ToNavMeshPosition (localDestination);
-			if (agent != null) {
-				agent.SetDestination (navMeshDestination);
+			if (navMeshDestination.HasValue && agent != null) {
+				agent.SetDestination (navMeshDestination.Value);
 			}
 		}
 
