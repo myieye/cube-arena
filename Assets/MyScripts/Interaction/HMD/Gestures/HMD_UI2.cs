@@ -37,7 +37,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         public override void OnManipulationUpdated (ManipulationEventData eventData) {
             base.OnManipulationUpdated (eventData);
             if (isManipulating) {
-                var delta = eventData.CumulativeDelta * TransformUtil.LocalRadius * 2;
+                var delta = eventData.CumulativeDelta * TransformUtil.LocalRadius * 4;
                 var relativeRaycastTarget = absoluteRaycastTarget.ToLocal () + delta;
 
                 var direction = relativeRaycastTarget - Camera.main.transform.position;
