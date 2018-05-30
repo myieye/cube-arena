@@ -124,10 +124,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (moveState.Equals (this.moveState)) return;
 
 			if (moveState.Equals (MoveState.XZ)) {
-				cursorCtrl.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
+				cursor.Get.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
 				TranslationPlane.transform.position = (Vector3.up * cubeRb.transform.position.y).ToLocal ();
 			} else {
-				cursorCtrl.raycastLayerMask = Layers.NotIgnoreRayCastMask;
+				cursor.Get.raycastLayerMask = Layers.NotIgnoreRayCastMask;
 				TranslationPlane.transform.position = (Vector3.zero).ToLocal ();
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;

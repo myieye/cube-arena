@@ -1,53 +1,53 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using CACursorMode = CubeArena.Assets.MyPrefabs.Cursor.CursorMode;
 using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
-using CubeArena.Assets.MyScripts.Interaction;
-using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.Interaction.HMD.Gestures;
-using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 	public class UIModeManager : NetworkBehaviourSingleton {
 
-		public RaycastCubeMover RaycastCubeMover {
+		private GameObject Cursor {
 			get {
-				return FindObjectOfType<RaycastCubeMover> ();
+				var component = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
+				return component ? component.gameObject : null;
 			}
 		}
-		public GestureCubeMover GestureCubeMover {
+		private CursorController StandardCursorController {
 			get {
-				return FindObjectOfType<GestureCubeMover> ();
+				return Cursor.GetComponentOfExactType<CursorController> ();
+			}
+		}
+		private CursorController TouchCursorController {
+			get {
+				return Cursor.GetComponentOfExactType<TouchCursorController> ();
 			}
 		}
 
 #if (UNITY_WSA || UNITY_EDITOR)
-		public HMD_UI1 HMD_UI1 {
+		private HMD_UI1 HMD_UI1 {
 			get {
 				return FindObjectOfType<HMD_UI1> ();
 			}
 		}
-		public HMD_UI2 HMD_UI2 {
+		private HMD_UI2 HMD_UI2 {
 			get {
 				return FindObjectOfType<HMD_UI2> ();
 			}
 		}
-		public HMD_UI3 HMD_UI3 {
+		private HMD_UI3 HMD_UI3 {
 			get {
 				return FindObjectOfType<HMD_UI3> ();
 			}
 		}
-		public HMD_SprayToggle HMD_SprayToggle {
+		private HMD_SprayToggle HMD_SprayToggle {
 			get {
 				return FindObjectOfType<HMD_SprayToggle> ();
 			}
@@ -102,7 +102,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			}
 		}
 
-		public CursorMode CurrentCursorMode { get; private set; }
+		public CACursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
 
 		public void OnEnable () {
@@ -163,64 +163,54 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					break;
 				case UIMode.Mouse:
 					inputMethod = CrossPlatformInputManager.ActiveInputMethod.Hardware;
-					CurrentCursorMode = CursorMode.Mouse;
-					//sprayMoveButton.SetActive (true);
+					CurrentCursorMode = CACursorMode.Mouse;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD1_Camera:
 					joystick.SetActive (true);
 					selectButton.SetActive (true);
-					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorMode.Camera;
+					CurrentCursorMode = CACursorMode.Camera;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightMiddle;
 					break;
 				case UIMode.HHD2_Touch:
 					joystick.SetActive (true);
 					touchpad.SetActive (true);
-					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorMode.Touch;
+					CurrentCursorMode = CACursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HHD3_Gestures:
 					touchpad.SetActive (true);
-					//sprayMoveButton.SetActive (true);
-					CurrentCursorMode = CursorMode.Touch;
+					CurrentCursorMode = CACursorMode.Touch;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #if (UNITY_WSA || UNITY_EDITOR)
 				case UIMode.HMD1_Gaze:
 					HMD_UI1.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorMode.Camera;
+					CurrentCursorMode = CACursorMode.Camera;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HMD2_Point:
 					HMD_UI2.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorMode.Pointer;
+					CurrentCursorMode = CACursorMode.Pointer;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 				case UIMode.HMD3_Translate:
 					HMD_UI3.enabled = true;
 					HMD_SprayToggle.enabled = true;
-					CurrentCursorMode = CursorMode.Translate;
+					CurrentCursorMode = CACursorMode.Translate;
 					sprayMoveButton.GetComponent<RectTransform> ().anchoredPosition = Positions.CanvasRightBottom;
 					break;
 #endif
 			}
 			CrossPlatformInputManager.SwitchActiveInputMethod (inputMethod);
-		}
 
-		/*
-		public bool InManipulationMode () {
-			switch (CurrentUIMode) {
-				case UIMode.HMD2_Point:
-				case UIMode.HMD3_Translate:
-					return true;
-				default:
-					return false;
+			if (Cursor) {
+				StandardCursorController.enabled = !InTouchMode;
+				TouchCursorController.enabled = InTouchMode;
 			}
-		} */
+		}
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
 			foreach (var player in players) {
@@ -253,9 +243,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (touchpad) {
 				touchpad.SetActive (false);
 			}
-			//if (sprayMoveButton) {
-			//	sprayMoveButton.SetActive (false);
-			//}
 
 #if (UNITY_WSA || UNITY_EDITOR)
 			if (HMD_UI1) {
@@ -277,8 +264,19 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			return Instance<UIModeManager> ().CurrentUIMode.Equals (mode);
 		}
 
-		public static bool InCursorMode (CursorMode cursorMode) {
+		public static bool InCursorMode (CACursorMode cursorMode) {
 			return Instance<UIModeManager> ().CurrentCursorMode == cursorMode;
+		}
+
+		public static bool InTouchMode {
+			get {
+				return InCursorMode (CACursorMode.Touch);
+			}
+		}
+		public static bool InPointerMode {
+			get {
+				return InCursorMode (CACursorMode.Pointer);
+			}
 		}
 	}
 }

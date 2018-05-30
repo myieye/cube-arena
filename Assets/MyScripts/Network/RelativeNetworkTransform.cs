@@ -23,6 +23,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         [SerializeField]
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
+        private int navMeshMissCount;
 
         private NetworkTransformMode mode;
         private Rigidbody rb;
@@ -124,8 +125,16 @@ namespace CubeArena.Assets.MyScripts.Network {
                     transform.rotation = rigidbodyState.rotation;
                     break;
                 case NetworkTransformMode.Agent:
-                    agent.Move (rigidbodyState.position - transform.position);
-                    agent.transform.rotation = rigidbodyState.rotation;
+                    if (agent.isOnNavMesh) {
+                        navMeshMissCount = 0;
+                        agent.Move (rigidbodyState.position - transform.position);
+                        agent.transform.rotation = rigidbodyState.rotation;
+                    } else {
+                        navMeshMissCount++;
+                        if (navMeshMissCount > 5) {
+                            agent.Warp (rigidbodyState.position);
+                        }
+                    }
                     break;
             }
         }

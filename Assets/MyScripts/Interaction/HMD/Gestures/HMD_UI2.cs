@@ -37,17 +37,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         public override void OnManipulationUpdated (ManipulationEventData eventData) {
             base.OnManipulationUpdated (eventData);
             if (isManipulating) {
-                var relativeRaycastTarget = absoluteRaycastTarget.ToLocal ();
-                relativeRaycastTarget = 
-                    //CalcPointerPosition (
-                    //*
-                        relativeRaycastTarget +
-                    //*/ CursorController.transform.position +
-                    (eventData.CumulativeDelta * TransformUtil.LocalRadius * 2)
-                    //)
-                    ;
-
-                //absoluteRaycastTarget = relativeRaycastTarget.ToServer ();
+                var delta = eventData.CumulativeDelta * TransformUtil.LocalRadius * 2;
+                var relativeRaycastTarget = absoluteRaycastTarget.ToLocal () + delta;
 
                 var direction = relativeRaycastTarget - Camera.main.transform.position;
                 CursorController.PointerDirection = direction;
@@ -63,7 +54,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
 
         private Vector3 CalcPointerPosition (Vector3 currPosition) {
-            return Camera.main.transform.position + (GetDirectionFromCamera(currPosition) * pointerDistance);
+            return Camera.main.transform.position + (GetDirectionFromCamera (currPosition) * pointerDistance);
         }
 
         private Vector3 GetDirectionFromCamera (Vector3 position) {

@@ -7,6 +7,7 @@ using CubeArena.Assets.MyScripts.Interaction.Listeners;
 using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -24,7 +25,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected Rigidbody cubeRb;
 		private NavMeshObstacle cubeNavObstacle;
 		private OverlapManager overlapManager;
-		protected CursorController cursorCtrl;
+		protected EnabledComponent<CursorController> cursor;
 
 		protected GameObject dragCubeTarget;
 		protected Vector3 dragStartPosition;
@@ -32,7 +33,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected override void Start () {
 			base.Start ();
 			stateManager.AddOnCubeDeselectedListener (this);
-			cursorCtrl = GetComponentInParent<CursorController> ();
+			cursor = new EnabledComponent<CursorController> (gameObject);
 			ResetOffset ();
 		}
 
@@ -76,7 +77,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected override void Move () {
 			if (cubeRb != null) {
-				cubeRb.velocity = cursorCtrl.GetVelocityFromToOffset (
+				cubeRb.velocity = cursor.Get.GetVelocityFromToOffset (
 					stateManager.SelectedCube.Cube.transform.position, currOffset);
 			}
 		}
@@ -109,7 +110,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 			if (hasAuthority) {
 				overlapManager = cube.GetComponent<OverlapManager> ();
-				GetComponent<CursorController> ().Refresh ();
+				cursor.Get.Refresh ();
 			}
 		}
 
@@ -122,7 +123,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		void RpcDeselectMovingCube (GameObject cube) {
 			lock (this) {
 				if (cubeRb != null) {
-					cube.layer = Layers.Default;
+					cube.layer = Layers.Cubes;
 					cube.GetComponent<Collider> ().isTrigger = false;
 					cubeRb.constraints = RigidbodyConstraints.None;
 					cubeRb.useGravity = true;
@@ -146,7 +147,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		bool StuckInDisallow () {
 			return stateManager.InState (InteractionState.Disallowed) &&
 				cubeRb.velocity.magnitude < 2 &&
-				overlapManager.HasOverlapWith (cursorCtrl.GetAlignedWith ());
+				overlapManager.HasOverlapWith (cursor.Get.GetAlignedWith ());
 		}
 
 		bool HasMoved () {

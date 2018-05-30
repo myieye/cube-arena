@@ -2,20 +2,17 @@ using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
     public static class Layers {
+        public static int Cubes {
+            get { return GetLayer ("Cubes"); }
+        }
         public static int IgnoreRaycast {
-            get {
-                return GetLayer ("Ignore Raycast");
-            }
+            get { return GetLayer ("Ignore Raycast"); }
         }
         public static int Default {
-            get {
-                return GetLayer ("Default");
-            }
+            get { return GetLayer ("Default"); }
         }
         public static int Everything {
-            get {
-                return GetLayer ("Everything");
-            }
+            get { return GetLayer ("Everything"); }
         }
 
         public static LayerMask NotIgnoreRayCastMask {

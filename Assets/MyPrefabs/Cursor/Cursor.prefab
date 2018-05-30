@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114602616254648556}
   - component: {fileID: 114587656176561424}
   - component: {fileID: 114861424286629492}
+  - component: {fileID: 114366437682871960}
   - component: {fileID: 114406208612879510}
   - component: {fileID: 114929147157624204}
   - component: {fileID: 114384645145117268}
@@ -42,6 +43,7 @@ GameObject:
   - component: {fileID: 65866006375572262}
   - component: {fileID: 114282487341315062}
   - component: {fileID: 114955242144486708}
+  - component: {fileID: 114034599395801784}
   m_Layer: 2
   m_Name: Cursor
   m_TagString: UI
@@ -302,6 +304,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114034599395801784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c67407c8ffc6f84ca739415b39788fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114149130840081820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -357,6 +370,24 @@ MonoBehaviour:
   velocityThreshold: 3
   angularVelocityThreshold: 3
   interpolationSpeed: 0.4
+--- !u!114 &114366437682871960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1596389934492644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09a5873284655e7489254a61f98bc22d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1000
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  touchOffsetSpeed: 50
+  touchOffset: {x: 0, y: 100}
+  isMovingSensitivity: 10
 --- !u!114 &114383090961952712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -528,10 +559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a976d3ad54d245d41bc1379ccf3a28b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 500
-  touchOffsetSpeed: 50
-  isMovingSensitivity: 10
-  touchOffset: {x: 0, y: 100}
+  speed: 1000
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291

@@ -37,7 +37,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return new Move {
                 Distance = Vector3.Distance (from.Position, to.Position),
                     CumulativeDistance = cumulativeDistance,
-                    Time = (to.Time - from.Time).TotalMilliseconds
+                    Time = (float) (to.Time - from.Time).TotalMilliseconds
             };
         }
 
@@ -45,7 +45,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return new Rotation {
                 Angle = Quaternion.Angle (from.Rotation, to.Rotation),
                     CumulativeAngle = cumulativeRotation,
-                    Time = (to.Time - from.Time).TotalMilliseconds
+                    Time = (float) (to.Time - from.Time).TotalMilliseconds
             };
         }
 
@@ -57,7 +57,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
         public static Selection BuildSelection (DateTime from, DateTime to) {
             return new Selection {
-                Time = (to - from).TotalMilliseconds
+                Time = (float) (to - from).TotalMilliseconds
             };
         }
 
@@ -196,7 +196,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
             DateTime to, int area) {
             return new AreaInteraction {
                 Area = area,
-                    Time = (to - from).TotalMilliseconds
+                    Time = (float) (to - from).TotalMilliseconds
             };
         }
 

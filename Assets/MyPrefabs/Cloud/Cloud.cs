@@ -36,8 +36,9 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 			var color = colourer.color;
 			color.a = Mathf.Min ((float) (1 - (age / lifetime)), maxA);
 			colourer.color = color;
-			
+
 			if (age > lifetime) {
+				GetComponent<CloudEffectivenessMeasurer> ().Flush ();
 				NetworkServer.Destroy (gameObject);
 			}
 		}

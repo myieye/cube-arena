@@ -1,12 +1,12 @@
 using CubeArena.Assets.MyScripts.Logging.DAL.SQLite;
 
 namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
-    public abstract class TimedMeasurement : Measurement {
+    public class TimedMeasurement : Measurement {
 
-        public double _time;
+        public float _time;
 
         [NotNull]
-        public double Time {
+        public float Time {
             get { return _time; }
             set { _time = value; }
         }

@@ -34,7 +34,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			if (isServer && Arrived ()) {
 				destination = TransformUtil.GetRandomPosition ();
 			} else if (AgentLostPath ()) {
+//#if UNITY_WSA && !UNITY_EDITOR
+//				transform.LookAt ()
+//#else
 				OnNewDestination (destination);
+//#endif
 			}
 
 			animator.SetBool ("Moving", IsMoving ());

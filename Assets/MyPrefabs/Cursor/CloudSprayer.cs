@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Interaction;
@@ -10,6 +11,7 @@ using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Colors;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using ProgressBar;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -41,13 +43,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private DateTime lastSpray;
 
 		private InteractionStateManager stateManager;
-		private CursorController cursorCtrl;
+		private EnabledComponent<CursorController> cursor;
+
 		private PlayerId playerId;
 
 		void Start () {
 			progressBar = FindObjectOfType<ProgressBarBehaviour> ();
 			stateManager = GetComponent<InteractionStateManager> ();
-			cursorCtrl = GetComponent<CursorController> ();
+			cursor = new EnabledComponent<CursorController> (gameObject);
 			playerId = GetComponent<PlayerId> ();
 			Reset ();
 		}
@@ -65,9 +68,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			CurrAmount = Mathf.Min (CurrAmount + (rechargeSpeed * Time.deltaTime), capacity);
 
 			if (stateManager.IsSpraying () && Spraying ()) {
-				var pos = cursorCtrl.Position;
-				if (pos.HasValue) {
-					Spray (pos.Value);
+				if (cursor.Get.IsActive) {
+					Spray (transform.position);
 				}
 			}
 		}
@@ -100,7 +102,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			spray.transform.rotation = UnityEngine.Random.rotation;
 			spray.transform.position = position;
 			spray.GetComponent<Colourer> ().color = playerColour;
-			spray.GetComponent <CloudEffectivenessMeasurer> ().PlayerMeasuerer = GetComponent <Measure> ();
+			spray.GetComponent<CloudEffectivenessMeasurer> ().PlayerMeasuerer = GetComponent<Measure> ();
 
 			return spray;
 		}

@@ -41,17 +41,12 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 			}
 		}
 
+		[ServerCallback]
 		public void Flush () {
-			if (!isServer) return;
-			
 			if (!measured) {
 				measured = true;
 				PlayerMeasuerer.CloudDestroyed (overlapTime, multipleOverlapTime, numOverlaps);
 			}
-		}
-
-		void OnDestroy () {
-			Flush ();
 		}
 	}
 }

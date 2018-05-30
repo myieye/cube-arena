@@ -15,7 +15,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         private CursorController _cursorCtrl;
         protected CursorController CursorController {
             get {
-                if (!_cursorCtrl) {
+                if (!(_cursorCtrl && _cursorCtrl.enabled)) {
                     _cursorCtrl = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
                 }
                 return _cursorCtrl;

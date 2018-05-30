@@ -23,8 +23,8 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
 
         public override string ToString () {
             return string.Format (
-                "{0} PlayerRoundId: {1}.",
-                base.ToString (), PlayerRoundId);
+                "{0} PlayerRoundId: {1}. PM: {2}.",
+                base.ToString (), PlayerRoundId, PracticeMode);
         }
     }
 }

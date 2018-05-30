@@ -40,11 +40,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
                 return (int) _uiModeManager.CurrentUIMode;
             }
         }*/
-        private CursorController CursorCtrl {
-            get {
-                return logger.GetComponent<CursorController> ();
-            }
-        }
+        private EnabledComponent<CursorController> cursor;
         private RoundManager RoundManager {
             get {
                 return FindObjectOfType<RoundManager> ();
@@ -52,7 +48,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
         }
         private Vector3 StartPosition {
             get {
-                return logger.GetComponent<StartPositionTracker> ().StartPosition;
+                return GetComponent<StartPositionTracker> ().StartPosition;
             }
         }
 
@@ -60,6 +56,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
         public override void OnStartAuthority () {
             LocalInstance = this;
+            cursor = new EnabledComponent<CursorController> (gameObject);
         }
 
         public void StartMove (GameObject obj) {
@@ -81,10 +78,11 @@ namespace CubeArena.Assets.MyScripts.Logging {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
             UpdateMove (obj);
-            logger.CmdLogMove (Calc.CalcMove (cumulativeMoveDistance, movingObjStartState, movingObjCurrState));
+            var move = Calc.CalcMove (cumulativeMoveDistance, movingObjStartState, movingObjCurrState);
+            logger.CmdLogMove (move, move.Time);
 
-            var placedOn = CursorCtrl.GetAlignedWith ();
-            var pointingUp = Calc.IsAlignedUp (CursorCtrl.gameObject);
+            var placedOn = cursor.Get.GetAlignedWith ();
+            var pointingUp = Calc.IsAlignedUp (cursor.Get.gameObject);
             var placedOnCube = pointingUp && placedOn && placedOn.CompareTag (Tags.Cube);
             int? placedOnPlayerId = null;
             if (placedOnCube) {
@@ -112,8 +110,9 @@ namespace CubeArena.Assets.MyScripts.Logging {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
             UpdateRotation (obj);
-            logger.CmdLogRotation (Calc.CalcRotate (cumulativeRotationAngle,
-                rotatingObjStartState, rotatingObjCurrState));
+            var rotation = Calc.CalcRotate (cumulativeRotationAngle,
+                rotatingObjStartState, rotatingObjCurrState);
+            logger.CmdLogRotation (rotation, rotation.Time);
         }
 
         public void MadeKill (GameObject cube, Enemy enemy) {
@@ -138,7 +137,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
                     tentativeSelectionCoroutine = null;
                 }));
         }
-        
+
         public void CancelTentativeSelection () {
             if (tentativeSelectionCoroutine != null) {
                 StopCoroutine (tentativeSelectionCoroutine);
@@ -155,9 +154,11 @@ namespace CubeArena.Assets.MyScripts.Logging {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
             if (SelectionActionType.Deselect.Equals (type)) {
-                logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now));
+                var selection = Calc.BuildSelection (selectionStart, DateTime.Now);
+                logger.CmdLogSelection (selection, selection.Time);
             } else if (SelectionActionType.Reselect.Equals (type)) {
-                logger.CmdLogSelection (Calc.BuildSelection (selectionStart, DateTime.Now));
+                var selection = Calc.BuildSelection (selectionStart, DateTime.Now);
+                logger.CmdLogSelection (selection, selection.Time);
                 selectionStart = DateTime.Now;
             } else if (SelectionActionType.Select.Equals (type)) {
                 selectionStart = DateTime.Now;
@@ -180,7 +181,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
         private void SaveCurrentAreaInteraction () {
             AreaInteraction areaInteraction = Calc.CalcAreaInteraction (
                 areaInteractionStart, DateTime.Now, interactionArea.Value);
-            logger.CmdLogAreaInteraction (areaInteraction);
+            logger.CmdLogAreaInteraction (areaInteraction, areaInteraction.Time);
             areaInteractionStart = DateTime.Now;
         }
 

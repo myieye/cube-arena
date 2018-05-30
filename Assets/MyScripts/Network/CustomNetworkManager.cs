@@ -20,7 +20,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		public void Start () {
 #if (UNITY_WSA || UNITY_ANDROID) && !UNITY_EDITOR
-			networkAddress = "192.168.1.103";
+			networkAddress = "192.168.1.105";
 #endif
 		}
 

@@ -7,16 +7,15 @@ using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using CubeArena.Assets.MyScripts.Interaction.State;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
     public class OverlapCubeSelecter : AbstractCubeSelecter {
 
         protected bool selecting;
-        protected CursorController cursorCtrl;
 
         protected override void Start () {
             base.Start ();
-            cursorCtrl = GetComponent<CursorController> ();
         }
 
         protected override void Update () {

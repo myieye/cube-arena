@@ -39,12 +39,14 @@ namespace CubeArena.Assets.MyScripts.Logging {
 		}
 
 		[Command]
-		public void CmdLogMove (Move move) {
+		public void CmdLogMove (Move move, float time) {
+			move.Time = time;
 			dataService.SaveMove (AddDbInfo (move));
 		}
 
 		[Command]
-		public void CmdLogRotation (Rotation rotation) {
+		public void CmdLogRotation (Rotation rotation, float time) {
+			rotation.Time = time;
 			dataService.SaveRotation (AddDbInfo (rotation));
 		}
 
@@ -54,7 +56,8 @@ namespace CubeArena.Assets.MyScripts.Logging {
 		}
 
 		[Command]
-		public void CmdLogSelection (Selection selection) {
+		public void CmdLogSelection (Selection selection, float time) {
+			selection.Time = time;
 			dataService.SaveSelecion (AddDbInfo (selection));
 		}
 
@@ -72,7 +75,8 @@ namespace CubeArena.Assets.MyScripts.Logging {
 		}
 
 		[Command]
-		public void CmdLogAreaInteraction (AreaInteraction areaInteraction) {
+		public void CmdLogAreaInteraction (AreaInteraction areaInteraction, float time) {
+			areaInteraction.Time = time;
 			dataService.SaveAreaInteraction (AddDbInfo (areaInteraction));
 		}
 
