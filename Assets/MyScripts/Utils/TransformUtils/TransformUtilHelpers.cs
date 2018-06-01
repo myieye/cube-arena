@@ -36,19 +36,19 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             return TransformUtil.Transform (TransformDirection.ServerToLocal, rotation);
         }
 
-        public static RigidbodyState ToServer (this Transform transform) {
+        public static RigidbodyState ToServerState (this Transform transform) {
             return TransformUtil.Transform (TransformDirection.LocalToServer, transform);
         }
 
-        public static RigidbodyState ToLocal (this Transform transform) {
+        public static RigidbodyState ToLocalState (this Transform transform) {
             return TransformUtil.Transform (TransformDirection.ServerToLocal, transform);
         }
 
-        public static RigidbodyState ToServer (this Rigidbody rigidbody) {
+        public static RigidbodyState ToServerState (this Rigidbody rigidbody) {
             return TransformUtil.Transform (TransformDirection.LocalToServer, rigidbody);
         }
 
-        public static RigidbodyState ToLocal (this Rigidbody rigidbody) {
+        public static RigidbodyState ToLocalState (this Rigidbody rigidbody) {
             return TransformUtil.Transform (TransformDirection.ServerToLocal, rigidbody);
         }
 
@@ -58,6 +58,14 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
         public static Vector3 ToLocalDirection (this Vector3 direction) {
             return TransformUtil.TransformVector (TransformDirection.ServerToLocal, direction);
+        }
+
+        public static void MoveToServer (this Transform transform) {
+            TransformUtil.MoveToServerCoordinates (transform);
+        }
+
+        public static void MoveToLocal (this Transform transform) {
+            TransformUtil.MoveToLocalCoordinates (transform);
         }
     }
 }

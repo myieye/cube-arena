@@ -1,6 +1,7 @@
 ﻿using System;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Attributes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
@@ -12,15 +13,23 @@ namespace CubeArena.Assets.MyScripts.Network {
     [DisallowMultipleComponent]
     [AddComponentMenu ("Network/RelativeNetworkTransform")]
     public class RelativeNetworkTransform : NetworkBehaviour {
+
         [SerializeField]
+        private bool sendUpdates = true;
+        [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
         private float positionThreshold = 1f;
         [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
         private float rotationThreshold = 10f;
         [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
         private float velocityThreshold = 3f;
         [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
         private float angularVelocityThreshold = 3f;
         [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
         private int navMeshMissCount;
@@ -77,8 +86,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                     agent.enabled = true;
                     break;
                 default:
-                    transform.position = startPosition.ToLocal ();
-                    transform.rotation = startRotation.ToLocal ();
+                    transform.MoveToLocal ();
                     break;
             }
 
@@ -86,7 +94,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Update () {
-            if (!IsSender) return;
+            if (!IsSender || !sendUpdates) return;
 
             wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (PastThreshold ()) {
@@ -153,9 +161,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         private RigidbodyState CalcStateInServerCoordinates () {
             if (mode == NetworkTransformMode.Rigidbody) {
-                return rb.ToServer ();
+                return rb.ToServerState ();
             } else {
-                return transform.ToServer ();
+                return transform.ToServerState ();
             }
         }
 

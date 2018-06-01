@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114006062455942474}
   - component: {fileID: 114545610818790046}
   - component: {fileID: 114175545592717510}
+  - component: {fileID: 114740670048285348}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Slower
@@ -213,3 +214,20 @@ MonoBehaviour:
   ignoreList:
   - UI
   touchedObjects: []
+--- !u!114 &114740670048285348
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1321071089660636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b794c47c11b7ba7488f846610c850b3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendUpdates: 0
+  positionThreshold: 1
+  rotationThreshold: 10
+  velocityThreshold: 3
+  angularVelocityThreshold: 3
+  interpolationSpeed: 0.4

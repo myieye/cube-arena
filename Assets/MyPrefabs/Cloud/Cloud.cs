@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Colors;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,19 +20,15 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 		private float maxA;
 		private Colourer colourer;
 
+		[ServerCallback]
 		void Start () {
-			// Server Code ------------------------
-			if (!isServer) return;
-
 			colourer = GetComponent<Colourer> ();
 			maxA = GetComponent<Renderer> ().material.color.a;
 			createdAt = DateTime.Now;
 		}
 
+		[ServerCallback]
 		void Update () {
-			// Server Code ------------------------
-			if (!isServer) return;
-
 			var age = (DateTime.Now - createdAt).TotalMilliseconds;
 			var color = colourer.color;
 			color.a = Mathf.Min ((float) (1 - (age / lifetime)), maxA);

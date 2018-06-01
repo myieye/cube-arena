@@ -10,7 +10,8 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 	[RequireComponent (typeof (OverlapManager))]
 	public class CloudEffectivenessMeasurer : NetworkBehaviour {
 
-		public Measure PlayerMeasuerer;
+		public Measure PlayerMeasuerer { get; set; }
+
 		private OverlapManager overlapManager;
 		private float overlapTime = 0;
 		private float multipleOverlapTime = 0;
@@ -19,16 +20,14 @@ namespace CubeArena.Assets.MyPrefabs.Cloud {
 
 		private List<GameObject> prevOverlaps;
 
+		[ServerCallback]
 		void Start () {
-			if (!isServer) return;
-
 			overlapManager = GetComponent<OverlapManager> ();
 			prevOverlaps = new List<GameObject> ();
 		}
 
+		[ServerCallback]
 		void Update () {
-			if (!isServer) return;
-
 			if (overlapManager.HasOverlap ()) {
 				overlapTime += Time.deltaTime;
 				multipleOverlapTime += (Time.deltaTime * overlapManager.GetCount ());

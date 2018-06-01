@@ -38,7 +38,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 					}
 
 					if (!enemyOverlapDetecters[i].HasOverlap ()) {
-						TransformUtil.MoveToServerCoordinates (enemy.transform);
+						enemy.transform.MoveToServer ();
 						EnableEnemy (enemy);
 						NetworkServer.Spawn (enemy);
 						i--;

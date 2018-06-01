@@ -12,6 +12,7 @@ using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Colors;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
+using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using ProgressBar;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -77,7 +78,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private void Spray (Vector3 position) {
 			lastSpray = DateTime.Now;
 			CurrAmount -= Cost;
-			CmdSpray (position);
+			CmdSpray (position.ToServer ());
 		}
 
 		private bool Spraying () {
