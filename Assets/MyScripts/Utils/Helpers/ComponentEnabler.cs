@@ -1,7 +1,7 @@
 using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 
-namespace CubeArena_HoloLens.Assets.MyScripts.Utils.Helpers {
+namespace CubeArena.Assets.MyScripts.Utils.Helpers {
     public static class ComponentEnabler {
 
         public static void EnableOnly<T> (this GameObject gameObject) where T : Behaviour {
