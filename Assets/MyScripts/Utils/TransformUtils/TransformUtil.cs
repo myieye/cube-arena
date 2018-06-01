@@ -28,8 +28,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
                     World.rotation == Quaternion.identity;
             }
         }
-        private static bool matricesInitialized;
-        private static int matricesUpdateFrame;
+        private static bool matricesInitialized = false;
+        private static int matricesUpdateFrame = -1;
         private static Matrix4x4 localToWorldMatrix;
         private static Matrix4x4 worldToLocalMatrix;
 
@@ -55,9 +55,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             // Only the HoloLens needs to repeatedly compute the matrices.
 #if !UNITY_WSA || UNITY_EDITOR
             if (matricesInitialized) return;
-#else
-            if (matricesUpdateFrame == Time.frameCount) return;
 #endif
+            if (matricesUpdateFrame == Time.frameCount) return;
 
             localToWorldMatrix = Matrix4x4.TRS (World.position, World.rotation,
                 Vector3.one * (LocalRadius / ServerRadius));
