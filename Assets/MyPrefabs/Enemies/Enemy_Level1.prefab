@@ -2005,11 +2005,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9ad08dd4ca0744a9ec10b427cf77f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendUpdates: 1
   positionThreshold: 1
   rotationThreshold: 10
   velocityThreshold: 3
   angularVelocityThreshold: 3
   interpolationSpeed: 1
+  mode: 2
 --- !u!114 &114215491181903306
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
@@ -30,22 +31,8 @@ namespace CubeArena.Assets.MyScripts.Logging {
         private DateTime selectionStart;
         private int? interactionArea;
         private DateTime areaInteractionStart;
-        private Coroutine tentativeSelectionCoroutine;
-        /*private static UIModeManager _uiModeManager;
-        private static int UIMode {
-            get {
-                if (!_uiModeManager) {
-                    _uiModeManager = FindObjectOfType<UIModeManager> ();
-                }
-                return (int) _uiModeManager.CurrentUIMode;
-            }
-        }*/
+        private List<Coroutine> tentativeSelectionCoroutines;
         private EnabledComponent<CursorController> cursor;
-        private RoundManager RoundManager {
-            get {
-                return FindObjectOfType<RoundManager> ();
-            }
-        }
         private Vector3 StartPosition {
             get {
                 return GetComponent<StartPositionTracker> ().StartPosition;
@@ -57,6 +44,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
         public override void OnStartAuthority () {
             LocalInstance = this;
             cursor = new EnabledComponent<CursorController> (gameObject);
+            tentativeSelectionCoroutines = new List<Coroutine> ();
         }
 
         public void StartMove (GameObject obj) {
@@ -81,12 +69,13 @@ namespace CubeArena.Assets.MyScripts.Logging {
             var move = Calc.CalcMove (cumulativeMoveDistance, movingObjStartState, movingObjCurrState);
             logger.CmdLogMove (move, move.Time);
 
-            var placedOn = cursor.Get.GetAlignedWith ();
+            var cubeBelow = RayUtil.FindGameObjectBelow (obj.transform, Layers.CubesMask);
+            // cursor.Get.GetAlignedWith ();
             var pointingUp = Calc.IsAlignedUp (cursor.Get.gameObject);
-            var placedOnCube = pointingUp && placedOn && placedOn.CompareTag (Tags.Cube);
-            int? placedOnPlayerId = null;
+            var placedOnCube = cubeBelow && (pointingUp || UIModeManager.InTouchMode);
+            int placedOnPlayerId = -1;
             if (placedOnCube) {
-                placedOnPlayerId = placedOn.GetComponent<PlayerId> ().Id;
+                placedOnPlayerId = cubeBelow.GetComponent<PlayerId> ().Id;
             }
             logger.CmdLogPlacement (Calc.BuildPlacement (placedOnPlayerId));
         }
@@ -115,12 +104,12 @@ namespace CubeArena.Assets.MyScripts.Logging {
             logger.CmdLogRotation (rotation, rotation.Time);
         }
 
-        public void MadeKill (GameObject cube, Enemy enemy) {
+        public void MadeKill (GameObject killer, Enemy enemy) {
             if (Settings.Instance.ServerOnlyMeasurementLogging && !isServer) return;
 
             logger.CmdLogKill (
-                Calc.BuildKill (enemy),
-                Calc.CalcAssists (cube).ToArray ());
+                Calc.BuildKill (enemy, killer),
+                Calc.CalcAssists (killer).ToArray ());
         }
 
         public void MadeSelection (SelectionActionType type) {
@@ -131,16 +120,25 @@ namespace CubeArena.Assets.MyScripts.Logging {
         }
 
         public void MadeTentativeSelection (SelectionActionType type) {
-            tentativeSelectionCoroutine =
-                StartCoroutine (DelayUtil.Do (0.5f, () => {
-                    MadeSelection (type);
-                    tentativeSelectionCoroutine = null;
-                }));
+            lock (this) {
+                tentativeSelectionCoroutines.Add (
+                    StartCoroutine (DelayUtil.Do (0.5f, () => {
+                        lock (this) {
+                            MadeSelection (type);
+                            if (tentativeSelectionCoroutines.Any ()) {
+                                tentativeSelectionCoroutines.RemoveAt (0);
+                            }
+                        }
+                    })));
+            }
         }
 
-        public void CancelTentativeSelection () {
-            if (tentativeSelectionCoroutine != null) {
-                StopCoroutine (tentativeSelectionCoroutine);
+        public void CancelTentativeSelections () {
+            lock (this) {
+                foreach (var tentativeSelectionCoroutine in tentativeSelectionCoroutines) {
+                    StopCoroutine (tentativeSelectionCoroutine);
+                }
+                tentativeSelectionCoroutines.Clear ();
             }
         }
 
@@ -170,7 +168,6 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
             int area = Calc.CalcArea (interactionPoint, StartPosition);
             if (interactionArea.HasValue && interactionArea.Value != area) {
-                //Debug.Log("Entered area: " + area);
                 SaveCurrentAreaInteraction ();
             } else if (!interactionArea.HasValue) {
                 areaInteractionStart = DateTime.Now;

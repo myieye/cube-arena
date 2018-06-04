@@ -19,8 +19,8 @@ namespace CubeArena.Assets.MyScripts.Utils {
             return list;
         }
 
-        public static bool RemoveFirst<T> (this IList<T> list, out T item, Func<T, bool> condition) {
-            if (list.Any (condition)) {
+        public static bool RemoveFirst<T> (this IList<T> list, out T item, Func<T, bool> condition = null) {
+            if ((condition == null && list.Any ()) || (condition != null && list.Any (condition))) {
                 item = list.First (condition);
                 list.Remove (item);
                 return true;

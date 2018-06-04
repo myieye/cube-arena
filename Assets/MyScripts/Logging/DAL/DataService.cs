@@ -61,6 +61,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		public void SaveKill (Kill kill, List<Assist> assists) {
 			Log (SaveToDb (db.InsertKill, kill));
 			foreach (var assist in assists) {
+				assist.KillId = kill.Id;
 				Log (SaveToDb (db.InsertAssist, assist));
 			}
 		}

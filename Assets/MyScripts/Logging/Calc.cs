@@ -61,9 +61,9 @@ namespace CubeArena.Assets.MyScripts.Logging {
             };
         }
 
-        public static Placement BuildPlacement (int? placedOnPlayerId) {
+        public static Placement BuildPlacement (int placedOnPlayerId) {
             return new Placement {
-                PlacedOnPlayerId = placedOnPlayerId.HasValue ? placedOnPlayerId.Value : -1
+                PlacedOnPlayerId = placedOnPlayerId
             };
         }
 
@@ -71,9 +71,10 @@ namespace CubeArena.Assets.MyScripts.Logging {
             return Quaternion.Angle (gameObject.transform.rotation, Quaternion.identity) < 45;
         }
 
-        public static Kill BuildKill (Enemy enemy) {
+        public static Kill BuildKill (Enemy enemy, GameObject killer) {
             return new Kill {
-                Level = enemy.level
+                Level = enemy.level,
+                PlayerRoundId = GetPlayerRoundId (killer)
             };
         }
 
@@ -149,7 +150,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
                 }
             }
 
-            // (2) All cubes on the ground attached to a cube off the grounf
+            // (2) All cubes on the ground attached to an assisting cube off the ground
             var allAssists = new List<FireCube> (offGroundAssists);
             foreach (var fireCube in cubes.Except (offGroundAssists)) {
                 if (FireCubeIsAttachedToAny (fireCube, offGroundAssists)) {

@@ -24,7 +24,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
 
         public virtual void OnInputClicked (InputClickedEventData eventData) {
             if (eventData.TapCount == 2 && LastInteractionSourceKindWas (InteractionSourceInfo.Controller)) {
-                Measure.LocalInstance.CancelTentativeSelection ();
+                Measure.LocalInstance.CancelTentativeSelections ();
                 SprayToggle.ToggleState ();
             }
         }

@@ -33,7 +33,6 @@ namespace CubeArena.Assets.MyScripts.Network {
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
         private int navMeshMissCount;
-
         private NetworkTransformMode mode;
         private Rigidbody rb;
         private NavMeshAgent agent;
@@ -47,6 +46,9 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
         private Vector3 startPosition;
         private Quaternion startRotation;
+
+        private long nextMessageId = 0;
+        private long prevMessageId = -1;
 
         protected virtual void Awake () {
             agent = GetComponent<NavMeshAgent> ();
@@ -105,18 +107,19 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         void TransmitSync () {
             var relativeRbs = CalcStateInServerCoordinates ();
-            CmdSyncPosition (relativeRbs);
+            CmdSyncPosition (relativeRbs, nextMessageId);
         }
 
         [Command]
-        private void CmdSyncPosition (RigidbodyState rigidbodyState) {
-            RpcBroadcastPosition (rigidbodyState);
+        private void CmdSyncPosition (RigidbodyState rigidbodyState, long messageId) {
+            RpcBroadcastPosition (rigidbodyState, messageId);
         }
 
         [ClientRpc]
-        private void RpcBroadcastPosition (RigidbodyState rigidbodyState) {
-            if (IsSender || !isInitialized) return;
+        private void RpcBroadcastPosition (RigidbodyState rigidbodyState, long messageId) {
+            if (IsSender || !isInitialized || messageId < prevMessageId) return;
 
+            prevMessageId = messageId;
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
             if (!IsValid (rigidbodyState)) return;
 

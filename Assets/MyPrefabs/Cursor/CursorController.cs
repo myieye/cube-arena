@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.GameObjects.AR;
+using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
@@ -9,6 +10,7 @@ using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
@@ -22,10 +24,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private Renderer cursorRenderer;
 		protected Rigidbody cursorRb;
 		private CustomARObject arObj;
+		protected InteractionStateManager stateManager;
 		// ---
 
 		// Ray casting ---
-		private RaycastHit lastHit;
+		protected RaycastHit lastHit;
 		private bool prevRaycastSuccess;
 		protected bool raycastSuccess;
 		public LayerMask raycastLayerMask;
@@ -88,6 +91,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			cursorRenderer = GetComponent<Renderer> ();
 			cursorRb = GetComponent<Rigidbody> ();
 			arObj = GetComponent<CustomARObject> ();
+			stateManager = GetComponent<InteractionStateManager> ();
 
 			if (GetType() == typeof (CursorController) && UIModeManager.InTouchMode) {
 				enabled = false;
@@ -138,8 +142,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private void TeleportTo (Vector3 position) {
-			cursorRb.position = position;
+			//cursorRb.position = position;
 			cursorRb.velocity = Vector3.zero;
+			transform.position = position;
 		}
 
 		/*
@@ -209,7 +214,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		public GameObject GetAlignedWith () {
 			if (Raycasting && raycastSuccess) {
-				return lastHit.collider.gameObject;
+				if (UIModeManager.InTouchMode && stateManager.HasSelection()) {
+					var cube = stateManager.SelectedCube.Cube;
+					return RayUtil.FindGameObjectBelow (cube.transform, raycastLayerMask);
+				} else {
+					return lastHit.collider.gameObject;
+				}
 			} else if (Translating) {
 				return RayUtil.FindGameObjectBelow (transform, raycastLayerMask);
 			} else {

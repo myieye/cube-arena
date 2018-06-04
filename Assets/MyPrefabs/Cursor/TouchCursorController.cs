@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
     public class TouchCursorController : CursorController {
@@ -20,10 +23,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
         protected override void Start () {
             base.Start ();
             currTouchOffset = Vector2.zero;
+            LastTouch = screenCenter;
 
             if (!UIModeManager.InTouchMode) {
-				enabled = false;
-			}
+                enabled = false;
+            }
         }
 
         protected override void Update () {
@@ -36,10 +40,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
             if (!IsActive) {
                 LerpLastTouchToCenter ();
             }
-            
+
+            if (stateManager && stateManager.IsRotating ()) {
+                lastHit.point = stateManager.SelectedCube.Cube.transform.position;
+            }
+
             //if (!raycastSuccess) {
-				// Set position on network
-		    //}
+            // Set position on network
+            //}
         }
 
         private void LerpLastTouchToCenter () {

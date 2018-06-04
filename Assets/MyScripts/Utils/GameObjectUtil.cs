@@ -11,8 +11,7 @@ namespace CubeArena.Assets.MyScripts.Utils {
 
         public static T FindLocalAuthoritativeObject<T> () where T : MonoBehaviour {
             return GameObject.FindObjectsOfType<T> ()
-                .FirstOrDefault (obj => obj.enabled &&
-                    obj.GetComponent<NetworkIdentity> ().hasAuthority);
+                .FirstOrDefault (obj => obj.GetComponent<NetworkIdentity> ().hasAuthority);
         }
 
         public static T GetComponentOfExactType<T>(this Component component) {

@@ -14,7 +14,13 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
         public static int Everything {
             get { return GetLayer ("Everything"); }
         }
-
+        
+        public static LayerMask CubesMask {
+            get {
+                return GetLayerMask ("Cubes");
+            }
+        }
+        
         public static LayerMask NotIgnoreRayCastMask {
             get {
                 return ~(1 << IgnoreRaycast); // ignore collisions with layerX

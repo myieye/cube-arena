@@ -71,7 +71,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 			foreach (var a in assists) {
 				AddDbInfo (a, false);
 			}
-			dataService.SaveKill (AddDbInfo (kill), new List<Assist> (assists));
+			dataService.SaveKill (AddDbInfo (kill, false), new List<Assist> (assists));
 		}
 
 		[Command]
