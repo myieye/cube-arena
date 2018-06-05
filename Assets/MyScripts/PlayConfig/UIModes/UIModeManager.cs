@@ -128,12 +128,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			} else {
 				mode = modeMsg.UIMode;
 			}
-			PassToPlayerText.enabled = true;
-			PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
-			StartCoroutine (DelayUtil.Do (modeMsg.PassToPlayerTime, () => {
-				PassToPlayerText.text = "";
-				PassToPlayerText.enabled = false;
-			}));
+
+			if (mode != UIMode.None) {
+				PassToPlayerText.enabled = true;
+				PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
+				StartCoroutine (DelayUtil.Do (modeMsg.PassToPlayerTime, () => {
+					PassToPlayerText.text = "";
+					PassToPlayerText.enabled = false;
+				}));
+			}
+			
 			SetUIMode (mode);
 		}
 
