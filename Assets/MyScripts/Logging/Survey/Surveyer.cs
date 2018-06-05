@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
 using NetworkPlayer = CubeArena.Assets.MyScripts.PlayConfig.Players.NetworkPlayer;
+using CubeArena.Assets.MyPrefabs.Player;
 
 namespace CubeArena.Assets.MyScripts.Logging.Survey {
     [RequireComponent (typeof (RatingQuestionAsker), typeof (WeightQuestionAsker))]
@@ -69,6 +70,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             clientsFinished = 0;
 
             foreach (var player in players) {
+                Debug.Log ("TargetDoSurvey");
                 TargetDoSurvey (player.DeviceConfig.Device.Connection, player.PlayerId);
             }
         }
@@ -111,35 +113,20 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         private void SaveCurrentQuestion () {
             if (CurrentQuestion is RatingQuestion) {
                 var answer = ratingQuestionAsker.GetRatingAnswer ();
-                CmdLogRatingAnswer (playerId, answer, answer.Id);
+                ServerLogger.LocalInstance.CmdLogRatingAnswer (playerId, answer, answer.Id);
             } else {
                 var answer = weightQuestionAsker.GetWeightAnswer ();
-                CmdLogWeightAnswer (playerId, answer, answer.Id);
+                ServerLogger.LocalInstance.CmdLogWeightAnswer (playerId, answer, answer.Id);
             }
         }
-        
-        [Command]
-		public void CmdLogWeightAnswer (int playerId, WeightAnswer answer, int id) {
-			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
-			answer.Id = id;
-			DataService.Instance.SaveWeightAnswer (answer);
-		}
-
-        [Command]
-		public void CmdLogRatingAnswer (int playerId, RatingAnswer answer, int id) {
-			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
-			answer.Id = id;
-			DataService.Instance.SaveRatingAnswer (answer);
-		}
 
         private void OnSurveyComplete () {
             surveyContainer.SetActive (false);
             SurveyStarted = false;
-            CmdOnSurveyComplete (playerId);
+            ServerBridge.LocalInstance.CmdOnSurveyComplete (playerId);
         }
 
-        [Command]
-        private void CmdOnSurveyComplete (int playerId) {
+        public void OnClientCompletedSurvey (int playerId) {
             clientsFinished++;
             if (clientsFinished == totalClients) {
                 surveyFinishedListener.OnSurveyFinished ();

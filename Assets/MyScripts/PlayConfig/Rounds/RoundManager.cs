@@ -62,6 +62,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void OnSurveyFinished () {
 			if (InLastRound ()) {
 				ResetRoundCounter ();
+				PlayerManager.Instance.DestroyPlayers ();
 			} else {
 				TriggerNewRound ();
 			}

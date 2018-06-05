@@ -18,9 +18,10 @@ using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Logging {
 
+    [RequireComponent (typeof (ServerLogger))]
     public class Measure : NetworkBehaviour {
 
-        public ServerLogger logger;
+        private ServerLogger logger;
         private GameObjectState movingObjStartState;
         private GameObjectState movingObjCurrState;
         private GameObjectState rotatingObjStartState;
@@ -32,19 +33,22 @@ namespace CubeArena.Assets.MyScripts.Logging {
         private int? interactionArea;
         private DateTime areaInteractionStart;
         private List<Coroutine> tentativeSelectionCoroutines;
-        private EnabledComponent<CursorController> cursor;
-        private Vector3 StartPosition {
-            get {
-                return GetComponent<StartPositionTracker> ().StartPosition;
+        public EnabledComponent<CursorController> Cursor { get; set; }
+        public Vector3 StartPosition { get; set; }
+            /*get {
+                return GameObjectUtil.FindLocalAuthoritativeObject<StartPositionTracker> ().StartPosition;
             }
-        }
+        }*/
 
         public static Measure LocalInstance { get; private set; }
 
         public override void OnStartAuthority () {
             LocalInstance = this;
-            cursor = new EnabledComponent<CursorController> (gameObject);
             tentativeSelectionCoroutines = new List<Coroutine> ();
+        }
+
+        private void Start () {
+            logger = GetComponent<ServerLogger> ();
         }
 
         public void StartMove (GameObject obj) {
@@ -71,7 +75,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 
             var cubeBelow = RayUtil.FindGameObjectBelow (obj.transform, Layers.CubesMask);
             // cursor.Get.GetAlignedWith ();
-            var pointingUp = Calc.IsAlignedUp (cursor.Get.gameObject);
+            var pointingUp = Calc.IsAlignedUp (Cursor.Get.gameObject);
             var placedOnCube = cubeBelow && (pointingUp || UIModeManager.InTouchMode);
             int placedOnPlayerId = -1;
             if (placedOnCube) {

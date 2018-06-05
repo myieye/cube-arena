@@ -18,6 +18,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 	public class PlayerSpawner : MonoBehaviourSingleton<PlayerSpawner> {
 
 		[SerializeField]
+		private Transform playerContainer;
+		[SerializeField]
+		private GameObject playerPrefab;
+		[SerializeField]
 		private GameObject cursorPrefab;
 		[SerializeField]
 		private GameObject cubePrefab;
@@ -45,6 +49,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				netPlayer.StartPosition = GetStartPosition ();
 				netPlayer.Color = colors[netPlayer.PlayerIndex];
 				netPlayer.AddedPlayer = true;
+				netPlayer.PlayerGameObject = SpawnPlayerObject (netPlayer);
 			}
 			var device = netPlayer.DeviceConfig.Device;
 			if (!deviceCursors.ContainsKey (device)) {
@@ -54,6 +59,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 				netPlayer.Cursor = deviceCursors[device];
 			}
 			netPlayer.Cubes = SpawnPlayerCubes (netPlayer.StartPosition, netPlayer);
+		}
+
+		private GameObject SpawnPlayerObject (NetworkPlayer netPlayer) {
+			var player = Instantiate (playerPrefab, playerContainer);
+			player.GetComponent<PlayerId> ().Id = netPlayer.PlayerId;
+			player.name = Text.PlayerName (netPlayer);
+			NetworkServer.SpawnWithClientAuthority (player, netPlayer.DeviceConfig.Device.Connection);
+			return player;
 		}
 
 		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer) {

@@ -37,8 +37,6 @@ GameObject:
   - component: {fileID: 114687127541539586}
   - component: {fileID: 114989534829272560}
   - component: {fileID: 114154341302727124}
-  - component: {fileID: 114149130840081820}
-  - component: {fileID: 114383090961952712}
   - component: {fileID: 114664024161728946}
   - component: {fileID: 65866006375572262}
   - component: {fileID: 114282487341315062}
@@ -315,18 +313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c67407c8ffc6f84ca739415b39788fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114149130840081820
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b12ff709340d824e8587cf6dadc7a77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logger: {fileID: 114383090961952712}
 --- !u!114 &114154341302727124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -389,17 +375,6 @@ MonoBehaviour:
   touchOffsetSpeed: 50
   touchOffset: {x: 0, y: 100}
   isMovingSensitivity: 10
---- !u!114 &114383090961952712
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1596389934492644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c44ad0e6b2283543962109674794d9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114384645145117268
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,3 +1,4 @@
+using System;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
@@ -20,6 +21,10 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
 
         public static string CursorName (NetworkPlayer player) {
             return string.Format ("Cursor [{0}:{1}]", player.PlayerId, player.Color.name);
+        }
+
+        public static string PlayerName (NetworkPlayer player) {
+            return string.Format ("Player [{0}:{1}]", player.PlayerId, player.Color.name);
         }
 
         private static string InactiveText (string text) {

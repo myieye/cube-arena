@@ -30,14 +30,14 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 			inactiveCamera.gameObject.SetActive (false);
 
 			foreach (var canvas in Resources.FindObjectsOfTypeAll<Canvas> ()) {
-				if (!(canvas.renderMode == RenderMode.WorldSpace)) {
 #if UNITY_WSA && !UNITY_EDITOR
+				if (!(canvas.renderMode == RenderMode.WorldSpace)) {
 					canvas.renderMode = RenderMode.ScreenSpaceCamera;
 					canvas.worldCamera = activeCamera;
-#else
-					canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-#endif
 				}
+#else
+				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+#endif
 			}
 
 		}

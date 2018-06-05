@@ -47,6 +47,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public int GenerateNewPlayers () {
+            DestroyPlayers ();
+
             Players = new List<NetworkPlayer> ();
             for (int i = 0; i < NumberOfPlayers; i++) {
                 Players.Add (new NetworkPlayer {
@@ -55,6 +57,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 });
             }
             return NumberOfPlayers;
+        }
+
+        public void DestroyPlayers () {
+            if (Players != null && Players.Any ()) {
+                foreach (var player in Players) {
+                    NetworkServer.Destroy (player.PlayerGameObject);
+                }
+            }
         }
 
         public List<NetworkPlayer> ConfigurePlayersForRound (int roundNum, List<DeviceConfig> deviceRoundConfig) {
@@ -83,6 +93,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
         internal NetworkConnection GetPlayerConnection (PlayerId playerId) {
             return FindPlayer (playerId).DeviceConfig.Device.Connection;
+        }
+
+        internal Measure GetPlayerMeasurer (PlayerId playerId) {
+            return FindPlayer (playerId).PlayerGameObject.GetComponent<Measure> ();
         }
 
         public void SpawnPlayers () {

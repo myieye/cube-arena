@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Logging;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
@@ -9,6 +10,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 
 		void Start () {
 			StartPosition = transform.position;
+			Measure.LocalInstance.StartPosition = StartPosition;
 		}
 	}
 }

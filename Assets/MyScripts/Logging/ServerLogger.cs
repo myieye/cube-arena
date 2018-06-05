@@ -27,6 +27,12 @@ namespace CubeArena.Assets.MyScripts.Logging {
 			}
 		}
 
+        public static ServerLogger LocalInstance { get; private set; }
+
+        public override void OnStartAuthority () {
+            LocalInstance = this;
+        }
+
 		void Start () {
 			if (isServer) {
 				dataService = DataService.Instance;
@@ -94,16 +100,18 @@ namespace CubeArena.Assets.MyScripts.Logging {
 			return measurement;
 		}
 
-		public void CmdLogWeightAnswer (WeightAnswer answer, int id) {
-			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (PlayerId);
+        [Command]
+		public void CmdLogWeightAnswer (int playerId, WeightAnswer answer, int id) {
+			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
 			answer.Id = id;
-			dataService.SaveWeightAnswer (answer);
+			DataService.Instance.SaveWeightAnswer (answer);
 		}
 
-		public void CmdLogRatingAnswer (RatingAnswer answer, int id) {
-			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (PlayerId);
+        [Command]
+		public void CmdLogRatingAnswer (int playerId, RatingAnswer answer, int id) {
+			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
 			answer.Id = id;
-			dataService.SaveRatingAnswer (answer);
+			DataService.Instance.SaveRatingAnswer (answer);
 		}
 	}
 }

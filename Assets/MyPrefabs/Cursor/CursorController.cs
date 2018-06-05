@@ -7,6 +7,7 @@ using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
@@ -84,6 +85,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 		public Vector3 TranslationPosition { get; set; }
 		// ---
+
+        public override void OnStartAuthority () {
+			Measure.LocalInstance.Cursor = new EnabledComponent<CursorController> (gameObject);
+		}
 
 		protected virtual void Start () {
 			screenCenter = Camera.main.ViewportToScreenPoint (new Vector3 (0.5f, 0.5f, 0));
