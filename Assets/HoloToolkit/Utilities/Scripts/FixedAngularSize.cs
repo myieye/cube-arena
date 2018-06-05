@@ -18,14 +18,14 @@ namespace HoloToolkit.Unity
         [Tooltip("Offsets the scale ratio so that text does not scale down too much. (Set to zero for linear scaling)")]
         [Range(0.0f, 1.0f)]
         [SerializeField]
-        private float sizeRatio = 0.0f;
+        private float sizeRatio = 0.002655952f;
         public float SizeRatio
         {
             get { return sizeRatio; }
             set
             {
                 // Set the value of sizeRatio, while maintaining the supported range.
-                if (value < 0.0f)
+                /*if (value < 0.0f)
                 {
                     sizeRatio = 0.0f;
                 }
@@ -36,7 +36,7 @@ namespace HoloToolkit.Unity
                 else
                 {
                     sizeRatio = value;
-                }
+                }*/
             }
         }
 
