@@ -5,6 +5,7 @@ using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.Spray;
 using CubeArena.Assets.MyScripts.Logging;
+using CubeArena.Assets.MyScripts.Logging.Survey;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
@@ -18,7 +19,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
-	public class RoundManager : NetworkBehaviourSingleton, RoundOverListener {
+	public class RoundManager : NetworkBehaviourSingleton, RoundOverListener, SurveyFinishedListener {
 
 		public bool InPracticeMode { get; private set; }
 		public int NumberOfRounds {
@@ -45,26 +46,34 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			ResetRoundCounter ();
 		}
 
-		public void TriggerNewRound () {
+		public void OnRoundOver (bool force = false) {
+			if (!force && Settings.Instance.EndlessRounds) return;
+
+			ResetGameObjects (0.5f);
+
+			if (!InPracticeMode && currRound > 0) {
+				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
+				FindObjectOfType<Surveyer> ().DoSurvey (PlayerManager.Instance.Players, this);
+			} else {
+				TriggerNewRound ();
+			}
+		}
+
+		public void OnSurveyFinished () {
+			if (InLastRound ()) {
+				ResetRoundCounter ();
+			} else {
+				TriggerNewRound ();
+			}
+		}
+
+		private void TriggerNewRound () {
 			if (InLastRound ()) {
 				ResetRoundCounter ();
 			}
 
 			ResetGameObjects (0.5f);
 			StartCoroutine (DelayUtil.Do (0.5f, StartNewRound));
-		}
-
-		public void OnRoundOver () {
-			if (Settings.Instance.EndlessRounds) return;
-
-			if (InLastRound ()) {
-				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
-				currRound = 0;
-				ResetGameObjects (0.5f);
-				ResetRoundCounter ();
-			} else {
-				TriggerNewRound ();
-			}
 		}
 
 		private void StartNewRound () {
