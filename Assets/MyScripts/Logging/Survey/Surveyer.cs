@@ -64,13 +64,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         }
 
         public void DoSurvey (List<NetworkPlayer> players, SurveyFinishedListener surveyFinishedListener) {
-            Debug.Log ("StartingSurvey");
             this.surveyFinishedListener = surveyFinishedListener;
             totalClients = players.Count;
             clientsFinished = 0;
 
             foreach (var player in players) {
-                Debug.Log ("TargetDoSurvey");
                 TargetDoSurvey (player.DeviceConfig.Device.Connection, player.PlayerId);
             }
         }
@@ -142,7 +140,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             if (CurrentQuestion is RatingQuestion) {
                 ratingQuestionAsker.AskRatingQuestion (CurrentQuestion as RatingQuestion);
             } else {
-                weightQuestionAsker.AskRatingQuestion (CurrentQuestion as WeightQuestion);
+                weightQuestionAsker.AskRatingQuestion (CurrentQuestion as WeightQuestion, OnNext);
             }
         }
     }

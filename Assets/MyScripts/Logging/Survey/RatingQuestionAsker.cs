@@ -19,6 +19,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             currQ = q;
             title.text = q.Title;
             question.text = q.QuestionText;
+            slider.value = Mathf.FloorToInt (slider.maxValue / 2);
         }
 
         public bool HasValidAnswer () {
