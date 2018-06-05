@@ -50,6 +50,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (!force && Settings.Instance.EndlessRounds) return;
 
 			ResetGameObjects (0.5f);
+			timeManager.Clear ();
 
 			if (!InPracticeMode && currRound > 0) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);

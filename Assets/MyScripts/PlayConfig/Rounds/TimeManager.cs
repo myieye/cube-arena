@@ -31,6 +31,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			RpcShowHidePracticeModeIndicator (practiceMode);
 		}
 
+		public void Clear () {
+			CancelInvoke (TickClock_Method);
+			roundTimeRemaining_S = 0;
+		}
+
 		[ClientRpc]
 		private void RpcShowHidePracticeModeIndicator (bool practiceMode) {
 			practiceModeIndicator.SetActive (practiceMode);
@@ -40,7 +45,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void TickClock () {
 			roundTimeRemaining_S -= 1;
 			if (roundTimeRemaining_S <= 0) {
-				CancelInvoke (TickClock_Method);
+				Clear ();
 				roundOverListener.OnRoundOver ();
 			}
 		}
