@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 114990484945501140}
   - component: {fileID: 114541207846551170}
   - component: {fileID: 114064981291196522}
+  - component: {fileID: 114317160001120260}
   m_Layer: 11
   m_Name: Cube
   m_TagString: Cube
@@ -354,6 +355,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98306178ad41c884689dd52a90dc4c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114317160001120260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1185236769734356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 603954312226dd243934483bd10f4cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+  m_TransformSyncMode: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
 --- !u!114 &114524380145941894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -429,7 +450,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d9ad08dd4ca0744a9ec10b427cf77f7, type: 3}
   m_Name: 
@@ -440,7 +461,6 @@ MonoBehaviour:
   velocityThreshold: 3
   angularVelocityThreshold: 3
   interpolationSpeed: 0.7
-  mode: 0
 --- !u!114 &114870904069057950
 MonoBehaviour:
   m_ObjectHideFlags: 1

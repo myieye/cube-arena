@@ -22,6 +22,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 #if (UNITY_WSA || UNITY_ANDROID) && !UNITY_EDITOR
 			networkAddress = "192.168.1.100";
 #endif
+
+			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA,
+				NetworkTransform_CA.HandleTransform_CA);
 		}
 
 		public override void OnServerDisconnect (NetworkConnection conn) {
