@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
@@ -9,11 +11,17 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
     public class CubeArenaMeasurementsMockDb : CubeArenaMeasurementsDb {
 
         private int nextPlayerId = 1;
-        private Dictionary<Type, List<object>> entities = new Dictionary<Type, List<object>> ();
+        private Dictionary<Type, List<BaseEntity>> entities = new Dictionary<Type, List<BaseEntity>> ();
         private Dictionary<Type, int> nextIds = new Dictionary<Type, int> ();
 
         public int GetNextPlayerId () {
             return nextPlayerId++;
+        }
+
+        public T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new () {
+            var t = typeof (T);
+            CheckLists (t);
+            return (T) entities[t].FirstOrDefault (e => condition.Compile () ((T) e));
         }
 
         public Assist InsertAssist (Assist assist) {
@@ -60,23 +68,43 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
             return Insert (device);
         }
 
+        public RatingAnswer SaveRatingAnswer (RatingAnswer answer) {
+            return UpdateOrInsert (answer);
+        }
+
+        public WeightAnswer SaveWeightAnswer (WeightAnswer answer) {
+            return UpdateOrInsert (answer);
+        }
+
         public Device GetDeviceByModel (string model) {
             var t = typeof (Device);
             CheckLists (t);
             return (Device) entities[t].Where (d => ((Device) d).Model.Equals (model)).FirstOrDefault ();
         }
 
+        private T UpdateOrInsert<T> (T entity) where T : BaseEntity {
+            Debug.Log (entity.Id);
+            if (entity.Id != default (int)) {
+                var t = typeof (T);
+                entities[t].RemoveAll (e => e.Id == entity.Id);
+            }
+
+            return Insert (entity);
+        }
+
         private T Insert<T> (T entity) where T : BaseEntity {
             var t = typeof (T);
             CheckLists (t);
             entities[t].Add (entity);
-            entity.Id = nextIds[t]++;
+            if (entity.Id == default (int)) {
+                entity.Id = nextIds[t]++;
+            }
             return entity;
         }
 
         private void CheckLists (Type type) {
             if (!entities.ContainsKey (type)) {
-                entities.Add (type, new List<object> ());
+                entities.Add (type, new List<BaseEntity> ());
             }
             if (!nextIds.ContainsKey (type)) {
                 nextIds.Add (type, 1);

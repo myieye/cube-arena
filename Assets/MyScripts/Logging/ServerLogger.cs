@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Logging.DAL;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
@@ -91,6 +92,18 @@ namespace CubeArena.Assets.MyScripts.Logging {
 			}
 			measurement.PracticeMode = roundManager.InPracticeMode;
 			return measurement;
+		}
+
+		public void CmdLogWeightAnswer (WeightAnswer answer, int id) {
+			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (PlayerId);
+			answer.Id = id;
+			dataService.SaveWeightAnswer (answer);
+		}
+
+		public void CmdLogRatingAnswer (RatingAnswer answer, int id) {
+			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (PlayerId);
+			answer.Id = id;
+			dataService.SaveRatingAnswer (answer);
 		}
 	}
 }

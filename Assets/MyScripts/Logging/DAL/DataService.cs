@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Logging.DAL.Mock;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 using CubeArena.Assets.MyScripts.Logging.DAL.SQLite;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using NetworkPlayer = CubeArena.Assets.MyScripts.PlayConfig.Players.NetworkPlayer;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
+using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
@@ -81,6 +84,26 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			} else {
 				device.Id = d.Id;
 			}
+		}
+
+		public void SaveRatingAnswer (RatingAnswer answer) {
+            RatingAnswer a = db.Find<RatingAnswer> (ra =>
+                ra.PlayerRoundId == answer.PlayerRoundId && ra.RatingId == answer.RatingId);
+            
+            if (a != null) {
+                answer.Id = a.Id;
+            }
+			Log (db.SaveRatingAnswer (answer));
+		}
+
+		public void SaveWeightAnswer (WeightAnswer answer) {
+            WeightAnswer a = db.Find<WeightAnswer> (wa =>
+                wa.PlayerRoundId == answer.PlayerRoundId && wa.WeightId == answer.WeightId);
+            
+            if (a != null) {
+                answer.Id = a.Id;
+            }
+			Log (db.SaveWeightAnswer (answer));
 		}
 
 		private T SaveToDb<T> (Func<T, T> saveFunc, T entity) {

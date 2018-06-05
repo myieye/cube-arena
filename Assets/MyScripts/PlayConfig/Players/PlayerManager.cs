@@ -98,7 +98,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                     }
                 }
                 StartCoroutine (DelayUtil.Do (time - 0.2f, () => NetworkServer.Destroy (netPlayer.Cursor)));
-                netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
+                if (netPlayer.Cubes != null) {
+                    netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
+                }
             }
         }
 

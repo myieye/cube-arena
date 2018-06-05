@@ -44,9 +44,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 			DeviceManager.Instance.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
 
-			if (Settings.Instance.AutoStartGame) {
+			/*if (Settings.Instance.AutoStartGame) {
 				FindObjectOfType<RoundManager> ().TriggerNewRound ();
-			}
+			}*/
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
