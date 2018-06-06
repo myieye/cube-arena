@@ -6,9 +6,9 @@ using CubeArena.Assets.MyScripts.Logging.Survey.Models;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Assertions;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using NetworkPlayer = CubeArena.Assets.MyScripts.PlayConfig.Players.NetworkPlayer;
 using CubeArena.Assets.MyPrefabs.Player;
 
@@ -19,12 +19,13 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         [SerializeField]
         private GameObject surveyContainer;
         [SerializeField]
+        private RectTransform questionContainer;
+        [SerializeField]
         private GameObject ratingQuestionContainer;
         [SerializeField]
         private GameObject weightQuestionContainer;
         [SerializeField]
         private Text questionCounter;
-
 
         // Server ---
         private SurveyFinishedListener surveyFinishedListener;
@@ -59,6 +60,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         // ---
 
         private void Start () {
+#if UNITY_ANDROID
+            surveyContainer.GetComponent<RectTransform> ().localScale = new Vector3 (2.5f, 2.5f, 1);
+#elif UNITY_WSA && !UNITY_EDITOR
+            surveyContainer.GetComponent<RectTransform> ().localScale = new Vector3 (0.3f, 0.3f, 0.3f);
+#endif
             ratingQuestionAsker = GetComponent<RatingQuestionAsker> ();
             weightQuestionAsker = GetComponent<WeightQuestionAsker> ();
         }
@@ -101,7 +107,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
 
         public void OnBack () {
             if (!SurveyStarted) return;
-            
+
             Assert.IsTrue (CurrentQuestionI > 0);
 
             CurrentQuestionI--;

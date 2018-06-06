@@ -83,7 +83,6 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
         }
 
         private T UpdateOrInsert<T> (T entity) where T : BaseEntity {
-            Debug.Log (entity.Id);
             if (entity.Id != default (int)) {
                 var t = typeof (T);
                 entities[t].RemoveAll (e => e.Id == entity.Id);
