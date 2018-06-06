@@ -16,7 +16,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		
 		private int enemyCount;
 
-		private int MaxLevel { get { return enemyPrefabs.Length - 1; } }
+		private int MaxLevel { get { return (enemyPrefabs.Length * 2) - 1; } }
 
 		public void InitEnemies () {
 			enemyCount = 0;
@@ -32,13 +32,14 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		public void OnEnemyKilled (Enemy enemy) {
-			var newEnemy = enemyPrefabs[Mathf.Min (enemy.level, MaxLevel)];
-			EnemySpawner.Instance.SpawnEnemy (newEnemy);
+			var nextLevelI = Mathf.Min (enemy.level, MaxLevel);
+			var newEnemy = enemyPrefabs[nextLevelI / 2];
+			EnemySpawner.Instance.SpawnEnemy (newEnemy, nextLevelI % 2 != 0, enemy.level + 1);
 		}
 
 		private void SpawnEnemies () {
 			while (enemyCount * Settings.Instance.PlayersPerEnemy < PlayerManager.Instance.NumberOfPlayers) {
-				EnemySpawner.Instance.SpawnEnemy (enemyPrefabs[0]);
+				EnemySpawner.Instance.SpawnEnemy (enemyPrefabs[0], false, 1);
 				enemyCount++;
 			}
 		}

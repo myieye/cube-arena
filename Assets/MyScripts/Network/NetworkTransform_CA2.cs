@@ -157,7 +157,9 @@ namespace UnityEngine.Networking {
                 default:
                  */
 
-                    transform.MoveToLocal ();
+            transform.position = startPosition.ToLocal ();
+            transform.rotation = startRotation.ToLocal ();
+                    //transform.MoveToLocal ();
                     /*
                     break;
                      

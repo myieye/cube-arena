@@ -63,7 +63,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         // ---
 
         private void Start () {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             surveyContainer.GetComponent<RectTransform> ().localScale = new Vector3 (2.5f, 2.5f, 1);
 #elif UNITY_WSA && !UNITY_EDITOR
             surveyContainer.GetComponent<RectTransform> ().localScale = new Vector3 (0.3f, 0.3f, 0.3f);

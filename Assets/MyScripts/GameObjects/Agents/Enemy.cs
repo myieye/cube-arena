@@ -12,9 +12,9 @@ using UnityEngine.AI;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
-	
-	public class Enemy : NetworkBehaviour {
 
+	public class Enemy : NetworkBehaviour {
+		[SyncVar]
 		public int level;
 		//private float killHeight;
 
@@ -53,7 +53,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private void DisableEnemy () {
 			GetComponent<Animator> ().enabled = false;
 			GetComponent<ARRelativeNetworkTransform> ().enabled = false;
-			GetComponent<RandomAgentNavigation> ().enabled = false;
+			if (GetComponent<RandomAgentNavigation> ()) {
+				GetComponent<RandomAgentNavigation> ().enabled = false;
+			}
 			GetComponent<NavMeshAgent> ().enabled = false;
 		}
 	}

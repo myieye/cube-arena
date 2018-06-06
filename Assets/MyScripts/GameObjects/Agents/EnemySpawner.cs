@@ -56,8 +56,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			}
 		}
 
-		public void SpawnEnemy (GameObject enemyPrefab) {
-			DisableEnemy (Instantiate (enemyPrefab, TransformUtil.GetRandomNavMeshPosition (), Random.rotation));
+		public void SpawnEnemy (GameObject enemyPrefab, bool movingEnemy, int level) {
+			var enemy = Instantiate (enemyPrefab, TransformUtil.GetRandomNavMeshPosition (), Random.rotation);
+			enemy.GetComponent<RandomAgentNavigation> ().movingEnemy = movingEnemy;
+			enemy.GetComponent<Enemy> ().level = level;
+			DisableEnemy (enemy);
 		}
 
 		private void DisableEnemy (GameObject enemy) {
