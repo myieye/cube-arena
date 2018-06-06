@@ -19,10 +19,22 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		private Vector3 localDestination;
 		[SyncVar]
 		private bool movingOnServer;
+		[HideInInspector]
+		[SyncVar]
+		public bool movingEnemy;
 
 		void Start () {
 			agent = GetComponent<NavMeshAgent> ();
 			animator = GetComponent<Animator> ();
+			if (!movingEnemy) {
+				enabled = false;
+			}
+		}
+
+		void OnEnable () {
+			if (!movingEnemy) {
+				enabled = false;
+			}
 		}
 
 		void Update () {
