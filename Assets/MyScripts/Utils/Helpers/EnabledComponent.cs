@@ -13,8 +13,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
         
         public T Get {
             get {
-                if (!(instance && instance.enabled)) {
-                    instance = parent.GetComponents<T> ().First (comp => comp.enabled);
+                if (!(instance && instance.enabled) && parent) {
+                    instance = parent.GetComponents<T> ().FirstOrDefault (comp => comp.enabled);
                 }
                 return instance;
             }
