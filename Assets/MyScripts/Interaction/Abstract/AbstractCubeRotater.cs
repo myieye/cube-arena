@@ -1,17 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Interaction.Listeners;
 using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Logging;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
-	public abstract class AbstractCubeRotater : NetworkBehaviour {
+	public abstract class AbstractCubeRotater : NetworkBehaviour, OnCubeDeselectedListener {
 
 		protected InteractionStateManager stateManager;
+		private bool isRotating;
 
 		protected virtual void Start () {
 			stateManager = GetComponent<InteractionStateManager> ();
+		}
+
+		public override void OnStartAuthority () {
+			base.OnStartAuthority ();
+			stateManager = GetComponent<InteractionStateManager> ();
+			stateManager.AddOnCubeDeselectedListener (this);
 		}
 
 		protected virtual void Update () {
@@ -35,12 +43,18 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 			if (!Rotating () && IsStartingRotate ()) {
 				StartRotate ();
 				stateManager.StartRotation ();
+				isRotating = true;
 			}
 		}
 
 		void CheckEndRotating () {
-			if (Rotating () && IsEndingRotate ()) {
-				stateManager.EndRotation ();
+			if (isRotating && (!Rotating () || IsEndingRotate ())) {
+				EndRotate (!Rotating ());
+				isRotating = false;
+
+				if (Rotating ()) {
+					stateManager.EndRotation ();
+				}
 			}
 		}
 
@@ -48,9 +62,17 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 			return stateManager.IsRotating ();
 		}
 
+		public void OnCubeDeselected (GameObject cube) {
+			if (isRotating) {
+				isRotating = false;
+				EndRotate (true);
+			}
+		}
+
 		protected abstract void Rotate ();
 		protected abstract bool IsStartingRotate ();
 		protected abstract bool IsEndingRotate ();
 		protected abstract void StartRotate ();
+		protected abstract void EndRotate (bool immediate);
 	}
 }

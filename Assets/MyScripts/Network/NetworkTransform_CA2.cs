@@ -489,6 +489,7 @@ namespace UnityEngine.Networking {
                 Quaternion rot = Quaternion.identity;
                 if (syncRotationAxis != AxisSyncMode.None) {
                     rot = UnserializeRotation3D (reader, syncRotationAxis, rotationSyncCompression);
+                    m_TargetSyncRotation3D = rot; // EDIT
                 }
 
                 if (m_ClientMoveCallback3D (ref pos, ref vel, ref rot)) {
@@ -867,10 +868,16 @@ namespace UnityEngine.Networking {
             }
 
             if (interpolateRotation != 0) {
+                
+                m_RigidBody3D.MoveRotation (m_TargetSyncRotation3D);
+                /*
                 m_RigidBody3D.MoveRotation (Quaternion.Slerp (
                     m_RigidBody3D.rotation,
                     m_TargetSyncRotation3D,
                     Time.fixedDeltaTime * interpolateRotation));
+                     */
+
+                m_RigidBody3D.angularVelocity = m_TargetSyncAngularVelocity3D;
 
                 //m_TargetSyncRotation3D *= Quaternion.Euler(m_TargetSyncAngularVelocity3D * Time.fixedDeltaTime);
 

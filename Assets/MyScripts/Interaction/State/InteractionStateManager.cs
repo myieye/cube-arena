@@ -104,7 +104,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			}
 
 			FinishAnyMeasurements ();
-			
+
 			// TODO clean up redundant logic
 			if (HasSelection () && !InState (InteractionState.Disallowed)) {
 				State = InteractionState.Moving;

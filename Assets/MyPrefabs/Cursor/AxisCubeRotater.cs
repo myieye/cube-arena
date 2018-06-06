@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
@@ -38,7 +39,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (selectedRigidbody != null) {
 				var torque = CalculateRotationTorque ();
 				selectedRigidbody.AddTorque (torque, ForceMode.VelocityChange);
-				CmdApplyTorqueOnNetwork (selectedRigidbody.gameObject, torque.ToServerDirection());
+				CmdApplyTorqueOnNetwork (selectedRigidbody.gameObject, torque.ToServerDirection ());
 			}
 		}
 
@@ -49,26 +50,74 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		[ClientRpc]
 		void RpcApplyTorqueOnOtherClients (GameObject cube, Vector3 torque) {
-			if (!hasAuthority) {
-				cube.GetComponent <Rigidbody> ().AddTorque (
-					torque.ToLocalDirection (), ForceMode.VelocityChange);
+			if (!hasAuthority && selectedRigidbody) {
+				selectedRigidbody.AddTorque (torque.ToLocalDirection (), ForceMode.VelocityChange);
 			}
 		}
 
 		protected override bool IsStartingRotate () {
 			return stateManager.HasSelection () && HasRotationInput () &&
 				!stateManager.IsMoving () && (!CrossPlatformInputManager.GetButton (Buttons.Select) ||
-                UIModeManager.InUIMode(UIMode.HMD1_Gaze));
+					UIModeManager.InUIMode (UIMode.HMD1_Gaze));
 		}
 
 		protected override void StartRotate () {
-			SelectCube (stateManager.SelectedCube.Cube);
+			SelectCubeOnNetwork (stateManager.SelectedCube.Cube);
+		}
+
+		protected void SelectCubeOnNetwork (GameObject cube) {
+			SelectCube (cube);
+			CmdSelectCubeOnNetwork (cube);
+		}
+
+		[Command]
+		protected void CmdSelectCubeOnNetwork (GameObject cube) {
+			RpcSelectCubeOnOtherClients (cube);
+		}
+
+		[ClientRpc]
+		void RpcSelectCubeOnOtherClients (GameObject cube) {
+			if (!hasAuthority) {
+				SelectCube (cube);
+			}
 		}
 
 		private void SelectCube (GameObject cube) {
-			selectedRigidbody = cube.GetComponent<Rigidbody> ();
-			selectedRigidbody.maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
-			rotationWaitTime = 0;
+			if (cube) {
+				selectedRigidbody = cube.GetComponent<Rigidbody> ();
+				selectedRigidbody.maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
+				selectedRigidbody.GetComponent<NetworkTransform_CA2> ().enabled = false;
+				rotationWaitTime = 0;
+			}
+		}
+
+		protected override void EndRotate (bool immediate) {
+			if (stateManager.SelectedCube != null) {
+				CmdDeselectCubeOnNetwork (stateManager.SelectedCube.Cube, immediate);
+			}
+		}
+
+		[Command]
+		private void CmdDeselectCubeOnNetwork (GameObject cube, bool immediate) {
+			RpcDeselectCubeOnClients (cube, immediate);
+		}
+
+		[ClientRpc]
+		void RpcDeselectCubeOnClients (GameObject cube, bool immediate) {
+			selectedRigidbody = null;
+
+			if (cube) {
+				if (immediate) {
+					cube.GetComponent<NetworkTransform_CA2> ().enabled = true;
+				} else {
+					var savedCube = cube;
+					StartCoroutine (DelayUtil.Do (1.5f, () => {
+						if (savedCube && (!selectedRigidbody || savedCube != selectedRigidbody.gameObject)) {
+							savedCube.GetComponent<NetworkTransform_CA2> ().enabled = true;
+						}
+					}));
+				}
+			}
 		}
 
 		protected override bool IsEndingRotate () {
