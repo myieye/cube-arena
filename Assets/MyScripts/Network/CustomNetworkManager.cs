@@ -25,6 +25,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA,
 				NetworkTransform_CA.HandleTransform_CA);
+			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA2,
+				NetworkTransform_CA2.HandleTransform_CA2);
 		}
 
 		public override void OnServerDisconnect (NetworkConnection conn) {

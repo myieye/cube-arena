@@ -544,9 +544,9 @@ MonoBehaviour:
   forceDefaultUIMode: 0
   defaultHHDUIMode: 2
   defaultHMDUIMode: 6
-  logMeasurementsToConsole: 1
-  logMeasurementsToDb: 1
-  resetDbOnStart: 1
+  logMeasurementsToConsole: 0
+  logMeasurementsToDb: 0
+  resetDbOnStart: 0
   serverOnlyMeasurementLogging: 0
   interactionAreaGridSize: 6
   rotationTimeout: 0.5

@@ -15,7 +15,7 @@ namespace UnityEngine.Networking {
   ///   <para>A component to synchronize the position of networked objects.</para>
   /// </summary>
   [DisallowMultipleComponent]
-  [AddComponentMenu ("Network/NetworkTransform")]
+  [AddComponentMenu ("Network/NetworkTransform_CA")]
   public class NetworkTransform_CA : NetworkBehaviour {
     [SerializeField]
     private float m_SendInterval = 0.1f;
