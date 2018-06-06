@@ -5,6 +5,7 @@
 // Assembly location: C:\Users\Blake\sandbox\unity\test-project\Library\UnityAssemblies\UnityEngine.Networking.dll
 
 using System;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine.AI;
 //using UnityEditor;
@@ -280,9 +281,6 @@ namespace UnityEngine.Networking {
     private Vector3 startPosition;
     private Quaternion startRotation;
 
-    private long nextMessageId = 0;
-    private long prevMessageId = -1;
-
     protected virtual void CustomAwake () {
       agent = GetComponent<NavMeshAgent> ();
       //rb = GetComponent<Rigidbody> ();
@@ -498,7 +496,7 @@ namespace UnityEngine.Networking {
         this.transform.position = position;
         if (this.syncRotationAxis == NetworkTransform_CA.AxisSyncMode.None)
           return;
-        this.transform.rotation = rotation.ToLocal ();
+        this.transform.rotation = rotation;
       } else {
         this.transform.position = reader.ReadVector3 ().ToLocal (); // EDIT
         if (this.syncRotationAxis == NetworkTransform_CA.AxisSyncMode.None)
@@ -530,7 +528,7 @@ namespace UnityEngine.Networking {
           //this.transform.position = targetPosition;
           if (this.syncRotationAxis == NetworkTransform_CA.AxisSyncMode.None)
             return;
-          this.transform.rotation = rotation.ToLocal ();
+          this.transform.rotation = rotation;
         } else {
           navMeshMissCount++;
           if (navMeshMissCount > 5) {
@@ -540,7 +538,7 @@ namespace UnityEngine.Networking {
 
       } else {
         var targetPosition = reader.ReadVector3 ().ToLocal (); // EDIT
-        
+
         if (agent.isOnNavMesh) {
           navMeshMissCount = 0;
           //this.transform.position = reader.ReadVector3 ().ToLocal (); // EDIT
@@ -693,7 +691,7 @@ namespace UnityEngine.Networking {
         NetworkTransform_CA.UnserializeRotation3D (reader, this.syncRotationAxis, this.rotationSyncCompression);
       } else {
         if (this.isServer && this.m_ClientMoveCallback3D != null) {
-          Vector3 position = reader.ReadVector3 ();
+          Vector3 position = reader.ReadVector3 ().ToLocal (); // EDIT
           Quaternion rotation = Quaternion.identity;
           if (this.syncRotationAxis != NetworkTransform_CA.AxisSyncMode.None)
             rotation = NetworkTransform_CA.UnserializeRotation3D (reader, this.syncRotationAxis, this.rotationSyncCompression);
@@ -707,7 +705,7 @@ namespace UnityEngine.Networking {
           if (this.syncRotationAxis != NetworkTransform_CA.AxisSyncMode.None)
             this.m_TargetSyncRotation3D = rotation;
         } else {
-          this.m_TargetSyncPosition = reader.ReadVector3 ();
+          this.m_TargetSyncPosition = reader.ReadVector3 ().ToLocal (); // EDIT
           if (this.syncRotationAxis != NetworkTransform_CA.AxisSyncMode.None)
             this.m_TargetSyncRotation3D = NetworkTransform_CA.UnserializeRotation3D (reader, this.syncRotationAxis, this.rotationSyncCompression);
         }
@@ -835,7 +833,8 @@ namespace UnityEngine.Networking {
     private void SendTransform () {
       if (!this.HasMoved () || ClientScene.readyConnection == null)
         return;
-      this.m_LocalTransformWriter.StartMessage ((short) 6);
+      //this.m_LocalTransformWriter.StartMessage ((short) 6);
+      this.m_LocalTransformWriter.StartMessage (MessageIds.CustomHandleTransform_CA); // EDIT
       this.m_LocalTransformWriter.Write (this.netId);
       switch (this.transformSyncMode) {
         case NetworkTransform_CA.TransformSyncMode.SyncNone:
@@ -1032,7 +1031,7 @@ namespace UnityEngine.Networking {
     }
 
     public static Vector3 UnserializeVelocity2D (NetworkReader reader, NetworkTransform_CA.CompressionSyncMode compression) {
-      return (Vector3) reader.ReadVector2 (); // EDIT
+      return (Vector3) reader.ReadVector2 ();
     }
 
     public static Quaternion UnserializeRotation3D (NetworkReader reader, NetworkTransform_CA.AxisSyncMode mode, NetworkTransform_CA.CompressionSyncMode compression) {
