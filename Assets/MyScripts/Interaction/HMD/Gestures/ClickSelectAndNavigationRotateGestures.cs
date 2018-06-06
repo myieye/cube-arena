@@ -13,15 +13,16 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
     public class ClickSelectAndNavigationRotateGestures : FunctionBasedGestureHandler, IInputHandler, INavigationHandler, IManipulationHandler, IInputClickHandler {
 
-        private EnabledComponent<CursorController> _cursorCtrl;
+        private CursorController _cursorCtrl;
         protected CursorController CursorController {
             get {
-                if (_cursorCtrl == null || _cursorCtrl.Get == null) {
-                    var cursorComponent = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
-                    var parent = cursorComponent ? cursorComponent.gameObject : null;
-                    _cursorCtrl = new EnabledComponent<CursorController> (parent);
+                if (!_cursorCtrl) {
+                    var cursorObject = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
+                    if (cursorObject) {
+                        _cursorCtrl = cursorObject.GetComponentOfExactType <CursorController> ();
+                    }
                 }
-                return _cursorCtrl.Get;
+                return _cursorCtrl;
             }
         }
         private InteractionStateManager _stateManager;

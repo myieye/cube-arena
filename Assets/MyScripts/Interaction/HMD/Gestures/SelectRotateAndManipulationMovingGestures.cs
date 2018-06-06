@@ -19,7 +19,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             Reset (disableMoving: true);
         }
 
-        private void Update () {
+        protected virtual void Update () {
             if (resetAfterMove && (!StateManager || !StateManager.IsMoving ())) {
                 Reset (disableMoving: true);
             }

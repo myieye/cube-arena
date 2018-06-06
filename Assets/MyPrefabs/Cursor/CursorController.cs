@@ -92,6 +92,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected virtual void Start () {
 			screenCenter = Camera.main.ViewportToScreenPoint (new Vector3 (0.5f, 0.5f, 0));
+			Raycasting = true;
 
 			cursorRenderer = GetComponent<Renderer> ();
 			cursorRb = GetComponent<Rigidbody> ();
