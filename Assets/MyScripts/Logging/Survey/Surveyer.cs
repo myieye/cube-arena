@@ -27,6 +27,9 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         [SerializeField]
         private Text questionCounter;
 
+        [SerializeField]
+        private GameObject surveyCursor;
+
         // Server ---
         private SurveyFinishedListener surveyFinishedListener;
         private int totalClients;
@@ -80,7 +83,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         }
 
         [TargetRpc]
-        public void TargetDoSurvey (NetworkConnection target, int playerId) {
+        public void TargetDoSurvey (NetworkConnection target, int playerId) {            
+#if UNITY_WSA && !UNITY_EDITOR
+            surveyCursor.SetActive (true);
+#endif
+
             this.playerId = playerId;
             SurveyStarted = true;
             questions = QuestionService.GetShuffledQuestions ();
@@ -124,7 +131,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             }
         }
 
-        private void OnSurveyComplete () {
+        private void OnSurveyComplete () {            
+#if UNITY_WSA && !UNITY_EDITOR
+            surveyCursor.SetActive (false);
+#endif
+
             surveyContainer.SetActive (false);
             SurveyStarted = false;
             ServerBridge.LocalInstance.CmdOnSurveyComplete (playerId);

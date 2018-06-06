@@ -4,6 +4,7 @@ using CubeArena.Assets.MyPrefabs.Cursor;
 using CubeArena.Assets.MyScripts.Interaction.State;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Helpers;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
@@ -12,13 +13,15 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
     public class ClickSelectAndNavigationRotateGestures : FunctionBasedGestureHandler, IInputHandler, INavigationHandler, IManipulationHandler, IInputClickHandler {
 
-        private CursorController _cursorCtrl;
+        private EnabledComponent<CursorController> _cursorCtrl;
         protected CursorController CursorController {
             get {
-                if (!(_cursorCtrl && _cursorCtrl.enabled)) {
-                    _cursorCtrl = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
+                if (_cursorCtrl == null || _cursorCtrl.Get == null) {
+                    var cursorComponent = GameObjectUtil.FindLocalAuthoritativeObject<CursorController> ();
+                    var parent = cursorComponent ? cursorComponent.gameObject : null;
+                    _cursorCtrl = new EnabledComponent<CursorController> (parent);
                 }
-                return _cursorCtrl;
+                return _cursorCtrl.Get;
             }
         }
         private InteractionStateManager _stateManager;
@@ -32,13 +35,13 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         }
 
         private bool isRotatingCube;
-        
+
         protected override void OnEnable () {
             base.OnEnable ();
             Reset ();
         }
 
-        private void Start() {
+        private void Start () {
             Reset ();
         }
 

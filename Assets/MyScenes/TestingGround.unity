@@ -12517,7 +12517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaea0b0285fef4d41a4011a94934e5d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceTypes: 02000000
+  deviceTypes: 01000000
 --- !u!1 &488626909
 GameObject:
   m_ObjectHideFlags: 0
@@ -12705,6 +12705,7 @@ MonoBehaviour:
   ratingQuestionContainer: {fileID: 1151074424}
   weightQuestionContainer: {fileID: 1384546232}
   questionCounter: {fileID: 1537620490}
+  surveyCursor: {fileID: 654212754}
 --- !u!114 &510772720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13131,6 +13132,10 @@ Prefab:
     - target: {fileID: 4000011792100794, guid: a611e772ef8ddf64d8106a9cbb70f31c, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012072213228, guid: a611e772ef8ddf64d8106a9cbb70f31c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a611e772ef8ddf64d8106a9cbb70f31c, type: 2}
@@ -13568,7 +13573,7 @@ GameObject:
   m_PrefabParentObject: {fileID: 1000012072213228, guid: a611e772ef8ddf64d8106a9cbb70f31c,
     type: 2}
   m_PrefabInternal: {fileID: 576469774}
---- !u!114 &654212755
+--- !u!114 &654212756
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -13579,7 +13584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaea0b0285fef4d41a4011a94934e5d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceTypes: 02000000
+  deviceTypes: 01000000
 --- !u!1 &671963291
 GameObject:
   m_ObjectHideFlags: 0
