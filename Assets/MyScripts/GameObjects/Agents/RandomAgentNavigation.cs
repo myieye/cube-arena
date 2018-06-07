@@ -71,15 +71,13 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		void OnNewDestination (Vector3 newDestination) {
-			Debug.Log ("OnNewDestination: " + newDestination);
-
 			if (!isServer) {
 				destination = newDestination;
 			}
 
 			localDestination = newDestination.ToLocal ();
 			var navMeshDestination = TransformUtil.ToNavMeshPosition (localDestination);
-			if (navMeshDestination.HasValue && agent != null) {
+			if (navMeshDestination.HasValue && agent != null && agent.isOnNavMesh) {
 				agent.SetDestination (navMeshDestination.Value);
 			}
 
