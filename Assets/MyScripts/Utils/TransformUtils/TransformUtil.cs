@@ -183,10 +183,14 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         }
 
         public static Vector3 GetRandomLocalPosition () {
+            if (!IsInitialized) return Vector3.zero;
+
             return Transform (TransformDirection.ServerToLocal, GetRandomPosition ());
         }
 
         public static Vector3 GetRandomNavMeshPosition () {
+            if (!IsInitialized) return Vector3.zero;
+
             return ToNavMeshPosition (GetRandomLocalPosition ()).Value;
         }
 
@@ -218,6 +222,8 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
         }
 
         public static Vector3 TransformVector (TransformDirection direction, Vector3 vector) {
+            if (!ShouldTransform) return vector;
+
             CheckTransformMatricesReady ();
             switch (direction) {
                 case TransformDirection.LocalToServer:
