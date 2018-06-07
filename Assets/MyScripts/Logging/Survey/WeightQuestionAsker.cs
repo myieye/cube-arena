@@ -32,8 +32,8 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             currQ = q;
             this.then = then;
             toggleGroup.SetAllTogglesOff ();
-            optionOneToggle.GetComponentInChildren<Text> ().text = q.OptionOne.ToString ();
-            optionTwoToggle.GetComponentInChildren<Text> ().text = q.OptionTwo.ToString ();
+            optionOneToggle.GetComponentInChildren<Text> ().text = q.OptionOne.ToFriendlyString ();
+            optionTwoToggle.GetComponentInChildren<Text> ().text = q.OptionTwo.ToFriendlyString ();
         }
 
         public WeightAnswer GetWeightAnswer () {

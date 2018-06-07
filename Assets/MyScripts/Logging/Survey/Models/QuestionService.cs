@@ -17,7 +17,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
             ratingQuestions.Add (new RatingQuestion (3, "Temporal Demand", "How hurried or rushed was the pace of the task?"));
             ratingQuestions.Add (new RatingQuestion (4, "Performance", "How successful were you in accomplishing what you were asked to do?"));
             ratingQuestions.Add (new RatingQuestion (5, "Effort", "How hard did you have to work to accomplish your level of performance?"));
-            ratingQuestions.Add (new RatingQuestion (6, "Frustration", "How insecure, discouraged, irritated, stressed, and annoyed wereyou?"));
+            ratingQuestions.Add (new RatingQuestion (6, "Frustration", "How insecure, discouraged, irritated, stressed, and annoyed were you?"));
             //*/
 
             weightQuestions = new List<WeightQuestion> ();
