@@ -64,7 +64,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 for (int d = 0; d < currConfig.Count; d++) {
                     var prevDevice = prevConfig[d].Device;
                     var currDevice = currConfig[d].Device;
-                    if (prevDevice.Type == currDevice.Type && prevDevice != currDevice &&
+                    if (prevDevice.Model == currDevice.Model && prevDevice != currDevice &&
                         !usedDevices.Contains (prevDevice)) {
                         SwapDevices (prevConfig[d], currConfig[d], currConfig);
                         usedDevices.Add (prevDevice);

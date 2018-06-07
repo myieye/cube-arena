@@ -529,7 +529,7 @@ MonoBehaviour:
   passToPlayerTime: 0
   arEnabledInEditor: 0
   arEnabled: 1
-  optimizeDeviceRoundConfig: 0
+  optimizeDeviceRoundConfig: 1
   overrideAvailableDevices: 1
   endlessRounds: 1
   autoStartGame: 0
