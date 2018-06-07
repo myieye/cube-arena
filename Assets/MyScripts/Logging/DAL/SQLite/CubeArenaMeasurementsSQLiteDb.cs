@@ -152,7 +152,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
                 foreach (var e in conn.Table<T> ()) {
                     Debug.Log (e);
                 }
-            } catch (SQLiteException e) {
+            } catch {
                 Debug.LogError ("Table does not exist: " + typeof (T).Name);
             }
         }

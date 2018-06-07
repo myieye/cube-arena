@@ -212,7 +212,7 @@ namespace UnityEngine.Networking {
     /// <summary>
     ///   <para>Cached Rigidbody2D.</para>
     /// </summary>
-    public Rigidbody2D rigidbody2D {
+    public new Rigidbody2D rigidbody2D { // EDIT (new)
       get {
         return this.m_RigidBody2D;
       }
@@ -624,11 +624,13 @@ namespace UnityEngine.Networking {
         reader.ReadVector2 ();
         reader.ReadVector2 ();
         if (this.syncRotationAxis != NetworkTransform_CA.AxisSyncMode.None) {
-          double num1 = (double) NetworkTransform_CA.UnserializeRotation2D (reader, this.rotationSyncCompression);
+          //double num1 = (double) NetworkTransform_CA.UnserializeRotation2D (reader, this.rotationSyncCompression);
+          NetworkTransform_CA.UnserializeRotation2D (reader, this.rotationSyncCompression); // EDIT
         }
         if (!this.syncSpin)
           return;
-        double num2 = (double) NetworkTransform_CA.UnserializeSpin2D (reader, this.rotationSyncCompression);
+        //double num2 = (double) NetworkTransform_CA.UnserializeSpin2D (reader, this.rotationSyncCompression);
+        NetworkTransform_CA.UnserializeSpin2D (reader, this.rotationSyncCompression); // EDIT
       } else {
         if ((UnityEngine.Object) this.m_RigidBody2D == (UnityEngine.Object) null)
           return;
@@ -778,14 +780,16 @@ namespace UnityEngine.Networking {
       if (this.m_FixedPosDiff == Vector3.zero && this.m_TargetSyncRotation3D == this.transform.rotation)
         return;
       if ((double) this.m_InterpolateMovement != 0.0) {
-        int num1 = (int) this.m_CharacterController.Move (this.m_FixedPosDiff * this.m_InterpolateMovement);
+        //int num1 = (int) this.m_CharacterController.Move (this.m_FixedPosDiff * this.m_InterpolateMovement);
+        this.m_CharacterController.Move (this.m_FixedPosDiff * this.m_InterpolateMovement); // EDIT
       }
       if ((double) this.interpolateRotation != 0.0)
         this.transform.rotation = Quaternion.Slerp (this.transform.rotation, this.m_TargetSyncRotation3D, (float) ((double) Time.fixedDeltaTime * (double) this.interpolateRotation * 10.0));
       if ((double) Time.time - (double) this.m_LastClientSyncTime <= (double) this.GetNetworkSendInterval ())
         return;
       this.m_FixedPosDiff = Vector3.zero;
-      int num2 = (int) this.m_CharacterController.Move (this.m_TargetSyncPosition - this.transform.position);
+      //int num2 = (int) this.m_CharacterController.Move (this.m_TargetSyncPosition - this.transform.position);
+      this.m_CharacterController.Move (this.m_TargetSyncPosition - this.transform.position);
     }
 
     private void InterpolateTransformMode2D () {
@@ -799,7 +803,7 @@ namespace UnityEngine.Networking {
       if ((double) this.interpolateRotation != 0.0) {
         float num1 = this.m_RigidBody2D.rotation % 360f;
         if ((double) num1 < 0.0) {
-          float num2 = num1 + 360f;
+          //float num2 = num1 + 360f; // EDIT;
         }
         this.m_RigidBody2D.MoveRotation (Quaternion.Slerp (this.transform.rotation, Quaternion.Euler (0.0f, 0.0f, this.m_TargetSyncRotation2D), Time.fixedDeltaTime * this.interpolateRotation / this.GetNetworkSendInterval ()).eulerAngles.z);
         this.m_TargetSyncRotation2D += (float) ((double) this.m_TargetSyncAngularVelocity2D * (double) Time.fixedDeltaTime * 0.100000001490116);
