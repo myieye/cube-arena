@@ -29,23 +29,22 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		void Start () {
 			agent = GetComponent<NavMeshAgent> ();
 			animator = GetComponent<Animator> ();
-			enabled = movingEnemy;
-			
-			if (movingEnemy && isServer) {
-				destination = transform.position;
-			}
 		}
 
 		public override void OnStartClient () {
-			enabled = movingEnemy;
+			Init ();
 		}
 
-		void OnEnable () {
-			if (!movingEnemy) {
-				enabled = false;
-			} else if (!target) {
+		private void Init () {
+			enabled = movingEnemy;
+
+			if (movingEnemy && !target) {
 				target = Instantiate (targetPrefab);
 				target.SetActive (false);
+			}
+
+			if (movingEnemy && isServer) {
+				destination = transform.position;
 			}
 		}
 
