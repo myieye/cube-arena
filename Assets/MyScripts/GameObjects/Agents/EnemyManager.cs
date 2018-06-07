@@ -38,7 +38,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		}
 
 		private void SpawnEnemies () {
-			while (enemyCount * Settings.Instance.PlayersPerEnemy < PlayerManager.Instance.NumberOfPlayers) {
+			while (enemyCount * Settings.Instance.PlayersPerEnemy < PlayerManager.Instance.NumberOfActivePlayers) {
 				EnemySpawner.Instance.SpawnEnemy (enemyPrefabs[0], false, 1);
 				enemyCount++;
 			}
