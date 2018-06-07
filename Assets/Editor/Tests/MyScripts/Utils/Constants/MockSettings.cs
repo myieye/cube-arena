@@ -6,6 +6,10 @@ using CubeArena.Assets.MyScripts.Utils.Settings;
 namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
     public class MockSettings : ISettings {
 
+        public void EnableUserStudySettings () {
+            
+        }
+
         public bool ForceUserStudySettings { get; set; }
         public float UserStudyPassToPlayerTime { get; set; }
         public string ServerIp { get; set; }
@@ -53,6 +57,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public float MinRotationVelocity { get; set; }
         public float MaxRotationVelocity { get; set; }
         public float AxisSensitivity { get; set; }
+
         //public int[] AreaRadiuses { get; set; }
         //public float AreaCenterPlayerStartPointOffset { get; set; }
     }

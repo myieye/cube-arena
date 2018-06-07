@@ -120,6 +120,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
+			
+			if (modeMsg.ForceUserStudySettings) {
+				Settings.Instance.EnableUserStudySettings ();
+			}
+
 			UIMode mode;
 			if (Settings.Instance.ForceTestUIMode) {
 				mode = Settings.Instance.TestUIMode;
@@ -234,7 +239,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			var msg = new UIModeMessage {
 				UIMode = uiMode, PlayerNum = player.PlayerNum,
 					PassToPlayerTime = Settings.Instance.PassToPlayerTime,
-					DisableUIModeList = Settings.Instance.DisableUIModeListOnClients
+					DisableUIModeList = Settings.Instance.DisableUIModeListOnClients,
+					ForceUserStudySettings = Settings.Instance.ForceUserStudySettings
 			};
 			NetworkServer.SendToClient (player.DeviceConfig.Device.Connection.connectionId,
 				MessageIds.SetUIMode, msg);

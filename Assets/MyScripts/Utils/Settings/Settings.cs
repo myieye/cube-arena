@@ -17,24 +17,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 			Instance = this;
 
 			if (forceUserStudySettings) {
-				//passToPlayerTime = userStudyPassToPlayerTime;
-				autoStartGame = false;
-				endlessRounds = false;
-				debugCursor = false;
-				disableUIModeListOnClients = true;
-				forceTestUIMode = false;
-				forceDefaultUIMode = false;
-				serverOnlyMeasurementLogging = false;
-
-				if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
-					logMeasurementsToDb = true;
-					logDeviceConnections = true;
-					resetDbOnStart = false;
-					overrideAvailableDevices = false;
-				} else {
-					logMeasurementsToDb = false;
-					overrideAvailableDevices = true;
-				}
+				EnableUserStudySettings ();
 			}
 
 #if UNITY_EDITOR
@@ -49,6 +32,27 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 			logMeasurementsToDb = false;
 			//serverIp = "192.168.137.1";
 #endif
+		}
+
+		public void EnableUserStudySettings () {
+			//passToPlayerTime = userStudyPassToPlayerTime;
+			autoStartGame = false;
+			endlessRounds = false;
+			debugCursor = false;
+			disableUIModeListOnClients = true;
+			forceTestUIMode = false;
+			forceDefaultUIMode = false;
+			serverOnlyMeasurementLogging = false;
+
+			if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
+				logMeasurementsToDb = true;
+				logDeviceConnections = true;
+				resetDbOnStart = false;
+				overrideAvailableDevices = false;
+			} else {
+				logMeasurementsToDb = false;
+				overrideAvailableDevices = true;
+			}
 		}
 
 		public static ISettings Instance { get; set; }

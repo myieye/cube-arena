@@ -6,5 +6,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
         public int PlayerNum;
         public float PassToPlayerTime;
         public bool DisableUIModeList;
+        public bool ForceUserStudySettings;
     }
 }

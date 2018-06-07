@@ -3,6 +3,9 @@ using CubeArena.Assets.MyScripts.Utils.Settings;
 
 namespace CubeArena.Assets.MyScripts.Utils.Settings {
 	public interface ISettings {
+
+		void EnableUserStudySettings ();
+
 		bool ForceUserStudySettings { get; }
 		float UserStudyPassToPlayerTime { get; }
 		string ServerIp { get; }
