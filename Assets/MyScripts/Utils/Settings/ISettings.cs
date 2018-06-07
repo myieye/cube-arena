@@ -25,6 +25,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		bool LogUIMode { get; }
 		bool LogDeviceInfo { get; }
 		bool LogDeviceConnections { get; }
+        bool DisableUIModeListOnClients { get; }
 		bool ForceTestUIMode { get; }
 		UIMode TestUIMode { get; }
 		bool ForceDefaultUIMode { get; }
@@ -40,7 +41,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float MinRotationVelocity { get; }
 		float MaxRotationVelocity { get; }
 		float AxisSensitivity { get; }
-		//int[] AreaRadiuses { get; }
-		//float AreaCenterPlayerStartPointOffset { get; }
+        //int[] AreaRadiuses { get; }
+        //float AreaCenterPlayerStartPointOffset { get; }
     }
 }

@@ -84,12 +84,14 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			if (!IsServer) {
 				GetComponent<NetworkManagerHUD> ().showGUI = false;
+				FindObjectOfType<UIModeList> ().SetEnabled (!Settings.Instance.DisableUIModeListOnClients);
 			}
 		}
 
 		public override void OnClientDisconnect (NetworkConnection conn) {
 			base.OnClientDisconnect (conn);
 			GetComponent<NetworkManagerHUD> ().showGUI = true;
+			FindObjectOfType<UIModeList> ().SetEnabled (true);
 		}
 	}
 }

@@ -21,6 +21,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 				autoStartGame = false;
 				endlessRounds = false;
 				debugCursor = false;
+				disableUIModeListOnClients = true;
 				forceTestUIMode = false;
 				forceDefaultUIMode = false;
 				serverOnlyMeasurementLogging = false;
@@ -112,6 +113,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private bool logDeviceConnections;
 		[Header ("UI Modes")]
 		[SerializeField]
+		private bool disableUIModeListOnClients;
+		[SerializeField]
 		private bool forceTestUIMode;
 		[SerializeField]
 		private UIMode testUIMode;
@@ -143,7 +146,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private float maxRotationVelocity;
 		[SerializeField]
 		private float axisSensitivity;
-
 
 		/*[SerializeField]
 		private int[] areaRadiuses;
@@ -215,6 +217,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public bool LogDeviceConnections {
 			get { return logDeviceConnections; }
+		}
+		public bool DisableUIModeListOnClients {
+			get { return disableUIModeListOnClients; }
 		}
 		public bool ForceTestUIMode {
 			get { return forceTestUIMode; }

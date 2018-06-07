@@ -137,7 +137,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 					PassToPlayerText.enabled = false;
 				}));
 			}
-			
+
+			uiModeList.SetEnabled (!modeMsg.DisableUIModeList);
+
 			SetUIMode (mode);
 		}
 
@@ -231,7 +233,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		private void SetPlayerUIMode (Players.NetworkPlayer player, UIMode uiMode) {
 			var msg = new UIModeMessage {
 				UIMode = uiMode, PlayerNum = player.PlayerNum,
-					PassToPlayerTime = Settings.Instance.PassToPlayerTime
+					PassToPlayerTime = Settings.Instance.PassToPlayerTime,
+					DisableUIModeList = Settings.Instance.DisableUIModeListOnClients
 			};
 			NetworkServer.SendToClient (player.DeviceConfig.Device.Connection.connectionId,
 				MessageIds.SetUIMode, msg);

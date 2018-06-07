@@ -22,5 +22,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			var currMode = UIModeManager.Instance<UIModeManager> ().CurrentUIMode;
 			dropdown.value = UIModeHelpers.UIModesForCurrentDevice.ToList().IndexOf(currMode);
 		}
+
+		public void SetEnabled (bool enabled) {
+			dropdown.interactable = enabled;
+		}
 	}
 }

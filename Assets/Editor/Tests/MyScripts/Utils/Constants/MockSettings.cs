@@ -28,6 +28,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public bool LogUIMode { get; set; }
         public bool LogDeviceInfo { get; set; }
         public bool LogDeviceConnections { get; set; }
+        public bool DisableUIModeListOnClients { get; set; }
         public bool ForceTestUIMode { get; set; }
         public UIMode TestUIMode { get; set; }
         public bool ForceDefaultUIMode { get; set; }
@@ -47,7 +48,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public bool ResetDbOnStart { get; set; }
         public bool LogMeasurementsToConsole { get; set; }
         public bool ServerOnlyMeasurementLogging { get; set; }
-		public int InteractionAreaGridSize { get; set; }
+        public int InteractionAreaGridSize { get; set; }
         public float RotationTimeout { get; set; }
         public float MinRotationVelocity { get; set; }
         public float MaxRotationVelocity { get; set; }
