@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Network {
-	public class TouchNetworkGUIToggle : MonoBehaviour {
+	public class NetworkGUIToggle : MonoBehaviour {
 
 		[SerializeField]
 		private int touchCount;
@@ -15,10 +15,20 @@ namespace CubeArena.Assets.MyScripts.Network {
 		private bool toggleNetworkManagerHUD;
 		private bool toggleNetworkDiscovery;
 
-		private void Start () {
-			if (!DeviceTypeManager.IsDeviceType (DeviceTypeSpec.Android)) {
-				Destroy (this);
+		private bool ToggleActive {
+			get {
+#if UNITY_EDITOR || UNITY_STANDALONE
+				return Input.GetMouseButtonDown (1);
+#elif UNITY_ANDROID
+				return Input.touchCount >= touchCount;
+#endif
 			}
+		}
+
+		private void Start () {
+#if UNITY_WSA && !UNITY_EDITOR
+			Destroy (this);
+#endif
 
 			valid = true;
 			networkManagerHUD = GetComponent<NetworkManagerHUD> ();
@@ -34,10 +44,10 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		private void Update () {
-			if (valid && Input.touchCount >= touchCount) {
+			if (valid && ToggleActive) {
 				ToggleGUI ();
 				valid = false;
-			} else if (Input.touchCount < touchCount) {
+			} else if (!ToggleActive) {
 				valid = true;
 			}
 		}
