@@ -1297,6 +1297,7 @@ MonoBehaviour:
   - {fileID: 100000, guid: bd0de3dd47b609e40abe7df56526b03d, type: 2}
   - {fileID: 100000, guid: 4c7a90debf081ca4fa7fb7fea0b8a2eb, type: 2}
   - {fileID: 100000, guid: d5f84b2d231bacd4291b8fa79eccc62a, type: 2}
+  - {fileID: 100000, guid: 9ca0fb1f9cf94c244814e4a7643d0cfa, type: 2}
 --- !u!114 &315206371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12525,6 +12526,41 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -18534,6 +18570,7 @@ MonoBehaviour:
   - {fileID: 100000, guid: bd0de3dd47b609e40abe7df56526b03d, type: 2}
   - {fileID: 100000, guid: 4c7a90debf081ca4fa7fb7fea0b8a2eb, type: 2}
   - {fileID: 100000, guid: d5f84b2d231bacd4291b8fa79eccc62a, type: 2}
+  - {fileID: 100000, guid: 9ca0fb1f9cf94c244814e4a7643d0cfa, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
