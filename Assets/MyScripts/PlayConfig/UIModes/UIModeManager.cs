@@ -138,7 +138,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				}));
 			}
 
-			uiModeList.SetEnabled (!modeMsg.DisableUIModeList);
+			uiModeList.SetEnabled (!modeMsg.DisableUIModeList || isServer);
 
 			SetUIMode (mode);
 		}
