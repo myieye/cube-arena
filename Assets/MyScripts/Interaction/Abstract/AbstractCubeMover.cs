@@ -37,7 +37,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 
 		bool CheckStartMoving () {
 			GameObject cube;
-			if (!stateManager.IsMoving () && IsStartingMove (out cube) && stateManager.StartMove ()) {
+			if (!stateManager.IsMoving () && IsStartingMove (out cube) && stateManager.StartMove (cube)) {
 				StartMove (cube);
 				return true;
 			}

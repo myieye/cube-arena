@@ -98,7 +98,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			State = InteractionState.Idle;
 		}
 
-		public bool StartMove () {
+		public bool StartMove (GameObject cube) {
 			if (MovingDisabled) {
 				return false;
 			}
@@ -111,15 +111,19 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			} else if (IsHovering ()) {
 				Select (HoveredCube.Cube);
 				State = InteractionState.Moving;
+			} else if (cube) {
+				Select (cube);
+				State = InteractionState.Moving;
+				Debug.LogWarning ("Null on StartMove");
 			}
 
-			if (SelectedCube != null && SelectedCube.StateManager != null) {
+			if (SelectedCube != null) {
 				SelectedCube.StateManager.StartDrag ();
 				Measure.LocalInstance.StartMove (SelectedCube.Cube);
 				return true;
 			} else {
 				SelectedCube = null;
-				Debug.LogWarning ("Null on StartMove");
+				Debug.LogWarning ("Dragged cube not found!");
 				return false;
 			}
 		}
