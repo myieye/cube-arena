@@ -46,6 +46,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 #if !UNITY_EDITOR
 			logMeasurementsToDb = false;
+			//serverIp = "192.168.137.1";
 #endif
 		}
 
@@ -56,6 +57,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private bool forceUserStudySettings;
 		[SerializeField]
 		private float userStudyPassToPlayerTime;
+		[SerializeField]
+		private string serverIp;
 
 		[Header ("Players")]
 		[SerializeField]
@@ -152,6 +155,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public float UserStudyPassToPlayerTime {
 			get { return userStudyPassToPlayerTime; }
+		}
+		public string ServerIp {
+			get { return serverIp; }
 		}
 		public PlayerNumberMode PlayerNumberMode {
 			get { return playerNumberMode; }

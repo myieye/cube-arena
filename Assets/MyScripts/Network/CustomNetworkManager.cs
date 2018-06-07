@@ -19,8 +19,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 		public static bool IsServer { get; private set; }
 
 		public void Start () {
-#if (UNITY_WSA || UNITY_ANDROID) && !UNITY_EDITOR
-			networkAddress = "192.168.1.102";
+#if !UNITY_EDITOR
+			networkAddress = Settings.Instance.ServerIp;
 #endif
 
 			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA,

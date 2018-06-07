@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -52,7 +53,7 @@ public class SpeechCommands : MonoBehaviour {
 	}
 
 	public void ConnectClient () {
-		NetworkManager.singleton.networkAddress = "192.168.1.102";
+		NetworkManager.singleton.networkAddress = Settings.Instance.ServerIp;
 		FindObjectOfType<NetworkManager> ().StartClient ();
 	}
 

@@ -5,6 +5,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 	public interface ISettings {
 		bool ForceUserStudySettings { get; }
 		float UserStudyPassToPlayerTime { get; }
+		string ServerIp { get; }
 		PlayerNumberMode PlayerNumberMode { get; }
 		int NumberOfPlayers { get; }
 		int PlayersPerEnemy { get; }
