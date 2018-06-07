@@ -84,7 +84,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (InPracticeMode) {
 				if (InFirstRound ()) {
 					if (!configGenerator.TryGenerateDeviceRoundConfigs (
-							PlayerManager.Instance.NumberOfPlayers, out deviceRoundConfigs)) {
+							PlayerManager.Instance.NumberOfPlayersForRound, out deviceRoundConfigs)) {
 						DecrementModeAndRoundNumber ();
 						return;
 					}

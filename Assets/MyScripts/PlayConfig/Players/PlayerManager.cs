@@ -24,7 +24,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
         }
 
         public List<NetworkPlayer> Players { get; private set; }
-        public int NumberOfPlayers {
+        public int NumberOfActivePlayers { get { return Players != null ? Players.Count : 0; } }
+        public int NumberOfPlayersForRound {
             get {
                 switch (Settings.Instance.PlayerNumberMode) {
                     case PlayerNumberMode.NumberOfDevices:
@@ -50,13 +51,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             DestroyPlayers ();
 
             Players = new List<NetworkPlayer> ();
-            for (int i = 0; i < NumberOfPlayers; i++) {
+            for (int i = 0; i < NumberOfPlayersForRound; i++) {
                 Players.Add (new NetworkPlayer {
                     PlayerId = dataService.GetNextPlayerId (),
                         PlayerIndex = i, PlayerNum = i + 1
                 });
             }
-            return NumberOfPlayers;
+            return NumberOfPlayersForRound;
         }
 
         public void DestroyPlayers () {
