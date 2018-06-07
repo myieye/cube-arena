@@ -113,10 +113,15 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 				State = InteractionState.Moving;
 			}
 
-			SelectedCube.StateManager.StartDrag ();
-			Measure.LocalInstance.StartMove (SelectedCube.Cube);
-
-			return true;
+			if (SelectedCube != null && SelectedCube.StateManager != null) {
+				SelectedCube.StateManager.StartDrag ();
+				Measure.LocalInstance.StartMove (SelectedCube.Cube);
+				return true;
+			} else {
+				SelectedCube = null;
+				Debug.LogWarning ("Null on StartMove");
+				return false;
+			}
 		}
 
 		public void EndMove () {
