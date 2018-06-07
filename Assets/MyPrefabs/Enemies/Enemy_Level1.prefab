@@ -2245,6 +2245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08aa65114787a1b45b1735c6fd359a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPrefab: {fileID: 1168489547306798, guid: ef22972aade7b8544995a68990e10cba,
+    type: 2}
   movingEnemy: 0
 --- !u!114 &114832729715987862
 MonoBehaviour:

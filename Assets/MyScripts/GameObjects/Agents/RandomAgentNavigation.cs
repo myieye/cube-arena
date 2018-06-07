@@ -12,6 +12,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 	public class RandomAgentNavigation : NetworkBehaviour {
 
+		[SerializeField]
+		private GameObject targetPrefab;
+		private GameObject target;
 		private NavMeshAgent agent;
 		private Animator animator;
 		[SyncVar (hook = "OnNewDestination")]
@@ -28,12 +31,23 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			animator = GetComponent<Animator> ();
 			if (!movingEnemy) {
 				enabled = false;
+			} else if (isServer) {
+				destination = transform.position;
 			}
 		}
 
 		void OnEnable () {
 			if (!movingEnemy) {
 				enabled = false;
+			} else if (!target) {
+				target = Instantiate (targetPrefab);
+				target.SetActive (false);
+			}
+		}
+
+		void OnDisable () {
+			if (target) {
+				Destroy (target);
 			}
 		}
 
@@ -46,17 +60,19 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			if (isServer && Arrived ()) {
 				destination = TransformUtil.GetRandomPosition ();
 			} else if (AgentLostPath ()) {
-//#if UNITY_WSA && !UNITY_EDITOR
-//				transform.LookAt ()
-//#else
+				//#if UNITY_WSA && !UNITY_EDITOR
+				//				transform.LookAt ()
+				//#else
 				OnNewDestination (destination);
-//#endif
+				//#endif
 			}
 
 			animator.SetBool ("Moving", IsMoving ());
 		}
 
 		void OnNewDestination (Vector3 newDestination) {
+			Debug.Log ("OnNewDestination: " + newDestination);
+
 			if (!isServer) {
 				destination = newDestination;
 			}
@@ -65,6 +81,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			var navMeshDestination = TransformUtil.ToNavMeshPosition (localDestination);
 			if (navMeshDestination.HasValue && agent != null) {
 				agent.SetDestination (navMeshDestination.Value);
+			}
+
+			if (target) {
+				target.SetActive (true);
+				target.transform.rotation = TransformUtil.World.rotation;
+				target.transform.position = navMeshDestination.Value;
 			}
 		}
 
