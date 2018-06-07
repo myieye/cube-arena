@@ -81,6 +81,15 @@ namespace CubeArena.Assets.MyScripts.Network {
 				ClientScene.AddPlayer (client.connection, 0, msg);
 				//UIModeManager.Instance<UIModeMAnager> ().uiModeManager.OnClientConnect ();
 			}
+
+			if (!IsServer) {
+				GetComponent<NetworkManagerHUD> ().showGUI = false;
+			}
+		}
+
+		public override void OnClientDisconnect (NetworkConnection conn) {
+			base.OnClientDisconnect (conn);
+			GetComponent<NetworkManagerHUD> ().showGUI = true;
 		}
 	}
 }
