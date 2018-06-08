@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
     public enum WeightOption {
@@ -18,7 +19,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
          */
         public static string ToFriendlyString (this WeightOption weightOption) {
             var val = weightOption.ToString ();
-            return string.Concat (val.Select (x => Char.IsUpper (x) ? " " + x : x.ToString ())).TrimStart (' ');
+            return Regex.Replace(val, "([a-z])([A-Z])", "$1 $2");
         }
     }
 }

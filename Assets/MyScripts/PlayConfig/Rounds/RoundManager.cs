@@ -31,18 +31,35 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 		private DeviceConfigurationGenerator configGenerator;
-
-		void Start () {
-			Init ();
-			configGenerator = new DeviceConfigurationGenerator (DeviceManager.Instance);
+		private bool inTestPhase;
+		private float RoundLength {
+			get {
+				if (inTestPhase) {
+					return Settings.Instance.PracticeRoundLength;
+				} else if (InPracticeMode) {
+					return Settings.Instance.ShortPracticeRoundLength;
+				} else {
+					return Settings.Instance.RoundLength;
+				}
+			}
+		}
+		private int NumberOfPlayers {
+			get {
+				if (inTestPhase) {
+					return PlayerManager.Instance.NumberOfPlayersForRound;
+				} else {
+					return PlayerManager.Instance.NumberOfActivePlayers;
+				}
+			}
 		}
 
-		void OnEnable () {
+		void Start () {
+			timeManager = FindObjectOfType<TimeManager> ();
+			configGenerator = new DeviceConfigurationGenerator (DeviceManager.Instance);
 			ResetRoundCounter ();
 		}
 
-		private void Init () {
-			timeManager = FindObjectOfType<TimeManager> ();
+		void OnEnable () {
 			ResetRoundCounter ();
 		}
 
@@ -52,7 +69,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			ResetGameObjects (0.5f);
 			timeManager.RpcClear ();
 
-			if (!InPracticeMode && currRound > 0) {
+			if (!inTestPhase && !InPracticeMode && currRound > 0) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				FindObjectOfType<Surveyer> ().DoSurvey (PlayerManager.Instance.Players, this);
 			} else {
@@ -83,13 +100,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			IncrementModeAndRoundNumber ();
 
 			if (InPracticeMode) {
-				if (InFirstRound ()) {
-					if (!configGenerator.TryGenerateDeviceRoundConfigs (
-							PlayerManager.Instance.NumberOfPlayersForRound, out deviceRoundConfigs)) {
+				if (NeedsNewRoundConfig ()) {
+					if (!configGenerator.TryGenerateDeviceRoundConfigs (NumberOfPlayers, out deviceRoundConfigs)) {
 						DecrementModeAndRoundNumber ();
 						return;
 					}
-					PlayerManager.Instance.GenerateNewPlayers ();
+					if (inTestPhase) {
+						PlayerManager.Instance.GenerateNewPlayers ();
+					}
 				}
 
 				// Generate new PlayerRoundIds
@@ -97,25 +115,38 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 					currRound, deviceRoundConfigs[currRound - 1]);
 				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
 
-				timeManager.StartRound (Settings.Instance.PracticeRoundLength, Settings.Instance.PassToPlayerTime, this, InPracticeMode);
+				timeManager.StartRound (RoundLength, Settings.Instance.PassToPlayerTime, this, InPracticeMode);
 				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
 			} else {
-				timeManager.StartRound (Settings.Instance.RoundLength, 0, this, InPracticeMode);
+				timeManager.StartRound (RoundLength, 0, this, InPracticeMode);
 				SpawnGameObjects ();
 			}
 		}
 
 		private void IncrementModeAndRoundNumber () {
-			InPracticeMode = !InPracticeMode;
-			if (InPracticeMode) {
+			if (currRound == NumberOfRounds && inTestPhase) {
+				inTestPhase = false;
+				InPracticeMode = true;
+				currRound = 1;
+			} else if (inTestPhase) {
+				InPracticeMode = true;
 				currRound++;
+			} else {
+				InPracticeMode = !InPracticeMode;
+				if (InPracticeMode) {
+					currRound++;
+				}
 			}
 		}
 
 		private void DecrementModeAndRoundNumber () {
-			InPracticeMode = !InPracticeMode;
-			if (!InPracticeMode) {
+			if (inTestPhase) {
 				currRound--;
+			} else {
+				InPracticeMode = !InPracticeMode;
+				if (!InPracticeMode) {
+					currRound--;
+				}
 			}
 		}
 
@@ -131,16 +162,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void ResetRoundCounter () {
+			inTestPhase = true;
 			InPracticeMode = false;
 			currRound = 0;
 		}
 
 		private bool InLastRound () {
-			return currRound == NumberOfRounds && !InPracticeMode;
+			return currRound == NumberOfRounds && !InPracticeMode && !inTestPhase;
 		}
 
-		private bool InFirstRound () {
-			return currRound == 1 && InPracticeMode;
+		private bool NeedsNewRoundConfig () {
+			return currRound == 1 && (InPracticeMode || inTestPhase);
 		}
 	}
 }

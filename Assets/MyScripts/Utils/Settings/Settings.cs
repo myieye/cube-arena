@@ -93,6 +93,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		[SerializeField]
 		private float practiceRoundLength;
 		[SerializeField]
+		private float shortPracticeRoundLength;
+		[SerializeField]
 		private float passToPlayerTime;
 
 		[Header ("AR")]
@@ -190,6 +192,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public float PracticeRoundLength {
 			get { return practiceRoundLength; }
+		}
+		public float ShortPracticeRoundLength {
+			get { return shortPracticeRoundLength; }
 		}
 		public float PassToPlayerTime {
 			get { return passToPlayerTime; }

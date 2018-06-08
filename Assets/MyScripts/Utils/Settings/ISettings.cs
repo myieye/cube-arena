@@ -14,6 +14,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		int PlayersPerEnemy { get; }
 		float RoundLength { get; }
 		float PracticeRoundLength { get; }
+		float ShortPracticeRoundLength { get; }
 		float PassToPlayerTime  { get; }
 		bool AREnabledInEditor { get; }
 		bool AREnabled { get; }

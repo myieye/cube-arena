@@ -18,6 +18,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public int PlayersPerEnemy { get; set; }
         public float RoundLength { get; set; }
         public float PracticeRoundLength { get; set; }
+		public float ShortPracticeRoundLength { get; set; }
         public float PassToPlayerTime { get; set; }
         public bool AREnabledInEditor { get; set; }
         public bool AREnabled { get; set; }
