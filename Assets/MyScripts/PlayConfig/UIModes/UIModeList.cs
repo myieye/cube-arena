@@ -17,14 +17,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public static UIModeList Instance { get; private set; }
 
 		void Awake () {
+			SetVisible (false);
 			Instance = this;
 			dropdown = GetComponent<Dropdown> ();
 			dropdown.options = (
 				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
-		}
-
-		void Start () {
-			SetVisible (false);
 		}
 
 		public void RefreshSelectedUIMode () {
@@ -41,6 +38,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public void SetVisible (bool visible) {
 			if (gameObject) {
+				Debug.Log ("Active: " + visible);
 				gameObject.SetActive (visible);
 			}
 		}
