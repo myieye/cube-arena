@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
+using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
@@ -86,7 +87,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (cube) {
 				selectedRigidbody = cube.GetComponent<Rigidbody> ();
 				selectedRigidbody.maxAngularVelocity = Settings.Instance.MaxRotationVelocity;
-				selectedRigidbody.GetComponent<NetworkTransform_CA2> ().enabled = false;
+				SetCubeNetworkTransformEnabled (cube, false);
 				rotationWaitTime = 0;
 			}
 		}
@@ -108,12 +109,12 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 			if (cube) {
 				if (immediate) {
-					cube.GetComponent<NetworkTransform_CA2> ().enabled = true;
+					SetCubeNetworkTransformEnabled (cube, true);
 				} else {
 					var savedCube = cube;
 					StartCoroutine (DelayUtil.Do (1.5f, () => {
 						if (savedCube && (!selectedRigidbody || savedCube != selectedRigidbody.gameObject)) {
-							savedCube.GetComponent<NetworkTransform_CA2> ().enabled = true;
+							SetCubeNetworkTransformEnabled (savedCube, true);
 						}
 					}));
 				}
@@ -135,6 +136,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected bool HasRotationInput () {
 			return CalculateRotationTorque ().magnitude > 0;
+		}
+
+		private void SetCubeNetworkTransformEnabled (GameObject cube, bool enabled) {
+			cube.GetComponent<RelativeNetworkTransform> ().enabled = enabled;
 		}
 	}
 }
