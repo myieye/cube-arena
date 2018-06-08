@@ -112,7 +112,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		}
 
 		private void OnDisable () {
-			uiModeList.SetVisible (false || isServer);
+			if (uiModeList) {
+				uiModeList.SetVisible (false || isServer);
+			}
 		}
 
 		private void TryRegisterUIModeMessageHandler () {
@@ -125,7 +127,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
-			
+
 			if (modeMsg.ForceUserStudySettings) {
 				Settings.Instance.EnableUserStudySettings ();
 			}
