@@ -14,17 +14,24 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		void Awake () {
 			dropdown = GetComponent<Dropdown> ();
 			dropdown.options = (
-				from mode in UIModeHelpers.UIModesForCurrentDevice
-				select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
+				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
 		}
 
 		public void RefreshSelectedUIMode () {
 			var currMode = UIModeManager.Instance<UIModeManager> ().CurrentUIMode;
-			dropdown.value = UIModeHelpers.UIModesForCurrentDevice.ToList().IndexOf(currMode);
+			dropdown.value = UIModeHelpers.UIModesForCurrentDevice.ToList ().IndexOf (currMode);
 		}
 
 		public void SetEnabled (bool enabled) {
-			dropdown.interactable = enabled;
+			if (dropdown) {
+				dropdown.interactable = enabled;
+			}
+		}
+
+		public void SetVisible (bool visible) {
+			if (gameObject) {
+				gameObject.SetActive (visible);
+			}
 		}
 	}
 }

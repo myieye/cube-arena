@@ -19,6 +19,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private const string TickClock_Method = "TickClock";
 		private RoundOverListener roundOverListener;
 
+		void OnEnable () {
+			Clear ();
+		}
+
 		void OnDisable () {
 			Clear ();
 			OnRoundTimeRemainingChanged (roundTimeRemaining_S);
@@ -28,17 +32,31 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void StartRound (float roundLength, float roundDelay, RoundOverListener roundOverListener, bool practiceMode) {
 			this.roundOverListener = roundOverListener;
 
-			roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
-			CancelInvoke (TickClock_Method);
+			RpcClear ();
+
 			StartCoroutine (DelayUtil.Do (roundDelay,
-				() => InvokeRepeating (TickClock_Method, 1, 1)));
-				
-			RpcShowHidePracticeModeIndicator (practiceMode);
+				() => {
+					roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
+					InvokeRepeating (TickClock_Method, 1, 1);
+					clock.enabled = true;
+					RpcShowHidePracticeModeIndicator (practiceMode);
+				}));
 		}
 
-		public void Clear () {
+		[ClientRpc]
+		public void RpcClear () {
+			Clear ();
+		}
+
+		private void Clear () {
 			CancelInvoke (TickClock_Method);
 			roundTimeRemaining_S = 0;
+			if (clock) {
+				clock.enabled = false;
+			}
+			if (practiceModeIndicator) {
+				practiceModeIndicator.SetActive (false);
+			}
 		}
 
 		[ClientRpc]
@@ -50,15 +68,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void TickClock () {
 			roundTimeRemaining_S -= 1;
 			if (roundTimeRemaining_S <= 0) {
-				Clear ();
+				RpcClear ();
 				roundOverListener.OnRoundOver ();
 			}
 		}
 
 		private void OnRoundTimeRemainingChanged (int roundTimeRemaining) {
-			TimeSpan time = TimeSpan.FromSeconds (roundTimeRemaining);
-			var clockTime = string.Format ("{0}:{1:D2}", time.Minutes, time.Seconds);
-			clock.text = clockTime;
+			if (clock) {
+				TimeSpan time = TimeSpan.FromSeconds (roundTimeRemaining);
+				var clockTime = string.Format ("{0}:{1:D2}", time.Minutes, time.Seconds);
+				clock.text = clockTime;
+			}
 		}
 	}
 }

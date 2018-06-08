@@ -50,7 +50,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (!force && Settings.Instance.EndlessRounds) return;
 
 			ResetGameObjects (0.5f);
-			timeManager.Clear ();
+			timeManager.RpcClear ();
 
 			if (!InPracticeMode && currRound > 0) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
@@ -63,6 +63,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void OnSurveyFinished () {
 			if (InLastRound ()) {
 				ResetRoundCounter ();
+				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				PlayerManager.Instance.DestroyPlayers ();
 			} else {
 				TriggerNewRound ();

@@ -105,9 +105,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public CACursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
 
-		public void OnEnable () {
+		private void OnEnable () {
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
 			SetUIMode (UIMode.None);
+			uiModeList.SetVisible (false || isServer);
+		}
+
+		private void OnDisable () {
+			uiModeList.SetVisible (false || isServer);
 		}
 
 		private void TryRegisterUIModeMessageHandler () {
@@ -140,7 +145,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				StartCoroutine (DelayUtil.Do (modeMsg.PassToPlayerTime, () => {
 					PassToPlayerText.text = "";
 					PassToPlayerText.enabled = false;
+					uiModeList.SetVisible (true);
 				}));
+			} else {
+				uiModeList.SetVisible (false || isServer);
 			}
 
 			uiModeList.SetEnabled (!modeMsg.DisableUIModeList || isServer);

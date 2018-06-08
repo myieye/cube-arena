@@ -72,6 +72,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             weightQuestionAsker = GetComponent<WeightQuestionAsker> ();
         }
 
+        private void OnDisable () {
+            surveyContainer.SetActive (false);
+            SurveyStarted = false;
+        }
+
         public void DoSurvey (List<NetworkPlayer> players, SurveyFinishedListener surveyFinishedListener) {
             this.surveyFinishedListener = surveyFinishedListener;
             totalClients = players.Count;
