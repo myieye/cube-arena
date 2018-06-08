@@ -112,6 +112,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                         measure.RpcFlushMeasurements ();
                     }
                 }
+                // TODO: delay is likely causing Rpc object not found warning.
                 StartCoroutine (DelayUtil.Do (time - 0.2f, () => NetworkServer.Destroy (netPlayer.Cursor)));
                 if (netPlayer.Cubes != null) {
                     netPlayer.Cubes.ForEach (cube => NetworkServer.Destroy (cube));
