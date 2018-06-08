@@ -24,10 +24,11 @@ namespace CubeArena.Assets.MyScripts.Network {
         private float rotationInterpolation;
         [ConditionalField ("sendUpdates", true)]
         [SerializeField]
-        private float positionThreshold = 1f;
+        private float positionThreshold = 0.01f;
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
-        private float rotationThreshold = 10f;
+        private float rotationThreshold = 1f;
+        /*
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
         private float velocityThreshold = 3f;
@@ -38,6 +39,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         [ConditionalField ("sendUpdates", true)]
         private float interpolationSpeed = 0.4f;
         private const float MaxWait = 10f;
+         */
         private int navMeshMissCount;
         private NetworkTransformMode mode;
         private Rigidbody rb;
@@ -111,10 +113,10 @@ namespace CubeArena.Assets.MyScripts.Network {
             if (!IsSender || !sendUpdates) return;
 
             //wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
-            //if (PastThreshold ()) {
-            TransmitSync ();
-            //    SaveState ();
-            //}
+            if (PastThreshold ()) {
+                TransmitSync ();
+                SaveState ();
+            }
         }
 
         protected virtual void FixedUpdate () {
@@ -139,7 +141,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         void TransmitSync () {
             var relativeRbs = CalcStateInServerCoordinates ();
-            CmdSyncPosition (relativeRbs, nextMessageId);
+            CmdSyncPosition (relativeRbs, nextMessageId++);
         }
 
         [Command]
@@ -212,16 +214,9 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private bool PastThreshold () {
-            var pastThreshold =
-                Vector3.Distance (transform.position, rbs.position) > ScaleThreshold (positionThreshold) ||
-                Quaternion.Angle (transform.rotation, rbs.rotation) > ScaleThreshold (rotationThreshold);
-            if (mode == NetworkTransformMode.Rigidbody) {
-                if (!rb) return false;
-                pastThreshold = pastThreshold ||
-                    Vector3.Distance (rb.velocity, rbs.velocity) > ScaleThreshold (velocityThreshold) ||
-                    Vector3.Distance (rb.angularVelocity, rbs.angularVelocity) > ScaleThreshold (angularVelocityThreshold);
-            }
-            return pastThreshold;
+            return
+                Vector3.Distance (transform.position, rbs.position) > positionThreshold ||
+                Quaternion.Angle (transform.rotation, rbs.rotation) > rotationThreshold;
         }
 
         private void SaveState () {
@@ -238,8 +233,9 @@ namespace CubeArena.Assets.MyScripts.Network {
             }
         }
 
+        /*
         private float ScaleThreshold (float threshold) {
             return threshold * (1 - (wait / MaxWait));
-        }
+        } */
     }
 }

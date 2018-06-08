@@ -2215,13 +2215,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendUpdates: 1
-  movementInterpolation: 0.2
-  rotationInterpolation: 0.2
-  positionThreshold: 1
-  rotationThreshold: 10
-  velocityThreshold: 3
-  angularVelocityThreshold: 3
-  interpolationSpeed: 1
+  movementInterpolation: 0
+  rotationInterpolation: 0
+  positionThreshold: 0.01
+  rotationThreshold: 1
 --- !u!136 &136917956573300838
 CapsuleCollider:
   m_ObjectHideFlags: 1
