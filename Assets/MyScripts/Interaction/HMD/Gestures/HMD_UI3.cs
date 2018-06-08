@@ -37,8 +37,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         public override void OnManipulationUpdated (ManipulationEventData eventData) {
             base.OnManipulationUpdated (eventData);
             if (isManipulating) {
-                var delta = eventData.CumulativeDelta * TransformUtil.LocalRadius * 3.5f;
-                var relativeTarget = absoluteTarget.ToLocal () + delta;
+                //var delta = eventData.CumulativeDelta * TransformUtil.LocalRadius * 3.5f;
+                var relativeTarget = absoluteTarget.ToLocal () + scaledCumulativeDelta;//delta;
 
                 CursorController.TranslationPosition = relativeTarget;
             }
