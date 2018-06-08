@@ -84,7 +84,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			if (!IsServer) {
 				GetComponent<NetworkManagerHUD> ().showGUI = false;
-				UIModeList.Instance.SetEnabled (!Settings.Instance.DisableUIModeListOnClients);
+				if (UIModeList.Instance) {
+					UIModeList.Instance.SetEnabled (!Settings.Instance.DisableUIModeListOnClients);
+				}
 			}
 		}
 
