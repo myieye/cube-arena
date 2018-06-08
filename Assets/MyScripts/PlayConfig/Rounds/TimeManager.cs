@@ -36,7 +36,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 			StartCoroutine (DelayUtil.Do (roundDelay,
 				() => {
-					roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
+					roundTimeRemaining_S = Mathf.CeilToInt (roundLength);
 					InvokeRepeating (TickClock_Method, 1, 1);
 					RpcShow (practiceMode);
 				}));
