@@ -21,6 +21,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 				return Input.GetMouseButtonDown (1);
 #elif UNITY_ANDROID
 				return Input.touchCount >= touchCount;
+#elif UNITY_WSA
+				return false;
 #endif
 			}
 		}
