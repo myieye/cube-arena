@@ -38,8 +38,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				() => {
 					roundTimeRemaining_S = Mathf.CeilToInt (roundLength * 60f);
 					InvokeRepeating (TickClock_Method, 1, 1);
-					clock.enabled = true;
-					RpcShowHidePracticeModeIndicator (practiceMode);
+					RpcShow (practiceMode);
 				}));
 		}
 
@@ -60,7 +59,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		[ClientRpc]
-		private void RpcShowHidePracticeModeIndicator (bool practiceMode) {
+		private void RpcShow (bool practiceMode) {
+			clock.enabled = true;
 			practiceModeIndicator.SetActive (practiceMode);
 		}
 
