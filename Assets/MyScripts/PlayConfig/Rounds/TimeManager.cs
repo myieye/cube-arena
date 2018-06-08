@@ -19,6 +19,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private const string TickClock_Method = "TickClock";
 		private RoundOverListener roundOverListener;
 
+		void OnDisable () {
+			Clear ();
+			OnRoundTimeRemainingChanged (roundTimeRemaining_S);
+		}
+
 		[Server]
 		public void StartRound (float roundLength, float roundDelay, RoundOverListener roundOverListener, bool practiceMode) {
 			this.roundOverListener = roundOverListener;
