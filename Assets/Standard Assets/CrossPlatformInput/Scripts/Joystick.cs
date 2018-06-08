@@ -16,18 +16,19 @@ namespace UnityStandardAssets.CrossPlatformInput {
 		public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
 		public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
 
-		Vector3 m_StartPos;
+		Vector3 origin;
 		bool m_UseX; // Toggle for using the x axis
 		bool m_UseY; // Toggle for using the Y axis
 		CrossPlatformInputManager.VirtualAxis m_HorizontalVirtualAxis; // Reference to the joystick in the cross platform input
 		CrossPlatformInputManager.VirtualAxis m_VerticalVirtualAxis; // Reference to the joystick in the cross platform input
+		Vector3 touchStart;
 
 		void OnEnable () {
 			CreateVirtualAxes ();
 		}
 
 		void UpdateVirtualAxes (Vector3 value) {
-			var delta = m_StartPos - value;
+			var delta = origin - value;
 			delta.y = -delta.y;
 			delta /= MovementRange;
 			if (m_UseX) {
@@ -58,26 +59,29 @@ namespace UnityStandardAssets.CrossPlatformInput {
 		public void OnDrag (PointerEventData data) {
 			Vector3 newPos = Vector3.zero;
 
+			touchStart = Vector3.Lerp (touchStart, origin, 0.05f);
+
 			if (m_UseX) {
-				int delta = (int) (data.position.x - m_StartPos.x);
+				int delta = (int) (data.position.x - touchStart.x);
 				newPos.x = delta;
 			}
 
 			if (m_UseY) {
-				int delta = (int) (data.position.y - m_StartPos.y);
+				int delta = (int) (data.position.y - touchStart.y);
 				newPos.y = delta;
 			}
-			transform.position = Vector3.ClampMagnitude (new Vector3 (newPos.x, newPos.y, newPos.z), MovementRange) + m_StartPos;
+			transform.position = Vector3.ClampMagnitude (new Vector3 (newPos.x, newPos.y, newPos.z), MovementRange) + origin;
 			UpdateVirtualAxes (transform.position);
 		}
 
 		public void OnPointerUp (PointerEventData data) {
-			transform.position = m_StartPos;
-			UpdateVirtualAxes (m_StartPos);
+			transform.position = origin;
+			UpdateVirtualAxes (origin);
 		}
 
 		public void OnPointerDown (PointerEventData data) {
-			m_StartPos = transform.position;
+			origin = transform.position;
+			touchStart = data.position;
 		}
 
 		void OnDisable () {
