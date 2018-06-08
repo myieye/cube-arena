@@ -110,7 +110,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         protected virtual void Update () {
             if (!IsSender || !sendUpdates) return;
 
-            wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
+            //wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             //if (PastThreshold ()) {
             TransmitSync ();
             //    SaveState ();
