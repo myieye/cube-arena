@@ -38,7 +38,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public void SetVisible (bool visible) {
 			if (gameObject) {
-				Debug.Log ("Active: " + visible);
 				gameObject.SetActive (visible);
 			}
 		}
