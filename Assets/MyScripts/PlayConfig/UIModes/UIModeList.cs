@@ -23,6 +23,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
 		}
 
+		void Start () {
+			SetVisible (false);
+		}
+
 		public void RefreshSelectedUIMode () {
 			var currMode = UIModeManager.Instance<UIModeManager> ().CurrentUIMode;
 			dropdown.value = UIModeHelpers.UIModesForCurrentDevice.ToList ().IndexOf (currMode);
