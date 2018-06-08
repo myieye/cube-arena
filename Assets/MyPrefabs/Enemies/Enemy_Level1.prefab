@@ -2179,6 +2179,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendUpdates: 1
+  movementInterpolation: 0.2
+  rotationInterpolation: 0.2
   positionThreshold: 1
   rotationThreshold: 10
   velocityThreshold: 3

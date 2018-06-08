@@ -18,6 +18,12 @@ namespace CubeArena.Assets.MyScripts.Network {
         private bool sendUpdates = true;
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
+        private float movementInterpolation;
+        [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
+        private float rotationInterpolation;
+        [ConditionalField ("sendUpdates", true)]
+        [SerializeField]
         private float positionThreshold = 1f;
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
@@ -37,6 +43,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         private Rigidbody rb;
         private NavMeshAgent agent;
         private RigidbodyState rbs = new RigidbodyState ();
+        private RigidbodyState targetState = new RigidbodyState ();
         private float wait = 0;
         protected bool isInitialized;
         public bool IsSender {
@@ -87,7 +94,12 @@ namespace CubeArena.Assets.MyScripts.Network {
                     transform.rotation = startRotation.ToLocal ();
                     agent.enabled = true;
                     break;
+                case NetworkTransformMode.Rigidbody:
+                    targetState = rb.ToLocalState ();
+                    transform.MoveToLocal ();
+                    break;
                 default:
+                    targetState = transform.ToLocalState ();
                     transform.MoveToLocal ();
                     break;
             }
@@ -99,9 +111,29 @@ namespace CubeArena.Assets.MyScripts.Network {
             if (!IsSender || !sendUpdates) return;
 
             wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
-            if (PastThreshold ()) {
-                TransmitSync ();
-                SaveState ();
+            //if (PastThreshold ()) {
+            TransmitSync ();
+            //    SaveState ();
+            //}
+        }
+
+        protected virtual void FixedUpdate () {
+            if (!sendUpdates || IsSender || !isInitialized) {
+                return;
+            }
+
+            switch (mode) {
+                case NetworkTransformMode.Rigidbody:
+                    if (!rb) return;
+                    rb.MovePosition (Vector3.Lerp (rb.position, targetState.position, movementInterpolation));
+                    rb.MoveRotation (Quaternion.Lerp (rb.rotation, targetState.rotation, rotationInterpolation));
+                    rb.velocity = Vector3.Lerp (rb.velocity, targetState.velocity, movementInterpolation);
+                    rb.angularVelocity = Vector3.Lerp (rb.angularVelocity, targetState.angularVelocity, rotationInterpolation);
+                    break;
+                case NetworkTransformMode.Transform:
+                    transform.position = Vector3.Lerp (transform.position, targetState.position, movementInterpolation);
+                    transform.rotation = Quaternion.Lerp (transform.rotation, targetState.rotation, rotationInterpolation);
+                    break;
             }
         }
 
@@ -122,9 +154,10 @@ namespace CubeArena.Assets.MyScripts.Network {
             prevMessageId = messageId;
             rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
             if (!IsValid (rigidbodyState)) return;
+            targetState = rigidbodyState;
 
             switch (mode) {
-                case NetworkTransformMode.Rigidbody:
+                /*case NetworkTransformMode.Rigidbody:
                     if (!rb) return;
                     rb.MovePosition (rigidbodyState.position);
                     rb.MoveRotation (rigidbodyState.rotation);
@@ -134,7 +167,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                 case NetworkTransformMode.Transform:
                     transform.position = rigidbodyState.position;
                     transform.rotation = rigidbodyState.rotation;
-                    break;
+                    break;*/
                 case NetworkTransformMode.Agent:
                     if (agent.isOnNavMesh) {
                         navMeshMissCount = 0;
