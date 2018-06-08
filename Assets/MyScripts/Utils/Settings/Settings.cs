@@ -53,6 +53,17 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 				logMeasurementsToDb = false;
 				overrideAvailableDevices = true;
 			}
+
+#if UNITY_WSA && !UNITY_EDITOR
+			var fpsText = GameObject.Find ("FpsText");
+			if (fpsText) {
+				fpsText.SetActive (false);
+			}
+			var fpsDisplay = GameObject.Find ("FPSDisplay");
+			if (fpsDisplay) {
+				fpsDisplay.SetActive (false);
+			}
+#endif
 		}
 
 		public static ISettings Instance { get; set; }
