@@ -46,7 +46,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         private NavMeshAgent agent;
         private RigidbodyState rbs = new RigidbodyState ();
         private RigidbodyState targetState = new RigidbodyState ();
-        private float wait = 0;
+        //private float wait = 0;
         protected bool isInitialized;
         public bool IsSender {
             get {
@@ -238,7 +238,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private void SaveState () {
-            wait = 0;
+            //wait = 0;
             if (mode == NetworkTransformMode.Rigidbody && rb) {
                 rbs.position = rb.position;
                 rbs.rotation = rb.rotation;
