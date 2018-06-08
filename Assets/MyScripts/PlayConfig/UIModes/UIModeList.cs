@@ -9,9 +9,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 	[RequireComponent (typeof (Dropdown))]
 	public class UIModeList : MonoBehaviour {
 
+		[SerializeField]
 		private Dropdown dropdown;
+		[SerializeField]
+		private GameObject dropdownArrow;
+
+		public static UIModeList Instance { get; private set; }
 
 		void Awake () {
+			Instance = this;
 			dropdown = GetComponent<Dropdown> ();
 			dropdown.options = (
 				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
@@ -24,7 +30,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public void SetEnabled (bool enabled) {
 			if (dropdown) {
-				dropdown.interactable = enabled;
+				dropdown.enabled = enabled;
+				dropdownArrow.SetActive (enabled);
 			}
 		}
 
