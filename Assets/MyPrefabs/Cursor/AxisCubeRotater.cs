@@ -139,7 +139,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private void SetCubeNetworkTransformEnabled (GameObject cube, bool enabled) {
-			cube.GetComponent<RelativeNetworkTransform> ().enabled = enabled;
+			var networkTransform = cube.GetComponent<RelativeNetworkTransform> ();
+			if (enabled) {
+				networkTransform.ResetTarget ();
+			}
+			networkTransform.enabled = enabled;
 		}
 	}
 }

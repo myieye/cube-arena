@@ -86,6 +86,10 @@ namespace CubeArena.Assets.MyScripts.Network {
             }
         }
 
+        public void ResetTarget () {
+            targetState = GetCurrentState ();
+        }
+
         protected bool Init () {
             if (!TransformUtil.IsInitialized) return false;
 
@@ -219,10 +223,23 @@ namespace CubeArena.Assets.MyScripts.Network {
                 Quaternion.Angle (transform.rotation, rbs.rotation) > rotationThreshold;
         }
 
+        private RigidbodyState GetCurrentState () {
+            var rbs = new RigidbodyState ();
+             if (mode == NetworkTransformMode.Rigidbody && rb) {
+                rbs.position = rb.position;
+                rbs.rotation = rb.rotation;
+                rbs.velocity = rb.velocity;
+                rbs.angularVelocity = rb.angularVelocity;
+            } else {
+                rbs.position = transform.position;
+                rbs.rotation = transform.rotation;
+            }
+            return rbs;
+        }
+
         private void SaveState () {
             wait = 0;
-            if (mode == NetworkTransformMode.Rigidbody) {
-                if (!rb) return;
+            if (mode == NetworkTransformMode.Rigidbody && rb) {
                 rbs.position = rb.position;
                 rbs.rotation = rb.rotation;
                 rbs.velocity = rb.velocity;
