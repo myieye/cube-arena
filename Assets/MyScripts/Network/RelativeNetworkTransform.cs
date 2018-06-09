@@ -114,7 +114,7 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Update () {
-            if (!IsSender || !sendUpdates) return;
+            if (!IsSender || !sendUpdates || !isInitialized) return;
 
             //wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (PastThreshold ()) {
@@ -128,6 +128,7 @@ namespace CubeArena.Assets.MyScripts.Network {
                 return;
             }
 
+// TODO: Try not lerping
             switch (mode) {
                 case NetworkTransformMode.Rigidbody:
                     if (!rb) return;
@@ -148,6 +149,7 @@ namespace CubeArena.Assets.MyScripts.Network {
             CmdSyncPosition (relativeRbs, nextMessageId++);
         }
 
+// TODO: Don't call and see if Command without authority errors show up.
         [Command]
         private void CmdSyncPosition (RigidbodyState rigidbodyState, long messageId) {
             RpcBroadcastPosition (rigidbodyState, messageId);
