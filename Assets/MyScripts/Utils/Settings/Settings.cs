@@ -51,9 +51,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 			if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
 				logDeviceConnections = true;
-				defaultDatabaseVersion = DatabaseVersion.Release;
 				resetDebugDbOnStart = false;
 				overrideAvailableDevices = false;
+				if (DatabaseManager.Instance) {
+					DatabaseManager.Instance.SetDbVersion (DatabaseVersion.Release);
+				}
 			} else {
 				overrideAvailableDevices = true;
 			}

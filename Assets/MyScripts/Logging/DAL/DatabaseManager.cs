@@ -14,17 +14,26 @@ public class DatabaseManager : NetworkBehaviour {
 	[SerializeField]
 	private Dropdown dbVersionList;
 
+	public static DatabaseManager Instance { get; private set; }
+
 	void Awake () {
 #if !UNITY_EDITOR
 		DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
 		Destroy (dbVersionList.gameObject);
 		Destroy (this);
+#else
+		Instance = this;
 #endif
 	}
 
 	void Start () {
 		InitDatabaseVersionList ();
-		dbVersionList.value = (int) Settings.Instance.DefaultDatabaseVersion;
+		SetDbVersion (Settings.Instance.DefaultDatabaseVersion);
+
+	}
+
+	public void SetDbVersion (DatabaseVersion dbVersion) {
+		dbVersionList.value = (int) dbVersion;
 		RefreshDbVersion ();
 	}
 
