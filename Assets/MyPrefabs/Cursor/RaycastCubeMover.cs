@@ -122,7 +122,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		[ClientRpc]
 		void RpcDeselectMovingCube (GameObject cube) {
 			lock (this) {
-				if (cubeRb != null) {
+				if (cubeRb != null && cube) {
 					cube.layer = Layers.Cubes;
 					cube.GetComponent<Collider> ().isTrigger = false;
 					cubeRb.constraints = RigidbodyConstraints.None;

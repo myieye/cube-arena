@@ -28,7 +28,15 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			if (IsDetchCollision (col)) {
 				RpcDie (col.gameObject);
 				EnemyManager.Instance.OnEnemyKilled (this);
-				Measure.LocalInstance.MadeKill (col.gameObject, this);
+				if (col != null) {
+					if (Measure.LocalInstance) {
+						Measure.LocalInstance.MadeKill (col.gameObject, this);
+					} else {
+						Debug.LogError ("Measure.LocalInstance NULL");
+					}
+				} else {
+					Debug.LogError ("Col NULL");
+				}
 			}
 		}
 
