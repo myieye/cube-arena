@@ -105,7 +105,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 						DecrementModeAndRoundNumber ();
 						return;
 					}
-					if (inTestPhase) {
+					if (InFirstRound ()) {
+						DeviceManager.Instance.SaveConnectedDevicesToDb ();
 						PlayerManager.Instance.GenerateNewPlayers ();
 					}
 				}
@@ -169,6 +170,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		private bool InLastRound () {
 			return currRound == NumberOfRounds && !InPracticeMode && !inTestPhase;
+		}
+
+		private bool InFirstRound () {
+			return currRound == 1 && inTestPhase;
 		}
 
 		private bool NeedsNewRoundConfig () {

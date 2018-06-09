@@ -104,14 +104,14 @@ namespace CubeArena.Assets.MyScripts.Logging {
 		public void CmdLogWeightAnswer (int playerId, WeightAnswer answer, int id) {
 			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
 			answer.Id = id;
-			DataService.Instance.SaveWeightAnswer (answer);
+			dataService.SaveWeightAnswer (answer);
 		}
 
         [Command]
 		public void CmdLogRatingAnswer (int playerId, RatingAnswer answer, int id) {
 			answer.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (playerId);
 			answer.Id = id;
-			DataService.Instance.SaveRatingAnswer (answer);
+			dataService.SaveRatingAnswer (answer);
 		}
 	}
 }

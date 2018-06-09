@@ -32,8 +32,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 					Debug.Log (string.Format ("Device Connected: {0} ({1})", connectedDevice.Model, connectedDevice.Type));
 				}
 
-				DataService.Instance.SaveDeviceIfNewModel (connectedDevice);
-				//var netPlayer = PlayerManager.Instance.AddPlayer (device.Connection, playerControllerId);
 				ConnectedDevices[key] = connectedDevice;
 				if (!DevicesByType.ContainsKey (connectedDevice.Type)) {
 					DevicesByType.Add (connectedDevice.Type, new List<ConnectedDevice> ());
@@ -77,6 +75,12 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
 			var enoughOfEachTestDeviceType = DevicesByType.All (
 				pair => !pair.Key.IsTestDeviceType () || pair.Value.Count >= numPlayers / 2f);
 			return allTestDeviceTypesPresent && enoughOfEachTestDeviceType;
+		}
+
+		public void SaveConnectedDevicesToDb () {
+			foreach (var device in ConnectedDevices.Values) {
+				DataService.Instance.SaveDeviceIfNewModel (device);
+			}
 		}
 	}
 }
