@@ -12,6 +12,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		PlayerNumberMode PlayerNumberMode { get; }
 		int NumberOfPlayers { get; }
 		int PlayersPerEnemy { get; }
+        bool SkipTestPhase { get; }
 		float RoundLength { get; }
 		float PracticeRoundLength { get; }
 		float ShortPracticeRoundLength { get; }
@@ -47,7 +48,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float MaxRotationVelocity { get; }
 		float AxisSensitivity { get; }
 
-		void CheckUserStudySettings ();
+        void CheckUserStudySettings ();
 		//int[] AreaRadiuses { get; }
 		//float AreaCenterPlayerStartPointOffset { get; }
 	}

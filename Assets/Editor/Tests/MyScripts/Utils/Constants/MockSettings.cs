@@ -19,6 +19,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public PlayerNumberMode PlayerNumberMode { get; set; }
         public int NumberOfPlayers { get; set; }
         public int PlayersPerEnemy { get; set; }
+        public bool SkipTestPhase { get; set; }
         public float RoundLength { get; set; }
         public float PracticeRoundLength { get; set; }
         public float ShortPracticeRoundLength { get; set; }

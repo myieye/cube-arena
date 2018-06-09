@@ -19,6 +19,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 			CheckUserStudySettings ();
 
+			skipTestPhase = false;
+
 #if UNITY_EDITOR
 			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
 #elif UNITY_STANDALONE
@@ -91,6 +93,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private int playersPerEnemy;
 
 		[Header ("Rounds")]
+		[SerializeField]
+		private bool skipTestPhase;
 		[SerializeField]
 		private float roundLength;
 		[SerializeField]
@@ -188,6 +192,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public int PlayersPerEnemy {
 			get { return playersPerEnemy; }
+		}
+		public bool SkipTestPhase {
+			get { return skipTestPhase; }
 		}
 		public float RoundLength {
 			get { return roundLength; }

@@ -129,6 +129,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void IncrementModeAndRoundNumber () {
+			if (BeforeFirstRound () && Settings.Instance.SkipTestPhase) {
+				InTestPhase = false;
+			}
+
 			if (currRound == NumberOfRounds && InTestPhase) {
 				InTestPhase = false;
 				InPracticeMode = true;
@@ -178,6 +182,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		private bool InFirstRound () {
 			return currRound == 1 && InTestPhase;
+		}
+
+		private bool BeforeFirstRound () {
+			return currRound == 0;
 		}
 
 		private bool NeedsNewRoundConfig () {
