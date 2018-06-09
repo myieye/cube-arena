@@ -6,6 +6,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
         [SerializeField]
         private UIMode activeUIMode;
+        [SerializeField]
+        private bool visible;
+
         private bool uiModeActive;
         private Renderer rend;
         private Collider coll;
@@ -31,7 +34,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
         private void Refresh () {
             if (rend) {
-                rend.enabled = uiModeActive && ARActive;
+                rend.enabled = visible && uiModeActive && ARActive;
             }
             if (coll) {
                 coll.enabled = uiModeActive && ARActive;

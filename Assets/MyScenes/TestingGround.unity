@@ -16134,6 +16134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeUIMode: 4
+  visible: 0
 --- !u!23 &1279607202
 MeshRenderer:
   m_ObjectHideFlags: 0
