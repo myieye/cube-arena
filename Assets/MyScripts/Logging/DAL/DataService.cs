@@ -18,13 +18,27 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
 		private CubeArenaMeasurementsDb db;
 
-		private DataService () {
-			db = new CubeArenaMeasurementsMockDb ();
-		}
+		private DataService () { }
 
-		public void InitDbWithVersion (DatabaseVersion dbVersion) {
-			if (!Settings.Instance.LogMeasurementsToDb) {
-				db = new CubeArenaMeasurementsSQLiteDb (dbVersion);
+		public void SetDbVersion (DatabaseVersion dbVersion) {
+			if (Settings.Instance.LogDbVersion) {
+				Debug.LogWarning ("----- Using DB: " + dbVersion + " -----");
+			}
+
+			var dbName = string.Format ("{0}_{1}", Database.CubeArenaMeasurementsDatabase, dbVersion);
+
+			switch (dbVersion) {
+				case DatabaseVersion.Mock:
+					db = new CubeArenaMeasurementsMockDb ();
+					break;
+				case DatabaseVersion.Release:
+					db = new CubeArenaMeasurementsSQLiteDb (dbName, false, false);
+					break;
+				case DatabaseVersion.Debug:
+					db = new CubeArenaMeasurementsSQLiteDb (dbName,
+						Settings.Instance.ResetDebugDbOnStart, Settings.Instance.LogMeasurementsToConsole);
+					break;
+
 			}
 		}
 

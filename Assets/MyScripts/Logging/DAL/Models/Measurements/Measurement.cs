@@ -21,10 +21,18 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
             set { _practiceMode = value; }
         }
 
+        public bool _testPhase;
+
+        [NotNull]
+        public bool TestPhase {
+            get { return _testPhase; }
+            set { _testPhase = value; }
+        }
+
         public override string ToString () {
             return string.Format (
-                "{0} PlayerRoundId: {1}. PM: {2}.",
-                base.ToString (), PlayerRoundId, PracticeMode);
+                "{0} PlayerRoundId: {1}. PM: {2}. Test Phase: {3}",
+                base.ToString (), PlayerRoundId, PracticeMode, TestPhase);
         }
     }
 }

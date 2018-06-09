@@ -1,4 +1,5 @@
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 
 namespace CubeArena.Assets.MyScripts.Utils.Settings {
@@ -15,10 +16,10 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float RoundLength { get; }
 		float PracticeRoundLength { get; }
 		float ShortPracticeRoundLength { get; }
-		float PassToPlayerTime  { get; }
+		float PassToPlayerTime { get; }
 		bool AREnabledInEditor { get; }
 		bool AREnabled { get; }
-        bool OptimizeDeviceRoundConfig { get; }
+		bool OptimizeDeviceRoundConfig { get; }
 		bool OverrideAvailableDevices { get; }
 		bool EndlessRounds { get; }
 		bool AutoStartGame { get; }
@@ -29,15 +30,16 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		bool LogUIMode { get; }
 		bool LogDeviceInfo { get; }
 		bool LogDeviceConnections { get; }
-        bool DisableUIModeListOnClients { get; }
+		bool DisableUIModeListOnClients { get; }
 		bool ForceTestUIMode { get; }
 		UIMode TestUIMode { get; }
 		bool ForceDefaultUIMode { get; }
 		UIMode DefaultHHDUIMode { get; }
 		UIMode DefaultHMDUIMode { get; }
 		UIMode DefaultUIMode { get; }
-		bool LogMeasurementsToDb { get; }
-		bool ResetDbOnStart { get; }
+		bool LogDbVersion { get; }
+		bool ResetDebugDbOnStart { get; }
+		DatabaseVersion DefaultDatabaseVersion { get; }
 		bool LogMeasurementsToConsole { get; }
 		bool ServerOnlyMeasurementLogging { get; }
 		int InteractionAreaGridSize { get; }
@@ -45,7 +47,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float MinRotationVelocity { get; }
 		float MaxRotationVelocity { get; }
 		float AxisSensitivity { get; }
-        //int[] AreaRadiuses { get; }
-        //float AreaCenterPlayerStartPointOffset { get; }
-    }
+
+		void CheckUserStudySettings ();
+		//int[] AreaRadiuses { get; }
+		//float AreaCenterPlayerStartPointOffset { get; }
+	}
 }

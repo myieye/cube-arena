@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Attributes;
+using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Settings {
@@ -16,9 +17,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 			Instance = this;
 
-			if (forceUserStudySettings) {
-				EnableUserStudySettings ();
-			}
+			CheckUserStudySettings ();
 
 #if UNITY_EDITOR
 			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;
@@ -29,9 +28,15 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 #endif
 
 #if !UNITY_EDITOR
-			logMeasurementsToDb = false;
+			defaultDatabaseVersion = DatabaseVersion.Mock;
 			//serverIp = "192.168.137.1";
 #endif
+		}
+
+		public void CheckUserStudySettings () {
+			if (forceUserStudySettings) {
+				EnableUserStudySettings ();
+			}
 		}
 
 		public void EnableUserStudySettings () {
@@ -45,12 +50,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 			serverOnlyMeasurementLogging = false;
 
 			if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
-				logMeasurementsToDb = true;
 				logDeviceConnections = true;
-				resetDbOnStart = false;
+				defaultDatabaseVersion = DatabaseVersion.Release;
+				resetDebugDbOnStart = false;
 				overrideAvailableDevices = false;
 			} else {
-				logMeasurementsToDb = false;
 				overrideAvailableDevices = true;
 			}
 
@@ -146,9 +150,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		[SerializeField]
 		private bool logMeasurementsToConsole;
 		[SerializeField]
-		private bool logMeasurementsToDb;
+		private bool logDbVersion;
 		[SerializeField]
-		private bool resetDbOnStart;
+		private bool resetDebugDbOnStart;
+		[SerializeField]
+		private DatabaseVersion defaultDatabaseVersion;
 		[SerializeField]
 		private bool serverOnlyMeasurementLogging;
 		[SerializeField]
@@ -272,11 +278,14 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 				}
 			}
 		}
-		public bool LogMeasurementsToDb {
-			get { return logMeasurementsToDb; }
+		public bool LogDbVersion {
+			get { return logDbVersion; }
 		}
-		public bool ResetDbOnStart {
-			get { return resetDbOnStart; }
+		public bool ResetDebugDbOnStart {
+			get { return resetDebugDbOnStart; }
+		}
+		public DatabaseVersion DefaultDatabaseVersion {
+			get { return defaultDatabaseVersion; }
 		}
 		public bool LogMeasurementsToConsole {
 			get { return logMeasurementsToConsole; }

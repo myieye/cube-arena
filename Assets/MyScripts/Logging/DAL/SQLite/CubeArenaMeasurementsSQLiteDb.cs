@@ -12,50 +12,57 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
 
         private SQLiteConnection conn;
 
-        public CubeArenaMeasurementsSQLiteDb (DatabaseVersion dbVersion) {
-            var dbName = string.Format ("{0}_{1}", Database.CubeArenaMeasurementsDatabase, dbVersion);
+        public CubeArenaMeasurementsSQLiteDb (string dbName, bool resetIfExists, bool dumpTablesToConsole) {
+            
             conn = SQLiteUtil.CreateDb (dbName);
-            TestDb ();
+
+            if (dumpTablesToConsole) {
+                PrintTables ();
+            }
+
+            if (resetIfExists) {
+                DropTables ();
+            }
+
+            CreateTablesIfNotExist ();
         }
 
-        private void TestDb () {
-            if (Settings.Instance.LogMeasurementsToConsole) {
-                PrintTable<PlayerRound> ();
-                PrintTable<Move> ();
-                PrintTable<Rotation> ();
-                PrintTable<SelectionAction> ();
-                PrintTable<Selection> ();
-                PrintTable<Placement> ();
-                PrintTable<Kill> ();
-                PrintTable<Assist> ();
-                PrintTable<PlayerCounter> ();
-                PrintTable<AreaInteraction> ();
-                PrintTable<CloudMeasurement> ();
-                PrintTable<Device> ();
-                PrintTable<RatingAnswer> ();
-                PrintTable<WeightAnswer> ();
-            }
+        private void PrintTables () {
+            PrintTable<PlayerRound> ();
+            PrintTable<Move> ();
+            PrintTable<Rotation> ();
+            PrintTable<SelectionAction> ();
+            PrintTable<Selection> ();
+            PrintTable<Placement> ();
+            PrintTable<Kill> ();
+            PrintTable<Assist> ();
+            PrintTable<PlayerCounter> ();
+            PrintTable<AreaInteraction> ();
+            PrintTable<CloudMeasurement> ();
+            PrintTable<Device> ();
+            PrintTable<RatingAnswer> ();
+            PrintTable<WeightAnswer> ();
+        }
 
-            if (Settings.Instance.ResetDbOnStart) {
-                Debug.LogWarning ("Clearing database...");
-                //*
-                conn.DropTable<PlayerRound> ();
-                conn.DropTable<Move> ();
-                conn.DropTable<Rotation> ();
-                conn.DropTable<SelectionAction> ();
-                conn.DropTable<Selection> ();
-                conn.DropTable<Placement> ();
-                conn.DropTable<Kill> ();
-                conn.DropTable<Assist> ();
-                conn.DropTable<PlayerCounter> ();
-                conn.DropTable<AreaInteraction> ();
-                conn.DropTable<CloudMeasurement> ();
-                conn.DropTable<Device> ();
-                conn.DropTable<RatingAnswer> ();
-                conn.DropTable<WeightAnswer> ();
-                //*/
-            }
+        private void DropTables () {
+            Debug.LogWarning ("Clearing database...");
+            conn.DropTable<PlayerRound> ();
+            conn.DropTable<Move> ();
+            conn.DropTable<Rotation> ();
+            conn.DropTable<SelectionAction> ();
+            conn.DropTable<Selection> ();
+            conn.DropTable<Placement> ();
+            conn.DropTable<Kill> ();
+            conn.DropTable<Assist> ();
+            conn.DropTable<PlayerCounter> ();
+            conn.DropTable<AreaInteraction> ();
+            conn.DropTable<CloudMeasurement> ();
+            conn.DropTable<Device> ();
+            conn.DropTable<RatingAnswer> ();
+            conn.DropTable<WeightAnswer> ();
+        }
 
+        private void CreateTablesIfNotExist () {
             conn.CreateTable<PlayerRound> ();
             conn.CreateTable<Move> ();
             conn.CreateTable<Rotation> ();

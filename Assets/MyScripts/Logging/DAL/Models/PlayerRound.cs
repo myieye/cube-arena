@@ -32,7 +32,6 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
             get { return _deviceId;}
             set { _deviceId = value;}
         }
-        
 
         public override string ToString () {
             return string.Format (

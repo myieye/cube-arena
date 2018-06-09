@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 114545610818790046}
   - component: {fileID: 114175545592717510}
   - component: {fileID: 114740670048285348}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cloud
   m_TagString: Slower
   m_Icon: {fileID: 0}
@@ -226,8 +226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendUpdates: 0
+  movementInterpolation: 0
+  rotationInterpolation: 0
   positionThreshold: 1
   rotationThreshold: 10
-  velocityThreshold: 3
-  angularVelocityThreshold: 3
-  interpolationSpeed: 0.4

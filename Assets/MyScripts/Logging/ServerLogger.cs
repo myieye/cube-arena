@@ -97,6 +97,7 @@ namespace CubeArena.Assets.MyScripts.Logging {
 				measurement.PlayerRoundId = PlayerManager.Instance.GetPlayerRoundId (PlayerId);
 			}
 			measurement.PracticeMode = roundManager.InPracticeMode;
+			measurement.TestPhase = roundManager.InTestPhase;
 			return measurement;
 		}
 

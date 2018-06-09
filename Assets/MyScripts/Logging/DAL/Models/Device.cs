@@ -20,5 +20,11 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Models {
             get { return _model;}
             set { _model = value;}
         }
+        
+        public override string ToString () {
+            return string.Format (
+                "Device: [{0}. Type: {1}. Model: {2}.]",
+                base.ToString (), Type, Model);
+        }
     }
 }

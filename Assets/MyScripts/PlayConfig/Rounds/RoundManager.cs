@@ -22,6 +22,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 	public class RoundManager : NetworkBehaviourSingleton, RoundOverListener, SurveyFinishedListener {
 
 		public bool InPracticeMode { get; private set; }
+		public bool InTestPhase { get; private set; }
 		public int NumberOfRounds {
 			get {
 				return UIModeHelpers.TestUIModes.Count;
@@ -31,10 +32,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 		private DeviceConfigurationGenerator configGenerator;
-		private bool inTestPhase;
 		private float RoundLength {
 			get {
-				if (inTestPhase) {
+				if (InTestPhase) {
 					return Settings.Instance.PracticeRoundLength;
 				} else if (InPracticeMode) {
 					return Settings.Instance.ShortPracticeRoundLength;
@@ -45,7 +45,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 		private int NumberOfPlayers {
 			get {
-				if (inTestPhase) {
+				if (InTestPhase) {
 					return PlayerManager.Instance.NumberOfPlayersForRound;
 				} else {
 					return PlayerManager.Instance.NumberOfActivePlayers;
@@ -69,7 +69,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			ResetGameObjects (0.5f);
 			timeManager.RpcClear ();
 
-			if (!inTestPhase && !InPracticeMode && currRound > 0) {
+			if (!InTestPhase && !InPracticeMode && currRound > 0) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
 				FindObjectOfType<Surveyer> ().DoSurvey (PlayerManager.Instance.Players, this);
 			} else {
@@ -101,12 +101,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 			if (InPracticeMode) {
 				if (NeedsNewRoundConfig ()) {
+					if (InFirstRound ()) {
+						Settings.Instance.CheckUserStudySettings ();
+						DeviceManager.Instance.SaveConnectedDevicesToDb ();
+					}
+
 					if (!configGenerator.TryGenerateDeviceRoundConfigs (NumberOfPlayers, out deviceRoundConfigs)) {
 						DecrementModeAndRoundNumber ();
 						return;
 					}
 					if (InFirstRound ()) {
-						DeviceManager.Instance.SaveConnectedDevicesToDb ();
 						PlayerManager.Instance.GenerateNewPlayers ();
 					}
 				}
@@ -125,11 +129,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void IncrementModeAndRoundNumber () {
-			if (currRound == NumberOfRounds && inTestPhase) {
-				inTestPhase = false;
+			if (currRound == NumberOfRounds && InTestPhase) {
+				InTestPhase = false;
 				InPracticeMode = true;
 				currRound = 1;
-			} else if (inTestPhase) {
+			} else if (InTestPhase) {
 				InPracticeMode = true;
 				currRound++;
 			} else {
@@ -141,7 +145,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void DecrementModeAndRoundNumber () {
-			if (inTestPhase) {
+			if (InTestPhase) {
 				currRound--;
 			} else {
 				InPracticeMode = !InPracticeMode;
@@ -163,21 +167,21 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void ResetRoundCounter () {
-			inTestPhase = true;
+			InTestPhase = true;
 			InPracticeMode = false;
 			currRound = 0;
 		}
 
 		private bool InLastRound () {
-			return currRound == NumberOfRounds && !InPracticeMode && !inTestPhase;
+			return currRound == NumberOfRounds && !InPracticeMode && !InTestPhase;
 		}
 
 		private bool InFirstRound () {
-			return currRound == 1 && inTestPhase;
+			return currRound == 1 && InTestPhase;
 		}
 
 		private bool NeedsNewRoundConfig () {
-			return currRound == 1 && (InPracticeMode || inTestPhase);
+			return currRound == 1 && (InPracticeMode || InTestPhase);
 		}
 	}
 }

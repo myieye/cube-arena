@@ -7,6 +7,10 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
     public class MockSettings : ISettings {
 
         public void EnableUserStudySettings () {
+
+        }
+
+        public void CheckUserStudySettings () {
             
         }
 
@@ -18,7 +22,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public int PlayersPerEnemy { get; set; }
         public float RoundLength { get; set; }
         public float PracticeRoundLength { get; set; }
-		public float ShortPracticeRoundLength { get; set; }
+        public float ShortPracticeRoundLength { get; set; }
         public float PassToPlayerTime { get; set; }
         public bool AREnabledInEditor { get; set; }
         public bool AREnabled { get; set; }
@@ -49,8 +53,9 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
                 }
             }
         }
-        public bool LogMeasurementsToDb { get; set; }
-        public bool ResetDbOnStart { get; set; }
+        public bool LogDbVersion { get; set; }
+        public bool ResetDebugDbOnStart { get; set; }
+        public DatabaseVersion DefaultDatabaseVersion { get; set; }
         public bool LogMeasurementsToConsole { get; set; }
         public bool ServerOnlyMeasurementLogging { get; set; }
         public int InteractionAreaGridSize { get; set; }

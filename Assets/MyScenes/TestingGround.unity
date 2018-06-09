@@ -615,9 +615,10 @@ MonoBehaviour:
   forceDefaultUIMode: 0
   defaultHHDUIMode: 2
   defaultHMDUIMode: 6
-  logMeasurementsToConsole: 0
-  logMeasurementsToDb: 0
-  resetDbOnStart: 0
+  logMeasurementsToConsole: 1
+  logDbVersion: 1
+  resetDebugDbOnStart: 1
+  defaultDatabaseVersion: 1
   serverOnlyMeasurementLogging: 0
   interactionAreaGridSize: 6
   rotationTimeout: 0.5
@@ -12859,6 +12860,31 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -12973,7 +12999,7 @@ GameObject:
   - component: {fileID: 451171892}
   - component: {fileID: 451171893}
   m_Layer: 0
-  m_Name: DataManager
+  m_Name: DatabaseManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13035,6 +13061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd1d64f802b5fd47b77618b60b44473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dbVersionList: {fileID: 2134440035}
 --- !u!1 &467140077 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1000011070707148, guid: 3eddd1c29199313478dd3f912bfab2ab,
@@ -17782,6 +17809,7 @@ MonoBehaviour:
     KeyCode: 0
   - Keyword: Print World
     KeyCode: 0
+  recognitionConfidenceLevel: 1
 --- !u!1 &1524675350
 GameObject:
   m_ObjectHideFlags: 0
@@ -19592,7 +19620,18 @@ MonoBehaviour:
     m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 451171893}
+        m_MethodName: OnSelectedDbVersionChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2134440036
