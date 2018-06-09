@@ -12,8 +12,9 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
 
         private SQLiteConnection conn;
 
-        public CubeArenaMeasurementsSQLiteDb () {
-            conn = SQLiteUtil.CreateDb (Database.CubeArenaMeasurementsDatabase);
+        public CubeArenaMeasurementsSQLiteDb (DatabaseVersion dbVersion) {
+            var dbName = string.Format ("{0}_{1}", Database.CubeArenaMeasurementsDatabase, dbVersion);
+            conn = SQLiteUtil.CreateDb (dbName);
             TestDb ();
         }
 

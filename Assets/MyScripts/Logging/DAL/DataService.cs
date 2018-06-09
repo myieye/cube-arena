@@ -17,11 +17,14 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 	public class DataService {
 
 		private CubeArenaMeasurementsDb db;
+
 		private DataService () {
-			if (Settings.Instance.LogMeasurementsToDb) {
-				db = new CubeArenaMeasurementsSQLiteDb ();
-			} else {
-				db = new CubeArenaMeasurementsMockDb ();
+			db = new CubeArenaMeasurementsMockDb ();
+		}
+
+		public void InitDbWithVersion (DatabaseVersion dbVersion) {
+			if (!Settings.Instance.LogMeasurementsToDb) {
+				db = new CubeArenaMeasurementsSQLiteDb (dbVersion);
 			}
 		}
 
@@ -87,22 +90,22 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		}
 
 		public void SaveRatingAnswer (RatingAnswer answer) {
-            RatingAnswer a = db.Find<RatingAnswer> (ra =>
-                ra.PlayerRoundId == answer.PlayerRoundId && ra.RatingId == answer.RatingId);
-            
-            if (a != null) {
-                answer.Id = a.Id;
-            }
+			RatingAnswer a = db.Find<RatingAnswer> (ra =>
+				ra.PlayerRoundId == answer.PlayerRoundId && ra.RatingId == answer.RatingId);
+
+			if (a != null) {
+				answer.Id = a.Id;
+			}
 			Log (db.SaveRatingAnswer (answer));
 		}
 
 		public void SaveWeightAnswer (WeightAnswer answer) {
-            WeightAnswer a = db.Find<WeightAnswer> (wa =>
-                wa.PlayerRoundId == answer.PlayerRoundId && wa.WeightId == answer.WeightId);
-            
-            if (a != null) {
-                answer.Id = a.Id;
-            }
+			WeightAnswer a = db.Find<WeightAnswer> (wa =>
+				wa.PlayerRoundId == answer.PlayerRoundId && wa.WeightId == answer.WeightId);
+
+			if (a != null) {
+				answer.Id = a.Id;
+			}
 			Log (db.SaveWeightAnswer (answer));
 		}
 
