@@ -35,7 +35,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
                 customRatingQuestions.Add (new RatingQuestion (15, "", "I was very helpful to the other players."));
                 customRatingQuestions.Add (new RatingQuestion (16, "", "The other players were very helpful to me."));
                 customRatingQuestions.Add (new RatingQuestion (17, "", "I needed to move a lot in order to accomplish what I wanted to."));
-                customRatingQuestions.Add (new RatingQuestion (18, "", "I really enjoyed the game."));
+                customRatingQuestions.Add (new RatingQuestion (18, "", "The system worked flawlessly."));
+                customRatingQuestions.Add (new RatingQuestion (19, "", "The system seemed very buggy."));
+                customRatingQuestions.Add (new RatingQuestion (20, "", "I have a lot of experience using the HoloLens."));
+                customRatingQuestions.Add (new RatingQuestion (21, "", "I have a lot of experience using a smartphone."));
+                customRatingQuestions.Add (new RatingQuestion (22, "", "I have a lot of experience with augmented reality."));
             }
 
             weightQuestions = new List<WeightQuestion> ();
