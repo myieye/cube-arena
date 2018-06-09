@@ -45,7 +45,9 @@ namespace CubeArena.Assets.MyScripts.Network {
         private Rigidbody rb;
         private NavMeshAgent agent;
         private RigidbodyState rbs = new RigidbodyState ();
-        private RigidbodyState targetState = new RigidbodyState ();
+        private RigidbodyState localTargetState = new RigidbodyState ();
+        private RigidbodyState serverTargetState = new RigidbodyState ();
+
         //private float wait = 0;
         protected bool isInitialized;
         public bool IsSender {
@@ -87,7 +89,8 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         public void ResetTarget () {
-            targetState = GetCurrentState ();
+            localTargetState = GetCurrentState ();
+            serverTargetState = CalcStateInServerCoordinates ();
         }
 
         protected bool Init () {
@@ -101,11 +104,13 @@ namespace CubeArena.Assets.MyScripts.Network {
                     agent.enabled = true;
                     break;
                 case NetworkTransformMode.Rigidbody:
-                    targetState = rb.ToLocalState ();
+                    localTargetState = rb.ToLocalState ();
+                    serverTargetState = rb.ToServerState ();
                     transform.MoveToLocal ();
                     break;
                 default:
-                    targetState = transform.ToLocalState ();
+                    localTargetState = transform.ToLocalState ();
+                    serverTargetState = transform.ToServerState ();
                     transform.MoveToLocal ();
                     break;
             }
@@ -123,23 +128,31 @@ namespace CubeArena.Assets.MyScripts.Network {
             }
         }
 
+        /**
+        Testing fix for problem: HoloLens constantly Lerps to targetState, which is a fixed state,
+            Not a local state. It actually needs to save the target and reconvert on every fixed update.
+         */
         protected virtual void FixedUpdate () {
             if (!sendUpdates || IsSender || !isInitialized) {
                 return;
             }
 
-// TODO: Try not lerping
+#if UNITY_WSA && !UNITY_EDITOR
+            localTargetState = serverTargetState.ToLocal (mode == NetworkTransformMode.Rigidbody);
+#endif
+
+            // TODO: Try not lerping
             switch (mode) {
                 case NetworkTransformMode.Rigidbody:
                     if (!rb) return;
-                    rb.MovePosition (Vector3.Lerp (rb.position, targetState.position, movementInterpolation));
-                    rb.MoveRotation (Quaternion.Lerp (rb.rotation, targetState.rotation, rotationInterpolation));
-                    rb.velocity = Vector3.Lerp (rb.velocity, targetState.velocity, movementInterpolation);
-                    rb.angularVelocity = Vector3.Lerp (rb.angularVelocity, targetState.angularVelocity, rotationInterpolation);
+                    rb.MovePosition (Vector3.Lerp (rb.position, localTargetState.position, movementInterpolation));
+                    rb.MoveRotation (Quaternion.Lerp (rb.rotation, localTargetState.rotation, rotationInterpolation));
+                    rb.velocity = Vector3.Lerp (rb.velocity, localTargetState.velocity, movementInterpolation);
+                    rb.angularVelocity = Vector3.Lerp (rb.angularVelocity, localTargetState.angularVelocity, rotationInterpolation);
                     break;
                 case NetworkTransformMode.Transform:
-                    transform.position = Vector3.Lerp (transform.position, targetState.position, movementInterpolation);
-                    transform.rotation = Quaternion.Lerp (transform.rotation, targetState.rotation, rotationInterpolation);
+                    transform.position = Vector3.Lerp (transform.position, localTargetState.position, movementInterpolation);
+                    transform.rotation = Quaternion.Lerp (transform.rotation, localTargetState.rotation, rotationInterpolation);
                     break;
             }
         }
@@ -149,42 +162,44 @@ namespace CubeArena.Assets.MyScripts.Network {
             CmdSyncPosition (relativeRbs, nextMessageId++);
         }
 
-// TODO: Don't call and see if Command without authority errors show up.
+        // TODO: Don't call and see if Command without authority errors show up.
         [Command]
         private void CmdSyncPosition (RigidbodyState rigidbodyState, long messageId) {
             RpcBroadcastPosition (rigidbodyState, messageId);
         }
 
         [ClientRpc]
-        private void RpcBroadcastPosition (RigidbodyState rigidbodyState, long messageId) {
+        private void RpcBroadcastPosition (RigidbodyState rbs, long messageId) {
             if (IsSender || !isInitialized || messageId < prevMessageId) return;
 
             prevMessageId = messageId;
-            rigidbodyState = TransformToLocalCoordinates (rigidbodyState);
-            if (!IsValid (rigidbodyState)) return;
-            targetState = rigidbodyState;
+            var localRbs = TransformToLocalCoordinates (rbs);
+            if (!IsValid (localRbs)) return;
+
+            localTargetState = localRbs;
+            serverTargetState = rbs;
 
             switch (mode) {
                 /*case NetworkTransformMode.Rigidbody:
                     if (!rb) return;
-                    rb.MovePosition (rigidbodyState.position);
-                    rb.MoveRotation (rigidbodyState.rotation);
-                    rb.velocity = rigidbodyState.velocity;
-                    rb.angularVelocity = rigidbodyState.angularVelocity;
+                    rb.MovePosition (localRigidbodyState.position);
+                    rb.MoveRotation (localRigidbodyState.rotation);
+                    rb.velocity = localRigidbodyState.velocity;
+                    rb.angularVelocity = localRigidbodyState.angularVelocity;
                     break;
                 case NetworkTransformMode.Transform:
-                    transform.position = rigidbodyState.position;
-                    transform.rotation = rigidbodyState.rotation;
+                    transform.position = localRigidbodyState.position;
+                    transform.rotation = localRigidbodyState.rotation;
                     break;*/
                 case NetworkTransformMode.Agent:
                     if (agent.isOnNavMesh) {
                         navMeshMissCount = 0;
-                        agent.Move (rigidbodyState.position - transform.position);
-                        agent.transform.rotation = rigidbodyState.rotation;
+                        agent.Move (localRbs.position - transform.position);
+                        agent.transform.rotation = localRbs.rotation;
                     } else {
                         navMeshMissCount++;
                         if (navMeshMissCount > 5) {
-                            agent.Warp (rigidbodyState.position);
+                            agent.Warp (localRbs.position);
                         }
                     }
                     break;
@@ -221,13 +236,13 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         private bool PastThreshold () {
             return
-                Vector3.Distance (transform.position, rbs.position) > positionThreshold ||
+            Vector3.Distance (transform.position, rbs.position) > positionThreshold ||
                 Quaternion.Angle (transform.rotation, rbs.rotation) > rotationThreshold;
         }
 
         private RigidbodyState GetCurrentState () {
             var rbs = new RigidbodyState ();
-             if (mode == NetworkTransformMode.Rigidbody && rb) {
+            if (mode == NetworkTransformMode.Rigidbody && rb) {
                 rbs.position = rb.position;
                 rbs.rotation = rb.rotation;
                 rbs.velocity = rb.velocity;
