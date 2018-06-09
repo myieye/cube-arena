@@ -8,7 +8,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		void EnableUserStudySettings ();
 
 		bool ForceUserStudySettings { get; }
-		float UserStudyPassToPlayerTime { get; }
 		string ServerIp { get; }
 		PlayerNumberMode PlayerNumberMode { get; }
 		int NumberOfPlayers { get; }

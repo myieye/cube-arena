@@ -15,7 +15,6 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         }
 
         public bool ForceUserStudySettings { get; set; }
-        public float UserStudyPassToPlayerTime { get; set; }
         public string ServerIp { get; set; }
         public PlayerNumberMode PlayerNumberMode { get; set; }
         public int NumberOfPlayers { get; set; }

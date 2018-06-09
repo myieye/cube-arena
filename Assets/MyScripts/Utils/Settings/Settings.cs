@@ -40,7 +40,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 
 		public void EnableUserStudySettings () {
-			//passToPlayerTime = userStudyPassToPlayerTime;
 			autoStartGame = false;
 			endlessRounds = false;
 			debugCursor = false;
@@ -77,8 +76,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		[Header ("User Study")]
 		[SerializeField]
 		private bool forceUserStudySettings;
-		[SerializeField]
-		private float userStudyPassToPlayerTime;
 		[SerializeField]
 		private string serverIp;
 
@@ -179,9 +176,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 		public bool ForceUserStudySettings {
 			get { return forceUserStudySettings; }
-		}
-		public float UserStudyPassToPlayerTime {
-			get { return userStudyPassToPlayerTime; }
 		}
 		public string ServerIp {
 			get { return serverIp; }
