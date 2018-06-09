@@ -1,6 +1,7 @@
 using System;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 using CubeArena.Assets.MyScripts.Logging.Survey.Models;
+using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
 
         private WeightQuestion currQ;
         private Action then;
+        private bool answered;
 
         private void Start () {
             optionOneToggle.onValueChanged.AddListener (OnOptionSelected);
@@ -24,13 +26,15 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
 
         private void OnOptionSelected (bool selected) {
             if (selected && HasValidAnswer ()) {
-                then.Invoke ();
+                answered = true;
+                StartCoroutine (DelayUtil.Do (0.5f, then));
             }
         }
 
         public void AskRatingQuestion (WeightQuestion q, Action then) {
             currQ = q;
             this.then = then;
+            answered = false;
             toggleGroup.SetAllTogglesOff ();
             optionOneToggle.GetComponentInChildren<Text> ().text = q.OptionOne.ToFriendlyString ();
             optionTwoToggle.GetComponentInChildren<Text> ().text = q.OptionTwo.ToFriendlyString ();
@@ -44,7 +48,9 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         }
 
         public bool HasValidAnswer () {
-            return optionOneToggle.isOn ^ optionTwoToggle.isOn;
+            return (optionOneToggle.isOn ^ optionTwoToggle.isOn)
+                && !answered; // prevents users from clicking on the next button before
+                // the delay does it automatically
         }
     }
 }
