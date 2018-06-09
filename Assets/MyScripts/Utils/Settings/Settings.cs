@@ -42,6 +42,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 
 		public void EnableUserStudySettings () {
+			forceUserStudySettings = true;
 			autoStartGame = false;
 			endlessRounds = false;
 			debugCursor = false;
