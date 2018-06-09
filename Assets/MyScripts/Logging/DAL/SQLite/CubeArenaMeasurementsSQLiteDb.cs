@@ -13,35 +13,34 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
         private SQLiteConnection conn;
 
         public CubeArenaMeasurementsSQLiteDb (string dbName, bool resetIfExists, bool dumpTablesToConsole) {
-            
+
             conn = SQLiteUtil.CreateDb (dbName);
 
-            if (dumpTablesToConsole) {
-                PrintTables ();
-            }
+            CreateTablesIfNotExist ();
+
+            PrintTables (dumpTablesToConsole);
 
             if (resetIfExists) {
                 DropTables ();
+                CreateTablesIfNotExist ();
             }
-
-            CreateTablesIfNotExist ();
         }
 
-        private void PrintTables () {
-            PrintTable<PlayerRound> ();
-            PrintTable<Move> ();
-            PrintTable<Rotation> ();
-            PrintTable<SelectionAction> ();
-            PrintTable<Selection> ();
-            PrintTable<Placement> ();
-            PrintTable<Kill> ();
-            PrintTable<Assist> ();
-            PrintTable<PlayerCounter> ();
-            PrintTable<AreaInteraction> ();
-            PrintTable<CloudMeasurement> ();
-            PrintTable<Device> ();
-            PrintTable<RatingAnswer> ();
-            PrintTable<WeightAnswer> ();
+        private void PrintTables (bool printContents) {
+            PrintTable<PlayerRound> (printContents);
+            PrintTable<Move> (printContents);
+            PrintTable<Rotation> (printContents);
+            PrintTable<SelectionAction> (printContents);
+            PrintTable<Selection> (printContents);
+            PrintTable<Placement> (printContents);
+            PrintTable<Kill> (printContents);
+            PrintTable<Assist> (printContents);
+            PrintTable<PlayerCounter> (printContents);
+            PrintTable<AreaInteraction> (printContents);
+            PrintTable<CloudMeasurement> (printContents);
+            PrintTable<Device> (printContents);
+            PrintTable<RatingAnswer> (printContents);
+            PrintTable<WeightAnswer> (printContents);
         }
 
         private void DropTables () {
@@ -153,18 +152,6 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             return InsertOrUpdate (answer);
         }
 
-        private void PrintTable<T> () where T : new () {
-            Debug.Log (typeof (T).Name + "s: ");
-
-            try {
-                foreach (var e in conn.Table<T> ()) {
-                    Debug.Log (e);
-                }
-            } catch {
-                Debug.LogError ("Table does not exist: " + typeof (T).Name);
-            }
-        }
-
         private T InsertOrUpdate<T> (T entity, Type type = null) where T : BaseEntity {
             if (entity.Id == default (int)) {
                 if (type == null) {
@@ -181,6 +168,20 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
                 }
             }
             return entity;
+        }
+
+        private void PrintTable<T> (bool printContents) where T : new () {
+            Debug.LogFormat ("{0}s: [{1}]", typeof (T).Name, conn.Table<T> ().Count ());
+
+            if (printContents) {
+                try {
+                    foreach (var e in conn.Table<T> ()) {
+                        Debug.Log (e);
+                    }
+                } catch {
+                    Debug.LogError ("Table does not exist: " + typeof (T).Name);
+                }
+            }
         }
     }
 }
