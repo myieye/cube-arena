@@ -25,11 +25,12 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			if (StartAutomatically) {
 				StartBroadcasting ();
-				//StartBroadcasting ();
 			}
 		}
 
 		public void StartBroadcasting () {
+			if (running) return;
+
 			InitializeNetworkDiscovery ();
 
 			if (DeviceTypeManager.DeviceType.IsServerDeviceType ()) {
@@ -51,7 +52,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		public void StopBroadcasting () {
-			StopBroadcast ();
+			if (running) {
+				StopBroadcast ();
+			}
 		}
 	}
 }

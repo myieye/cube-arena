@@ -48,6 +48,8 @@ namespace CubeArena.Assets.MyScripts.Network {
         private RigidbodyState localTargetState = new RigidbodyState ();
         private RigidbodyState serverTargetState = new RigidbodyState ();
 
+        private bool wasSenderInLastFrame;
+
         //private float wait = 0;
         protected bool isInitialized;
         public bool IsSender {
@@ -121,6 +123,8 @@ namespace CubeArena.Assets.MyScripts.Network {
         protected virtual void Update () {
             if (!IsSender || !sendUpdates || !isInitialized) return;
 
+            wasSenderInLastFrame = true;
+
             //wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (PastThreshold ()) {
                 TransmitSync ();
@@ -135,6 +139,11 @@ namespace CubeArena.Assets.MyScripts.Network {
         protected virtual void FixedUpdate () {
             if (!sendUpdates || IsSender || !isInitialized) {
                 return;
+            }
+
+            if (wasSenderInLastFrame) {
+                wasSenderInLastFrame = false;
+                
             }
 
 #if UNITY_WSA && !UNITY_EDITOR
