@@ -3,6 +3,7 @@ using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 using CubeArena.Assets.MyScripts.Logging.Survey.Models;
 using CubeArena.Assets.MyScripts.Utils;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace CubeArena.Assets.MyScripts.Logging.Survey {
@@ -25,17 +26,21 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         }
 
         private void OnOptionSelected (bool selected) {
-            if (selected && HasValidAnswer ()) {
+            Assert.IsFalse (answered);
+
+            if (!answered && selected && HasValidAnswer ()) {
                 answered = true;
+                SetTogglesEnabled (false);
                 StartCoroutine (DelayUtil.Do (0.5f, then));
             }
         }
 
         public void AskRatingQuestion (WeightQuestion q, Action then) {
+            answered = false;
             currQ = q;
             this.then = then;
-            answered = false;
             toggleGroup.SetAllTogglesOff ();
+            SetTogglesEnabled (true);
             optionOneToggle.GetComponentInChildren<Text> ().text = q.OptionOne.ToFriendlyString ();
             optionTwoToggle.GetComponentInChildren<Text> ().text = q.OptionTwo.ToFriendlyString ();
         }
@@ -48,9 +53,16 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
         }
 
         public bool HasValidAnswer () {
-            return (optionOneToggle.isOn ^ optionTwoToggle.isOn)
-                && !answered; // prevents users from clicking on the next button before
-                // the delay does it automatically
+            return (optionOneToggle.isOn ^ optionTwoToggle.isOn);
+        }
+
+        public bool CanClickNext () {
+            return HasValidAnswer () && !answered;
+        }
+
+        private void SetTogglesEnabled (bool enabled) {
+            optionOneToggle.interactable = enabled;
+            optionTwoToggle.interactable = enabled;
         }
     }
 }

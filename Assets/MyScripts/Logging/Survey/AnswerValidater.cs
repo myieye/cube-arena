@@ -18,7 +18,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
 
         private void Update () {
             if (surveyer.SurveyStarted && surveyer.CurrentQuestionAsker != null) {
-                nextBtn.interactable = surveyer.CurrentQuestionAsker.HasValidAnswer ();
+                nextBtn.interactable = surveyer.CurrentQuestionAsker.CanClickNext ();
                 backBtn.interactable = surveyer.CurrentQuestionI > 0;
             } else {
                 nextBtn.interactable = false;
