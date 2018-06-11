@@ -25,7 +25,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		void OnCollisionEnter (Collision col) {
 			if (!isServer) return;
 
-			if (IsDetchCollision (col)) {
+			if (IsDeathCollision (col)) {
 				RpcDie (col.gameObject);
 				EnemyManager.Instance.OnEnemyKilled (this);
 				if (col != null) {
@@ -50,7 +50,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			Destroy (gameObject, 3);
 		}
 
-		private bool IsDetchCollision (Collision col) {
+		private bool IsDeathCollision (Collision col) {
 			return col.gameObject.CompareTag (Tags.Cube) &&
 				col.gameObject.GetComponentInChildren<DynamicFireSource> ().burning
 			/* &&
