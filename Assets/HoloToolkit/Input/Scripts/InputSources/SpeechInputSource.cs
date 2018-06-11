@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-#if UNITY_WSA || UNITY_STANDALONE_WIN
+#if UNITY_WSA || UNITY_STANDALONE_WIN || UNITY_EDITOR
 using UnityEngine.Windows.Speech;
 #endif
 
@@ -39,7 +39,7 @@ namespace HoloToolkit.Unity.InputModule
         [Tooltip("The keywords to be recognized and optional keyboard shortcuts.")]
         public KeywordAndKeyCode[] Keywords;
 
-#if UNITY_WSA || UNITY_STANDALONE_WIN
+#if UNITY_WSA || UNITY_STANDALONE_WIN || UNITY_EDITOR
 
         [Tooltip("The confidence level for the keyword recognizer.")]
         // The serialized data of this field will be lost when switching between platforms and re-serializing this class.

@@ -4,7 +4,7 @@
 using System;
 using UnityEngine.EventSystems;
 
-#if UNITY_WSA || UNITY_STANDALONE_WIN
+#if UNITY_WSA || UNITY_STANDALONE_WIN || UNITY_EDITOR
 using UnityEngine.Windows.Speech;
 #endif
 
@@ -32,7 +32,7 @@ namespace HoloToolkit.Unity.InputModule
 
         public SpeechEventData(EventSystem eventSystem) : base(eventSystem) { }
 
-#if UNITY_WSA  || UNITY_STANDALONE_WIN
+#if UNITY_WSA  || UNITY_STANDALONE_WIN || UNITY_EDITOR
 
         /// <summary>
         /// A measure of correct recognition certainty.

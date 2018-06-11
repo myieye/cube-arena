@@ -13020,6 +13020,16 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb5629b3da4a94041980063474294c1e, type: 2}
   m_IsPrefabParent: 0
@@ -17708,6 +17718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marker: {fileID: 1132233650191854, guid: b71a3fa7aa6b61c4e998e4e01a99aacb, type: 2}
+  groundFlame: {fileID: 1502703442}
 --- !u!114 &1489046009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17720,40 +17731,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Keywords:
-  - Keyword: Shift
-    Response:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1489046008}
-          m_MethodName: ShiftWorldToCameraPosition
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-  - Keyword: Draw
-    Response:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1489046008}
-          m_MethodName: DrawMarkerAtZero
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - Keyword: Host
     Response:
       m_PersistentCalls:
@@ -17907,6 +17884,23 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - Keyword: Toggle Fire
+    Response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1489046008}
+          m_MethodName: ToggleGroundFlame
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 2
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   IsGlobalListener: 1
   PersistentKeywords: 0
 --- !u!114 &1489046010
@@ -17945,6 +17939,14 @@ MonoBehaviour:
     KeyCode: 0
   - Keyword: Print World
     KeyCode: 0
+  - Keyword: Toggle Fire
+    KeyCode: 0
+  recognitionConfidenceLevel: 1
+--- !u!198 &1502703442 stripped
+ParticleSystem:
+  m_PrefabParentObject: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+    type: 2}
+  m_PrefabInternal: {fileID: 448309910}
 --- !u!1 &1524675350
 GameObject:
   m_ObjectHideFlags: 0

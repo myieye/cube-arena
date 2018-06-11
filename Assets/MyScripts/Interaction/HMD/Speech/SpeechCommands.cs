@@ -11,6 +11,8 @@ public class SpeechCommands : MonoBehaviour {
 
 	[SerializeField]
 	private GameObject marker;
+	[SerializeField]
+	private ParticleSystem groundFlame;
 
 	public void ShiftWorldToCameraPosition () {
 		var blue = Color.blue;
@@ -69,5 +71,13 @@ public class SpeechCommands : MonoBehaviour {
 		Debug.Log (
 			". Ground Pos: " + TransformUtil.World.position +
 			". Ground radius: " + TransformUtil.LocalRadius);
+	}
+
+	public void ToggleGroundFlame () {
+		if (groundFlame.isPlaying) {
+			groundFlame.Stop ();
+		} else {
+			groundFlame.Play ();
+		}
 	}
 }
