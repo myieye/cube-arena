@@ -591,11 +591,11 @@ MonoBehaviour:
   playerNumberMode: 1
   numberOfPlayers: 2
   playersPerEnemy: 1
-  skipTestPhase: 0
+  skipTestPhase: 1
   roundLength: 5
   practiceRoundLength: 2.5
   shortPracticeRoundLength: 1
-  passToPlayerTime: 20
+  passToPlayerTime: 0
   arEnabledInEditor: 0
   arEnabled: 1
   optimizeDeviceRoundConfig: 1
@@ -12954,6 +12954,36 @@ Prefab:
         type: 2}
       propertyPath: ShapeModule.m_Scale.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
       objectReference: {fileID: 0}
     - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
         type: 2}

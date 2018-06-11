@@ -19,7 +19,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 			CheckUserStudySettings ();
 
-			skipTestPhase = false;
+			//skipTestPhase = false;
 
 #if UNITY_EDITOR
 			arEnabled = AREnabledInEditor && WebCamTexture.devices.Length > 0;

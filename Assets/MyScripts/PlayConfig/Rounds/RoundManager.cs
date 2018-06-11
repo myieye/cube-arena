@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.Spray;
-using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.Survey;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
@@ -32,6 +31,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private int currRound;
 		private List<List<DeviceConfig>> deviceRoundConfigs;
 		private DeviceConfigurationGenerator configGenerator;
+		private bool gameStarted;
 		private float RoundLength {
 			get {
 				if (InTestPhase) {
@@ -45,10 +45,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 		private int NumberOfPlayers {
 			get {
-				if (InTestPhase) {
-					return PlayerManager.Instance.NumberOfPlayersForRound;
-				} else {
+				if (gameStarted) {
 					return PlayerManager.Instance.NumberOfActivePlayers;
+				} else {
+					return PlayerManager.Instance.NumberOfPlayersForRound;
 				}
 			}
 		}
@@ -126,6 +126,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				timeManager.StartRound (RoundLength, 0, this, InPracticeMode);
 				SpawnGameObjects ();
 			}
+
+			gameStarted = true;
 		}
 
 		private void IncrementModeAndRoundNumber () {
@@ -174,6 +176,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			InTestPhase = true;
 			InPracticeMode = false;
 			currRound = 0;
+			gameStarted = false;
 		}
 
 		private bool InLastRound () {
@@ -181,7 +184,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private bool InFirstRound () {
-			return currRound == 1 && InTestPhase;
+			return currRound == 1 && (InTestPhase || (Settings.Instance.SkipTestPhase && InPracticeMode));
 		}
 
 		private bool BeforeFirstRound () {
