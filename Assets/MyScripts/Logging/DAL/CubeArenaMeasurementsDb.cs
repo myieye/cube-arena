@@ -5,7 +5,8 @@ using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
 
 namespace CubeArena.Assets.MyScripts.Logging.DAL {
     interface CubeArenaMeasurementsDb {
-
+        
+        void OnDestroy ();
         int GetNextPlayerId ();
         T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new ();
         Assist InsertAssist (Assist assist);

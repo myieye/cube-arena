@@ -29,7 +29,10 @@ public class DatabaseManager : NetworkBehaviour {
 	void Start () {
 		InitDatabaseVersionList ();
 		SetDbVersion (Settings.Instance.DefaultDatabaseVersion);
+	}
 
+	void OnDestroy () {
+		DataService.Instance.OnDestroy ();
 	}
 
 	public void SetDbVersion (DatabaseVersion dbVersion) {

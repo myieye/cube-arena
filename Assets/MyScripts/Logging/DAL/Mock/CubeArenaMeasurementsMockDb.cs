@@ -109,5 +109,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
                 nextIds.Add (type, 1);
             }
         }
+
+        public void OnDestroy () { }
     }
 }

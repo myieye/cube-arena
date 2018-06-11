@@ -183,5 +183,12 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
                 }
             }
         }
+
+        public void OnDestroy () {
+            if (conn != null) {
+                conn.Close ();
+                conn.Dispose ();
+            }
+        }
     }
 }

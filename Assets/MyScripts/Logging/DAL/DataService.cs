@@ -27,6 +27,8 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
 			var dbName = string.Format ("{0}_{1}", Database.CubeArenaMeasurementsDatabase, dbVersion);
 
+			CloseDb ();
+
 			switch (dbVersion) {
 				case DatabaseVersion.Mock:
 					db = new CubeArenaMeasurementsMockDb ();
@@ -39,6 +41,16 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 						Settings.Instance.ResetDebugDbOnStart, Settings.Instance.LogMeasurementsToConsole);
 					break;
 
+			}
+		}
+
+		public void OnDestroy () {
+			CloseDb ();
+		}
+
+		public void CloseDb () {
+			if (db != null) {
+				db.OnDestroy ();
 			}
 		}
 
