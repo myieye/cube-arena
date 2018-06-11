@@ -35,16 +35,21 @@ namespace CubeArena.Assets.MyScripts.Logging {
         private List<Coroutine> tentativeSelectionCoroutines;
         public EnabledComponent<CursorController> Cursor { get; set; }
         public Vector3 StartPosition { get; set; }
-            /*get {
+        /*get {
                 return GameObjectUtil.FindLocalAuthoritativeObject<StartPositionTracker> ().StartPosition;
             }
         }*/
 
         public static Measure LocalInstance { get; private set; }
+        public static Measure ServerInstance { get; private set; }
 
         public override void OnStartAuthority () {
             LocalInstance = this;
             tentativeSelectionCoroutines = new List<Coroutine> ();
+
+            if (GetComponent<NetworkIdentity> ().serverOnly) {
+                ServerInstance = this;
+            }
         }
 
         private void Start () {

@@ -28,15 +28,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			if (IsDeathCollision (col)) {
 				RpcDie (col.gameObject);
 				EnemyManager.Instance.OnEnemyKilled (this);
-				if (col != null) {
-					if (Measure.LocalInstance) {
-						Measure.LocalInstance.MadeKill (col.gameObject, this);
-					} else {
-						Debug.LogError ("Measure.LocalInstance NULL");
-					}
-				} else {
-					Debug.LogError ("Col NULL");
-				}
+				Measure.ServerInstance.MadeKill (col.gameObject, this);
 			}
 		}
 
