@@ -8,6 +8,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
         private static List<RatingQuestion> ratingQuestions;
         private static List<WeightQuestion> weightQuestions;
         private static List<RatingQuestion> customRatingQuestions;
+        private static List<RatingQuestion> oneTimeRatingQuestions;
 
         static QuestionService () {
             ratingQuestions = new List<RatingQuestion> ();
@@ -28,18 +29,24 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
             if (Settings.Instance.ForceUserStudySettings) {
                 customRatingQuestions.Add (new RatingQuestion (9, "", "I could easily communicate with the other players."));
                 customRatingQuestions.Add (new RatingQuestion (10, "", "I found the device was a significant hindrance to my communication."));
-                customRatingQuestions.Add (new RatingQuestion (11, "", "I always had a good overview of the play field."));
-                customRatingQuestions.Add (new RatingQuestion (12, "", "I would have been much more effective by myself."));
-                customRatingQuestions.Add (new RatingQuestion (13, "", "I could reach every area of the play field without dfficulty."));
-                customRatingQuestions.Add (new RatingQuestion (14, "", "I collaborated with the other players a lot."));
-                customRatingQuestions.Add (new RatingQuestion (15, "", "I was very helpful to the other players."));
-                customRatingQuestions.Add (new RatingQuestion (16, "", "The other players were very helpful to me."));
-                customRatingQuestions.Add (new RatingQuestion (17, "", "I needed to move a lot in order to accomplish what I wanted to."));
-                customRatingQuestions.Add (new RatingQuestion (18, "", "The system worked flawlessly."));
-                customRatingQuestions.Add (new RatingQuestion (19, "", "The system seemed very buggy."));
-                customRatingQuestions.Add (new RatingQuestion (20, "", "I have a lot of experience using the HoloLens."));
-                customRatingQuestions.Add (new RatingQuestion (21, "", "I have a lot of experience using a smartphone."));
-                customRatingQuestions.Add (new RatingQuestion (22, "", "I have a lot of experience with augmented reality."));
+                customRatingQuestions.Add (new RatingQuestion (11, "", "I could reach every area of the play field without dfficulty."));
+                customRatingQuestions.Add (new RatingQuestion (12, "", "I collaborated with the other players a lot."));
+                customRatingQuestions.Add (new RatingQuestion (13, "", "I was very helpful to the other players."));
+                customRatingQuestions.Add (new RatingQuestion (14, "", "The system seemed very buggy."));
+                
+                //customRatingQuestions.Add (new RatingQuestion (, "", "I always had a good overview of the play field."));
+                //customRatingQuestions.Add (new RatingQuestion (, "", "I would have been much more effective by myself."));
+                //customRatingQuestions.Add (new RatingQuestion (, "", "The other players were very helpful to me."));
+                //customRatingQuestions.Add (new RatingQuestion (, "", "I needed to move a lot in order to accomplish what I wanted to."));
+                //customRatingQuestions.Add (new RatingQuestion (, "", "The system worked flawlessly."));
+            }
+
+            oneTimeRatingQuestions = new List<RatingQuestion> ();
+
+            oneTimeRatingQuestions.Add (new RatingQuestion (15, "", "I have a lot of experience using the HoloLens."));
+            if (Settings.Instance.ForceUserStudySettings) {
+                oneTimeRatingQuestions.Add (new RatingQuestion (16, "", "I have a lot of experience using a smartphone."));
+                oneTimeRatingQuestions.Add (new RatingQuestion (17, "", "I have a lot of experience with augmented reality."));
             }
 
             weightQuestions = new List<WeightQuestion> ();
@@ -75,7 +82,11 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
             return new List<WeightQuestion> (weightQuestions).Shuffle ();
         }
 
-        public static IList<Question> GetShuffledQuestions () {
+        private static IList<RatingQuestion> GetShuffledOneTimeRatingQuestions () {
+            return new List<RatingQuestion> (oneTimeRatingQuestions).Shuffle ();
+        }
+
+        public static IList<Question> GetShuffledSurveyQuestions () {
             var questions = new List<Question> ();
             foreach (var q in GetShuffledRatingQuestions ()) {
                 questions.Add (q);
@@ -84,6 +95,14 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
                 questions.Add (q);
             }
             foreach (var q in GetShuffledCustomRatingQuestions ()) {
+                questions.Add (q);
+            }
+            return questions;
+        }
+
+        public static IList<Question> GetShuffledOneTimeQuestions () {
+            var questions = new List<Question> ();
+            foreach (var q in GetShuffledOneTimeRatingQuestions ()) {
                 questions.Add (q);
             }
             return questions;

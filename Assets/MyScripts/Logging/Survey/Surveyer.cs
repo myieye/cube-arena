@@ -95,7 +95,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
 
             this.playerId = playerId;
             SurveyStarted = true;
-            questions = QuestionService.GetShuffledQuestions ();
+            questions = QuestionService.GetShuffledSurveyQuestions ();
             CurrentQuestionI = 0;
             surveyContainer.SetActive (true);
 
