@@ -84,6 +84,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			if (!IsServer) {
 				GetComponent<NetworkManagerHUD> ().showGUI = false;
+				GetComponent<NetworkDiscovery> ().showGUI = false;
 				if (UIModeList.Instance) {
 					UIModeList.Instance.SetEnabled (!Settings.Instance.DisableUIModeListOnClients);
 				}
@@ -93,6 +94,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 		public override void OnClientDisconnect (NetworkConnection conn) {
 			base.OnClientDisconnect (conn);
 			GetComponent<NetworkManagerHUD> ().showGUI = true;
+			GetComponent<NetworkDiscovery> ().showGUI = true;
 			UIModeList.Instance.SetEnabled (true);
 		}
 	}

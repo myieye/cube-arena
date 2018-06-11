@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
@@ -79,5 +80,13 @@ public class SpeechCommands : MonoBehaviour {
 		} else {
 			groundFlame.Play ();
 		}
+	}
+
+	public void CancelNetworkSearch () {
+		CustomNetworkDiscovery.Instance.StopBroadcasting ();
+	}
+
+	public void StartNetworkSearch () {
+		CustomNetworkDiscovery.Instance.StartBroadcasting ();
 	}
 }

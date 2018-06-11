@@ -9,6 +9,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 		bool ForceUserStudySettings { get; }
 		string ServerIp { get; }
+        bool StartServerAutomatically { get; }
+		bool StartClientAutomatically { get; }
 		PlayerNumberMode PlayerNumberMode { get; }
 		int NumberOfPlayers { get; }
 		int PlayersPerEnemy { get; }

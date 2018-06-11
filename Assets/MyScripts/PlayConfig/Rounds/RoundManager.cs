@@ -127,7 +127,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				SpawnGameObjects ();
 			}
 
-			gameStarted = true;
+			if (!gameStarted) {
+				gameStarted = true;
+				CustomNetworkDiscovery.Instance.StopBroadcasting ();
+			}
 		}
 
 		private void IncrementModeAndRoundNumber () {

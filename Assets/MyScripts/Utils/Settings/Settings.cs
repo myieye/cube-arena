@@ -81,6 +81,10 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		private bool forceUserStudySettings;
 		[SerializeField]
 		private string serverIp;
+		[SerializeField]
+		private bool startServerAutomatically;
+		[SerializeField]
+		private bool startClientAutomatically;
 
 		[Header ("Players")]
 		[SerializeField]
@@ -184,6 +188,12 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public string ServerIp {
 			get { return serverIp; }
+		}
+		public bool StartServerAutomatically {
+			get { return startServerAutomatically; }
+		}
+		public bool StartClientAutomatically {
+			get { return startClientAutomatically; }
 		}
 		public PlayerNumberMode PlayerNumberMode {
 			get { return playerNumberMode; }
