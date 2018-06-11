@@ -1144,6 +1144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropdown: {fileID: 172322818}
   dropdownArrow: {fileID: 1605116476}
+  touchCount: 4
 --- !u!1 &190533475
 GameObject:
   m_ObjectHideFlags: 0
@@ -12954,6 +12955,11 @@ Prefab:
         type: 2}
       propertyPath: ShapeModule.m_Scale.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
       objectReference: {fileID: 0}
     - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
         type: 2}
