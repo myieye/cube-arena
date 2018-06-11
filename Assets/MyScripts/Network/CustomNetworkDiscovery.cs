@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,6 +11,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 	public class CustomNetworkDiscovery : NetworkDiscovery {
 
 		public static CustomNetworkDiscovery Instance { get; private set; }
+
+		private bool connecting;
 
 		private bool StartAutomatically {
 			get {
@@ -46,9 +49,21 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		public override void OnReceivedBroadcast (string fromAddress, string data) {
-			NetworkManager.singleton.networkAddress = fromAddress;
-			NetworkManager.singleton.StartClient ();
-			StopBroadcasting ();
+			lock (this) {
+				if (connecting) return;
+
+				connecting = true;
+
+				NetworkManager.singleton.networkAddress = fromAddress;
+				NetworkManager.singleton.StartClient ();
+
+				StartCoroutine (DelayUtil.Do (2f, () => {
+					lock (this) {
+						StopBroadcasting ();
+						connecting = false;
+					}
+				}));
+			}
 		}
 
 		public void StopBroadcasting () {
