@@ -18,12 +18,26 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
 
         private void Awake () {
             Instance = this;
-            ipPath = Path.Combine (Application.persistentDataPath, "server-ip.txt");
+            ipPath = Path.Combine (Application.persistentDataPath, "saved-server-ip.txt");
+            var settingsIpPath = Path.Combine (Application.persistentDataPath, "settings-server-ip.txt");
 
-            if (File.Exists (ipPath)) {
-                var ipAddress = File.ReadAllText (ipPath).Trim ();
-                if (!string.IsNullOrEmpty (ipAddress)) {
-                    Settings_CA.Instance.ServerIp = ipAddress;
+            if (!File.Exists (settingsIpPath)) {
+                using (var writer = File.CreateText (settingsIpPath)) {
+                    writer.Write (Settings_CA.Instance.ServerIp);
+                }
+            }
+
+            var prevSettingsIp = File.ReadAllText (settingsIpPath).Trim ();
+            if (prevSettingsIp == Settings_CA.Instance.ServerIp) {
+                if (File.Exists (ipPath)) {
+                    var ipAddress = File.ReadAllText (ipPath).Trim ();
+                    if (!string.IsNullOrEmpty (ipAddress)) {
+                        Settings_CA.Instance.ServerIp = ipAddress;
+                    }
+                }
+            } else {
+                using (var writer = File.CreateText (settingsIpPath)) {
+                    writer.Write (Settings_CA.Instance.ServerIp);
                 }
             }
         }
@@ -49,13 +63,14 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
         }
 
         private void OnTextSubmitted (object sender, EventArgs e) {
-            cursor.SetActive (savedCursorActiveness);
-            Keyboard.Instance.gameObject.SetActive (false);
-
             var newIpAddress = Keyboard.Instance.InputField.text;
             Debug.Log ("OnTextSubmitted: " + newIpAddress);
+
             Settings_CA.Instance.ServerIp = newIpAddress;
             SaveIpAddressToFile ();
+
+            cursor.SetActive (savedCursorActiveness);
+            Keyboard.Instance.gameObject.SetActive (false);
         }
 
         private void SaveIpAddressToFile () {
