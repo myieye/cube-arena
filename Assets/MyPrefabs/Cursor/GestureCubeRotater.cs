@@ -14,9 +14,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
         protected override Vector3 CalculateRotationTorque () {
             if (!UIModeManager.InUIMode (UIMode.HHD3_Gestures)) {
-                return base.CalculateRotationTorque ();
+                savedTorque = base.CalculateRotationTorque ();
             } else if (Input.touchCount < 2) {
-                return Vector3.zero;
+                savedTorque = Vector3.zero;
             } else {
                 var d1 = Input.GetTouch (0).deltaPosition;
                 var d2 = Input.GetTouch (1).deltaPosition;
@@ -24,8 +24,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
                 var y = Avg (d1.y, d2.y) * speed;
                 var cameraRelativeTorque = Camera.main.transform.TransformDirection (new Vector3 (y, 0, -x));
                 cameraRelativeTorque.y = 0;
-                return cameraRelativeTorque;
+                savedTorque = cameraRelativeTorque;
             }
+            return savedTorque;
         }
 
         protected override void StartRotate () {

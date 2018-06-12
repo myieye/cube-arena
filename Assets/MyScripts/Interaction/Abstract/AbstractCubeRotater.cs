@@ -26,8 +26,13 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 			if (!hasAuthority) return;
 			if (stateManager.IsSpraying ()) return;
 
-			CheckStartRotating ();
-			CheckEndRotating ();
+			if (!CheckStartRotating ()) {
+				if (!CheckEndRotating ()) {
+					if (Rotating ()) {
+						CalculateRotationTorque ();
+					}
+				}
+			}
 		}
 
 		protected virtual void FixedUpdate () {
@@ -39,15 +44,17 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 			}
 		}
 
-		void CheckStartRotating () {
+		bool CheckStartRotating () {
 			if (!Rotating () && IsStartingRotate ()) {
 				StartRotate ();
 				stateManager.StartRotation ();
 				isRotating = true;
+				return true;
 			}
+			return false;
 		}
 
-		void CheckEndRotating () {
+		bool CheckEndRotating () {
 			if (isRotating && (!Rotating () || IsEndingRotate ())) {
 				EndRotate (!Rotating ());
 				isRotating = false;
@@ -55,7 +62,9 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 				if (Rotating ()) {
 					stateManager.EndRotation ();
 				}
+				return true;
 			}
+			return false;
 		}
 
 		protected bool Rotating () {
@@ -74,5 +83,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
 		protected abstract bool IsEndingRotate ();
 		protected abstract void StartRotate ();
 		protected abstract void EndRotate (bool immediate);
+		protected abstract Vector3 CalculateRotationTorque ();
 	}
 }

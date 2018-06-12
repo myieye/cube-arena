@@ -21,6 +21,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private Rigidbody selectedRigidbody;
 		private float rotationWaitTime;
 
+		protected Vector3 savedTorque;
+
 		protected override void Start () {
 			base.Start ();
 		}
@@ -29,16 +31,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (stateManager.IsRotating ()) {
 				rotationWaitTime += Time.deltaTime;
 			}
-			if (HasRotationInput ()) {
-				rotationWaitTime = 0;
-			}
 
 			base.Update ();
 		}
 
 		protected override void Rotate () {
-			if (selectedRigidbody != null) {
-				var torque = CalculateRotationTorque ();
+			if (selectedRigidbody != null && HasSavedTorque ()) {
+				rotationWaitTime = 0;
+				var torque = savedTorque;// CalculateRotationTorque ();
 				selectedRigidbody.AddTorque (torque, ForceMode.VelocityChange);
 				CmdApplyTorqueOnNetwork (selectedRigidbody.gameObject, torque.ToServerDirection ());
 			}
@@ -126,16 +126,21 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				selectedRigidbody.angularVelocity.magnitude < Settings.Instance.MinRotationVelocity;
 		}
 
-		protected virtual Vector3 CalculateRotationTorque () {
+		protected override Vector3 CalculateRotationTorque () {
 			var x = CrossPlatformInputManager.GetAxis (Axes.Horizontal) * speed;
 			var y = CrossPlatformInputManager.GetAxis (Axes.Vertical) * speed;
 			var cameraRelativeTorque = Camera.main.transform.TransformDirection (new Vector3 (y, 0, -x));
 			cameraRelativeTorque.y = 0;
+			savedTorque = cameraRelativeTorque;
 			return cameraRelativeTorque;
 		}
 
 		protected bool HasRotationInput () {
 			return CalculateRotationTorque ().magnitude > 0;
+		}
+
+		private bool HasSavedTorque () {
+			return savedTorque.magnitude > 0;
 		}
 
 		private void SetCubeNetworkTransformEnabled (GameObject cube, bool enabled) {
@@ -145,5 +150,5 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			}
 			networkTransform.enabled = enabled;
 		}
-	}
+    }
 }
