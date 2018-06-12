@@ -394,6 +394,8 @@ namespace HoloToolkit.UI.Keyboard
             PresentKeyboard();
             Clear();
             InputField.text = startText;
+            m_CaretPosition = startText.Length;
+            UpdateCaretPosition (m_CaretPosition);
         }
 
         /// <summary>
