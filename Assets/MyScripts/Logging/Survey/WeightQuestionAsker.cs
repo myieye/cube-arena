@@ -31,7 +31,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             if (!answered && selected && HasValidAnswer ()) {
                 answered = true;
                 SetTogglesEnabled (false);
-                StartCoroutine (DelayUtil.Do (0.5f, then));
+                StartCoroutine (DelayUtil.Do (0.25f, then));
             }
         }
 

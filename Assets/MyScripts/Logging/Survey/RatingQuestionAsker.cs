@@ -24,7 +24,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             slider.value = Mathf.FloorToInt (slider.maxValue / 2);
 
             canClickNext = false;
-            StartCoroutine (DelayUtil.Do (0.5f, () => canClickNext = true));
+            StartCoroutine (DelayUtil.Do (0.25f, () => canClickNext = true));
         }
 
         public bool HasValidAnswer () {
