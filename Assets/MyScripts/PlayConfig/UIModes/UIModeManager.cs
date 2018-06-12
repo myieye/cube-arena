@@ -128,7 +128,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		private void OnUIModeMessage (NetworkMessage netMsg) {
 			var modeMsg = netMsg.ReadMessage<UIModeMessage> ();
 
-			if (modeMsg.ForceUserStudySettings) {
+			if (modeMsg.ForceUserStudySettings && !isServer) {
 				Settings.Instance.EnableUserStudySettings ();
 			}
 
