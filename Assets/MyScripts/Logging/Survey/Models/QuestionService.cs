@@ -33,7 +33,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
                 customRatingQuestions.Add (new RatingQuestion (12, "", "I collaborated with the other players a lot."));
                 customRatingQuestions.Add (new RatingQuestion (13, "", "I was very helpful to the other players."));
                 customRatingQuestions.Add (new RatingQuestion (14, "", "The system seemed very buggy."));
-                
+
                 //customRatingQuestions.Add (new RatingQuestion (, "", "I always had a good overview of the play field."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "I would have been much more effective by myself."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "The other players were very helpful to me."));
@@ -86,7 +86,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
             return new List<RatingQuestion> (oneTimeRatingQuestions).Shuffle ();
         }
 
-        public static IList<Question> GetShuffledSurveyQuestions () {
+        public static IList<Question> GetShuffledSurveyQuestions (bool withOneTimeQuestions) {
             var questions = new List<Question> ();
             foreach (var q in GetShuffledRatingQuestions ()) {
                 questions.Add (q);
@@ -97,13 +97,10 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
             foreach (var q in GetShuffledCustomRatingQuestions ()) {
                 questions.Add (q);
             }
-            return questions;
-        }
-
-        public static IList<Question> GetShuffledOneTimeQuestions () {
-            var questions = new List<Question> ();
-            foreach (var q in GetShuffledOneTimeRatingQuestions ()) {
-                questions.Add (q);
+            if (withOneTimeQuestions) {
+                foreach (var q in GetShuffledOneTimeRatingQuestions ()) {
+                    questions.Add (q);
+                }
             }
             return questions;
         }

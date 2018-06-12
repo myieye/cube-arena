@@ -77,25 +77,27 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             SurveyStarted = false;
         }
 
-        public void DoSurvey (List<NetworkPlayer> players, SurveyFinishedListener surveyFinishedListener) {
+        public void DoSurvey (List<NetworkPlayer> players,
+            SurveyFinishedListener surveyFinishedListener, bool doOneTimeQuestions) {
+
             this.surveyFinishedListener = surveyFinishedListener;
             totalClients = players.Count;
             clientsFinished = 0;
 
             foreach (var player in players) {
-                TargetDoSurvey (player.DeviceConfig.Device.Connection, player.PlayerId);
+                TargetDoSurvey (player.DeviceConfig.Device.Connection, player.PlayerId, doOneTimeQuestions);
             }
         }
 
         [TargetRpc]
-        public void TargetDoSurvey (NetworkConnection target, int playerId) {            
+        public void TargetDoSurvey (NetworkConnection target, int playerId, bool doOneTimeQuestions) {
 #if UNITY_WSA && !UNITY_EDITOR
             surveyCursor.SetActive (true);
 #endif
 
             this.playerId = playerId;
             SurveyStarted = true;
-            questions = QuestionService.GetShuffledSurveyQuestions ();
+            questions = QuestionService.GetShuffledSurveyQuestions (doOneTimeQuestions);
             CurrentQuestionI = 0;
             surveyContainer.SetActive (true);
 
@@ -136,7 +138,7 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey {
             }
         }
 
-        private void OnSurveyComplete () {            
+        private void OnSurveyComplete () {
 #if UNITY_WSA && !UNITY_EDITOR
             surveyCursor.SetActive (false);
 #endif

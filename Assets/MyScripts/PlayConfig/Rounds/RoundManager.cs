@@ -77,7 +77,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 			if (!InTestPhase && !InPracticeMode && currRound > 0) {
 				UIModeManager.Instance<UIModeManager> ().DisablePlayerUIs (PlayerManager.Instance.Players);
-				FindObjectOfType<Surveyer> ().DoSurvey (PlayerManager.Instance.Players, this);
+				FindObjectOfType<Surveyer> ().DoSurvey (PlayerManager.Instance.Players, this, InLastRound ());
 			} else {
 				TriggerNewRound ();
 			}
@@ -105,23 +105,14 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void StartNewRound () {
 			IncrementModeAndRoundNumber ();
 
-			if (InPracticeMode) {
-				if (NeedsNewRoundConfig ()) {
-					if (InFirstRound ()) {
-						Settings.Instance.CheckUserStudySettings ();
-						DeviceManager.Instance.SaveConnectedDevicesToDb ();
-					}
+			if (!DoRoundSetup ()) {
+				DecrementModeAndRoundNumber ();
+				return;
+			}
 
-					if (!InitRoundConfig ()) {
-						DecrementModeAndRoundNumber ();
-						return;
-					}
-				}
-
-				// Generate new PlayerRoundIds
-				var players = PlayerManager.Instance.ConfigurePlayersForRound (
-					currRound, deviceRoundConfigs[currRound - 1]);
-				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (players);
+			if (IsTimeForNextUIMode ()) {
+				PlayerManager.Instance.ConfigurePlayersForRound (currRound, deviceRoundConfigs[currRound - 1]);
+				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (PlayerManager.Instance.Players);
 
 				timeManager.StartRound (RoundLength, Settings.Instance.PassToPlayerTime, this, InPracticeMode);
 				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
@@ -139,7 +130,22 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			}
 		}
 
-		private bool InitRoundConfig () {
+		private bool DoRoundSetup () {
+			if (InFirstRound ()) {
+				Settings.Instance.CheckUserStudySettings ();
+				DeviceManager.Instance.SaveConnectedDevicesToDb ();
+			}
+
+			if (NeedsNewRoundConfig ()) {
+				if (!InitDeviceRoundConfig ()) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private bool InitDeviceRoundConfig () {
 			switch (GameConfigManager.Instance.Mode) {
 
 				case GameConfigMode.New:
@@ -229,6 +235,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		private bool NeedsNewRoundConfig () {
 			return currRound == 1 && (InPracticeMode || InTestPhase);
+		}
+
+		private bool IsTimeForNextUIMode () {
+			return InPracticeMode;
 		}
 	}
 }
