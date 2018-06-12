@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Counters;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
@@ -36,6 +38,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             PrintTable<Kill> (printContents);
             PrintTable<Assist> (printContents);
             PrintTable<PlayerCounter> (printContents);
+            PrintTable<GameConfigCounter> (printContents);
             PrintTable<AreaInteraction> (printContents);
             PrintTable<CloudMeasurement> (printContents);
             PrintTable<Device> (printContents);
@@ -54,6 +57,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             conn.DropTable<Kill> ();
             conn.DropTable<Assist> ();
             conn.DropTable<PlayerCounter> ();
+            conn.DropTable<GameConfigCounter> ();
             conn.DropTable<AreaInteraction> ();
             conn.DropTable<CloudMeasurement> ();
             conn.DropTable<Device> ();
@@ -71,11 +75,27 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             conn.CreateTable<Kill> ();
             conn.CreateTable<Assist> ();
             conn.CreateTable<PlayerCounter> ();
+            conn.CreateTable<GameConfigCounter> ();
             conn.CreateTable<AreaInteraction> ();
             conn.CreateTable<CloudMeasurement> ();
             conn.CreateTable<Device> ();
             conn.CreateTable<RatingAnswer> ();
             conn.CreateTable<WeightAnswer> ();
+        }
+
+        public int GetNextId<T> () where T : Counter, new () {
+            var name = typeof (T).Name;
+            var maxList = conn.Query<T> (string.Format ("select * from {0}", name));
+            int newPlayerCount = 1;
+            if (maxList.Count > 1) {
+                throw new ApplicationException (string.Format ("More than one {0}-counter found!", name));
+            } else if (maxList.Count == 1) {
+                newPlayerCount = maxList[0].Count + 1;
+                conn.Query<int> (string.Format ("update {0} set Count = ?", name), newPlayerCount);
+            } else {
+                conn.Query<int> (string.Format ("insert into {0} values (?)", name), newPlayerCount);
+            }
+            return newPlayerCount;
         }
 
         public int GetNextPlayerId () {
@@ -84,7 +104,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             if (maxList.Count > 1) {
                 throw new ApplicationException ("More than one player counter found!");
             } else if (maxList.Count == 1) {
-                newPlayerCount = maxList[0].PlayerCount + 1;
+                newPlayerCount = maxList[0].Count + 1;
                 conn.Query<int> ("update PlayerCounter set PlayerCount = ?", newPlayerCount);
             } else {
                 conn.Query<int> ("insert into PlayerCounter values (?)", newPlayerCount);
@@ -94,6 +114,10 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
 
         public T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new () {
             return conn.Find<T> (condition);
+        }
+
+        public List<T> FindAll<T> (Expression<Func<T, bool>> condition) where T : new () {
+            return conn.Table<T> ().Where (condition).ToList ();
         }
 
         public Assist InsertAssist (Assist assist) {

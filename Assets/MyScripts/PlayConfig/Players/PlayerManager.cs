@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Logging;
 using CubeArena.Assets.MyScripts.Logging.DAL;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
@@ -39,6 +41,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 }
             }
         }
+        private List<List<int>> gamePlayerRoundIds;
         private List<int> playerRoundIds;
         private DataService dataService;
 
@@ -60,12 +63,35 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             return NumberOfPlayersForRound;
         }
 
+        public void InitPlayersWithPlayerRounds (List<List<PlayerRound>> playerRounds) {
+            DestroyPlayers ();
+
+            Players = new List<NetworkPlayer> ();
+            foreach (var playerRound in playerRounds.First ()) {
+                Players.Add (new NetworkPlayer {
+                    PlayerId = playerRound.PlayerId,
+                        PlayerIndex = playerRound.PlayerNum - 1,
+                        PlayerNum = playerRound.PlayerNum
+                });
+            }
+
+            gamePlayerRoundIds = (from playerRound in playerRounds select (
+                from player in playerRound select player.Id).ToList ()).ToList ();
+        }
+
         public void DestroyPlayers () {
             if (Players != null && Players.Any ()) {
                 foreach (var player in Players) {
                     NetworkServer.Destroy (player.PlayerGameObject);
                 }
             }
+        }
+
+        public void GeneratePlayerRounds (List<List<DeviceConfig>> deviceRoundConfigs) {
+            Assert.AreEqual (Players.Count, deviceRoundConfigs[0].Count);
+
+            gamePlayerRoundIds = dataService.CreatePlayerRounds (Players, deviceRoundConfigs);
+            GameConfigManager.Instance.Refresh ();
         }
 
         public List<NetworkPlayer> ConfigurePlayersForRound (int roundNum, List<DeviceConfig> deviceRoundConfig) {
@@ -75,7 +101,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 Players[i].DeviceConfig = deviceRoundConfig[i];
             }
 
-            playerRoundIds = dataService.CreatePlayerRoundIds (Players, roundNum);
+            playerRoundIds = gamePlayerRoundIds[roundNum - 1];
             return Players;
         }
 
@@ -92,11 +118,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
             return FindPlayer (id).Cubes;
         }
 
-        internal NetworkConnection GetPlayerConnection (PlayerId playerId) {
+        public NetworkConnection GetPlayerConnection (PlayerId playerId) {
             return FindPlayer (playerId).DeviceConfig.Device.Connection;
         }
 
-        internal Measure GetPlayerMeasurer (PlayerId playerId) {
+        public Measure GetPlayerMeasurer (PlayerId playerId) {
             return FindPlayer (playerId).PlayerGameObject.GetComponent<Measure> ();
         }
 

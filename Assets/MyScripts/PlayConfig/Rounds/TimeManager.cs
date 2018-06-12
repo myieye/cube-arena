@@ -24,6 +24,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		void OnDisable () {
+			Debug.Log ("Time on disable: " + GetTimeText ());
+
 			Clear ();
 			OnRoundTimeRemainingChanged (roundTimeRemaining_S);
 		}
@@ -74,11 +76,15 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		private void OnRoundTimeRemainingChanged (int roundTimeRemaining) {
+			roundTimeRemaining_S = roundTimeRemaining;
 			if (clock) {
-				TimeSpan time = TimeSpan.FromSeconds (roundTimeRemaining);
-				var clockTime = string.Format ("{0}:{1:D2}", time.Minutes, time.Seconds);
-				clock.text = clockTime;
+				clock.text = GetTimeText ();
 			}
+		}
+
+		private string GetTimeText () {
+			TimeSpan time = TimeSpan.FromSeconds (roundTimeRemaining_S);
+			return string.Format ("{0}:{1:D2}", time.Minutes, time.Seconds);
 		}
 	}
 }

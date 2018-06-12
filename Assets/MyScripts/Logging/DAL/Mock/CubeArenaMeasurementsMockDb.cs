@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models.Answers;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Counters;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using UnityEngine;
 
@@ -13,6 +14,12 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
         private int nextPlayerId = 1;
         private Dictionary<Type, List<BaseEntity>> entities = new Dictionary<Type, List<BaseEntity>> ();
         private Dictionary<Type, int> nextIds = new Dictionary<Type, int> ();
+
+        public int GetNextId<T> () where T : Counter, new () {
+            var t = typeof (T);
+            CheckLists (t);
+            return nextIds[t]++;
+        }
 
         public int GetNextPlayerId () {
             return nextPlayerId++;
@@ -111,5 +118,9 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
         }
 
         public void OnDestroy () { }
+
+        public List<T> FindAll<T> (Expression<Func<T, bool>> condition) where T : new () {
+            return new List<T> ();
+        }  
     }
 }

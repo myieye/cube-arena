@@ -22,15 +22,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         }
 
         public bool TryGenerateDeviceRoundConfigs (int numPlayers, out List<List<DeviceConfig>> config) {
-            if (!CheckEnoughDevicesAvailable (numPlayers) || numPlayers < 1) {
-                config = null;
+            if (!GetEmptyConfig (numPlayers, RoundManager.Instance<RoundManager> ().NumberOfRounds, out config)) {
                 return false;
-            }
-
-            config = new List<List<DeviceConfig>> ();
-
-            for (var i = 0; i < RoundManager.Instance<RoundManager> ().NumberOfRounds; i++) {
-                config.Add (new List<DeviceConfig> ());
             }
 
             // Generate random valid device configuration
@@ -54,7 +47,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         }
 
         private void OptimizeDeviceRoundConfig (List<List<DeviceConfig>> config) {
-            var usedDevices = new List<ConnectedDevice> ();
+            var usedDevices = new List<Device> ();
             for (int r = 1; r < config.Count; r++) {
                 usedDevices.Clear ();
 
@@ -87,7 +80,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 var mixedUiModes = new List<UIMode> (UIModeHelpers.TestUIModes).Shuffle ();
                 for (int r = 0; r < config.Count; r++) {
                     var deviceConfig = config[r][p];
-                    
+
                     var device = deviceConfig.Device;
                     var deviceType = device.Type;
                     //var deviceType = deviceConfig.Device.Type;
@@ -112,12 +105,40 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                 return true;
             } else {
                 Debug.LogError ("Not enough devices for user study!");
-                if (Settings.Instance.OverrideAvailableDevices /* && numPlayers <= deviceManager.ConnectedDevices.Count*/) {
+                if (Settings.Instance.OverrideAvailableDevices /* && numPlayers <= deviceManager.ConnectedDevices.Count*/ ) {
                     return true;
                 } else {
                     return false;
                 }
             }
+        }
+
+        public bool MatchDevicesToGameConfig (List<List<PlayerRound>> list, out List<List<DeviceConfig>> config) {
+            Assert.IsTrue (list.Count > 0);
+
+            var numPlayers = list.First ().Count;
+
+            if (!GetEmptyConfig (numPlayers, list.Count, out config)) {
+                return false;
+            }
+
+            for (int r = 0; r < list.Count; r++) {
+                var round = list[r];
+                var rConfig = config[r];
+
+                for (int p = 0; p < round.Count; p++) {
+
+                    var pRound = round[p];
+                    Assert.IsTrue (r + 1 == pRound.RoundNum);
+
+                    rConfig.Add (new DeviceConfig {
+                        UIMode = pRound.UI,
+                            Device = GetFirstAvailableDevice (rConfig, pRound.UI.GetDeviceType (), numPlayers)
+                    });
+                }
+            }
+
+            return true;
         }
 
         private bool AddNextDeviceRecursive (List<List<DeviceConfig>> config, int roundI, int playerI, int numPlayers) {
@@ -185,7 +206,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             return device;
         }
 
-        private bool DeviceIsUnused (ConnectedDevice device, List<DeviceConfig> round) {
+        private bool DeviceIsUnused (Device device, List<DeviceConfig> round) {
             return !round.Exists (dc => dc.Device.Equals (device));
         }
 
@@ -193,6 +214,21 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
             Assert.IsTrue (config != null);
 
             return roundI + 1 == config.Count && playerI + 1 == numPlayers;
+        }
+
+        private bool GetEmptyConfig (int numPlayers, int numRounds, out List<List<DeviceConfig>> config) {
+            if (!CheckEnoughDevicesAvailable (numPlayers) || numPlayers < 1) {
+                config = null;
+                return false;
+            }
+
+            config = new List<List<DeviceConfig>> ();
+
+            for (var i = 0; i < numRounds; i++) {
+                config.Add (new List<DeviceConfig> ());
+            }
+
+            return true;
         }
 
         private void PrintDeviceRoundConfig (List<List<DeviceConfig>> config) {
@@ -205,7 +241,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
                         output.Append ("                                 ");
                     } else {
                         var devType = round[i] != null ? round[i].Device.Type.ToString () : "null";
-                        var devAddress = round[i] != null ? round[i].Device.Connection.address : "null";
+                        var devAddress = ""; // round[i] != null ? round[i].Device.Connection.address : "null";
                         var uiMode = round[i] != null ? (int) round[i].UIMode : -1;
                         output.Append (String.Format ("[{0}:{1}:{2}]  ", devType, uiMode, devAddress));
                     }

@@ -3,66 +3,71 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CubeArena.Assets.MyScripts.Logging.DAL;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class DatabaseManager : NetworkBehaviour {
+namespace CubeArena.Assets.MyScripts.Logging.DAL {
+	public class DatabaseManager : NetworkBehaviour {
 
-	[SerializeField]
-	private Dropdown dbVersionList;
+		[SerializeField]
+		private Dropdown dbVersionList;
 
-	public static DatabaseManager Instance { get; private set; }
+		public static DatabaseManager Instance { get; private set; }
 
-	void Awake () {
+		void Awake () {
 #if !UNITY_EDITOR
-		DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
-		Destroy (dbVersionList.gameObject);
-		Destroy (this);
+			DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
+			Destroy (dbVersionList.gameObject);
+			Destroy (this);
 #else
-		Instance = this;
+			Instance = this;
 #endif
-	}
+		}
 
-	void Start () {
-		InitDatabaseVersionList ();
-		SetDbVersion (Settings.Instance.DefaultDatabaseVersion);
-	}
+		void Start () {
+			InitDatabaseVersionList ();
+			SetDbVersion (Settings.Instance.DefaultDatabaseVersion);
+		}
 
-	void OnDestroy () {
-		DataService.Instance.OnDestroy ();
-	}
+		void OnDestroy () {
+			DataService.Instance.OnDestroy ();
+		}
 
-	public void SetDbVersion (DatabaseVersion dbVersion) {
-		dbVersionList.value = (int) dbVersion;
-		RefreshDbVersion ();
-	}
+		public void SetDbVersion (DatabaseVersion dbVersion) {
+			dbVersionList.value = (int) dbVersion;
+			RefreshDbVersion ();
+		}
 
-	private void InitDatabaseVersionList () {
-		var databaseVersions = Enum.GetValues (typeof (DatabaseVersion)).Cast<DatabaseVersion> ().ToList ();
-		dbVersionList.options = (
-			from dbVersion in databaseVersions select new Dropdown.OptionData (dbVersion.ToString ())).ToList ();
-	}
+		private void InitDatabaseVersionList () {
+			var databaseVersions = Enum.GetValues (typeof (DatabaseVersion)).Cast<DatabaseVersion> ().ToList ();
+			dbVersionList.options = (
+				from dbVersion in databaseVersions select new Dropdown.OptionData (dbVersion.ToString ())).ToList ();
+		}
 
-	public void OnSelectedDbVersionChanged () {
-		RefreshDbVersion ();
-	}
+		public void OnSelectedDbVersionChanged () {
+			RefreshDbVersion ();
+		}
 
-	[Server]
-	private void RefreshDbVersion () {
+		[Server]
+		private void RefreshDbVersion () {
 #if UNITY_EDITOR
-		var dbVersion = GetSelectedDbVersion ();
-		dbVersionList.GetComponent<Image> ().color = dbVersion.GetColor ();
-		DataService.Instance.SetDbVersion (dbVersion);
+			var dbVersion = GetSelectedDbVersion ();
+			dbVersionList.GetComponent<Image> ().color = dbVersion.GetColor ();
+			DataService.Instance.SetDbVersion (dbVersion);
+			dbVersionList.RefreshShownValue ();
 #else
-		DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
+			DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
 #endif
-	}
+			GameConfigManager.Instance.Refresh ();
+		}
 
-	private DatabaseVersion GetSelectedDbVersion () {
-		var dbIndex = dbVersionList.value;
-		return (DatabaseVersion) dbIndex;
+		private DatabaseVersion GetSelectedDbVersion () {
+			var dbIndex = dbVersionList.value;
+			return (DatabaseVersion) dbIndex;
+		}
 	}
 }

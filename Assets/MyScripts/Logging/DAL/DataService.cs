@@ -8,6 +8,9 @@ using CubeArena.Assets.MyScripts.Logging.DAL.SQLite;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using NetworkPlayer = CubeArena.Assets.MyScripts.PlayConfig.Players.NetworkPlayer;
+using System.Linq;
+using CubeArena.Assets.MyScripts.Logging.DAL.Models.Counters;
+using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
@@ -125,6 +128,10 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			Log (db.SaveRatingAnswer (answer));
 		}
 
+		public void SaveDeviceRoundConfigs (List<List<DeviceConfig>> deviceRoundConfigs) {
+
+		}
+
 		public void SaveWeightAnswer (WeightAnswer answer) {
 			WeightAnswer a = db.Find<WeightAnswer> (wa =>
 				wa.PlayerRoundId == answer.PlayerRoundId && wa.WeightId == answer.WeightId);
@@ -140,21 +147,81 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		}
 
 		public int GetNextPlayerId () {
-			return db.GetNextPlayerId ();
+			return db.GetNextId<PlayerCounter> ();
 		}
 
-		public List<int> CreatePlayerRoundIds (List<NetworkPlayer> players, int roundNum) {
-			var playerRoundIds = new List<int> ();
-			foreach (var player in players) {
-				var playerRound = new PlayerRound {
-					PlayerId = player.PlayerId,
-						RoundNum = roundNum,
-						UI = player.DeviceConfig.UIMode,
-						DeviceId = player.DeviceConfig.Device.Id
-				};
-				playerRoundIds.Add (db.InsertPlayerRound (playerRound).Id);
+		/*
+				public List<int> CreatePlayerRoundIds (List<NetworkPlayer> players, int gameConfigId, int roundNum) {
+					var playerRoundIds = new List<int> ();
+					foreach (var player in players) {
+						var playerRound = new PlayerRound {
+							GameConfigId = gameConfigId,
+								PlayerId = player.PlayerId,
+								RoundNum = roundNum,
+								UI = player.DeviceConfig.UIMode,
+								DeviceId = player.DeviceConfig.Device.Id
+						};
+						playerRoundIds.Add (db.InsertPlayerRound (playerRound).Id);
+					}
+					return playerRoundIds;
+				} */
+
+		public List<List<int>> CreatePlayerRounds (List<NetworkPlayer> players, List<List<DeviceConfig>> deviceRoundConfigs) {
+
+			var gamePlayerRoundIds = new List<List<int>> ();
+			int gameConfigId = db.GetNextId<GameConfigCounter> ();
+
+			for (int r = 0; r < deviceRoundConfigs.Count; r++) {
+
+				int roundNum = r + 1;
+				var rConfig = deviceRoundConfigs[r];
+
+				var playerRoundIds = new List<int> ();
+
+				for (int p = 0; p < rConfig.Count; p++) {
+					var player = players[p];
+					var devConfig = rConfig[p];
+
+					var playerRound = new PlayerRound {
+						GameConfigId = gameConfigId,
+							PlayerId = player.PlayerId,
+							PlayerNum = player.PlayerNum,
+							RoundNum = roundNum,
+							UI = devConfig.UIMode,
+							DeviceId = devConfig.Device.Id
+					};
+
+					playerRoundIds.Add (db.InsertPlayerRound (playerRound).Id);
+				}
+
+				gamePlayerRoundIds.Add (playerRoundIds);
 			}
-			return playerRoundIds;
+
+			return gamePlayerRoundIds;
+		}
+
+		public List<GameConfig> FindGameConfigs (int max = int.MaxValue) {
+			var counter = db.FindAll<PlayerCounter> ((pc) => true).FirstOrDefault ();
+			var gameConfigCount = counter != null ? counter.Count : 0;
+			var minGameConfigId = (gameConfigCount - max) + 1;
+
+			var playerRounds = db.FindAll<PlayerRound> (pr => pr.GameConfigId >= minGameConfigId);
+			return playerRounds.GroupBy (pr => pr.GameConfigId)
+				.OrderByDescending (gameConfig => gameConfig.First ().GameConfigId)
+				.Select (gameConfig => new GameConfig {
+					gameConfigId = gameConfig.First ().GameConfigId,
+						numPlayers = gameConfig.Max (pr => pr.PlayerId) - gameConfig.Min (pr => pr.PlayerId) + 1,
+						numRounds = gameConfig.Max (pr => pr.RoundNum)
+					/*, lastRound = db.FindMaxRoundForGam*/
+				}).ToList ();
+		}
+
+		public List<List<PlayerRound>> FindPlayerRoundsForGame (int gameConfigId) {
+			var playerRounds = db.FindAll<PlayerRound> (pr => pr.GameConfigId == gameConfigId);
+			return playerRounds.GroupBy (pr => pr.RoundNum)
+				.OrderBy (round => round.First ().RoundNum)
+				.Select (round => round.OrderBy (p => p.PlayerId).ToList ())
+				.ToList ();
 		}
 	}
 }

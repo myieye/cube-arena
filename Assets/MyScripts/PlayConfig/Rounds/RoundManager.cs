@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CubeArena.Assets.MyPrefabs.Cloud;
 using CubeArena.Assets.MyScripts.GameObjects.Agents;
 using CubeArena.Assets.MyScripts.GameObjects.Spray;
+using CubeArena.Assets.MyScripts.Logging.DAL;
 using CubeArena.Assets.MyScripts.Logging.Survey;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
@@ -63,6 +64,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			ResetRoundCounter ();
 		}
 
+		void OnDisable () {
+			Debug.Log (string.Format ("Round on disable: {0}. PM: {1}. TP: {2}.",
+				currRound, InPracticeMode, InTestPhase));
+		}
+
 		public void OnRoundOver (bool force = false) {
 			if (!force && Settings.Instance.EndlessRounds) return;
 
@@ -106,12 +112,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 						DeviceManager.Instance.SaveConnectedDevicesToDb ();
 					}
 
-					if (!configGenerator.TryGenerateDeviceRoundConfigs (NumberOfPlayers, out deviceRoundConfigs)) {
+					if (!InitRoundConfig ()) {
 						DecrementModeAndRoundNumber ();
 						return;
-					}
-					if (InFirstRound ()) {
-						PlayerManager.Instance.GenerateNewPlayers ();
 					}
 				}
 
@@ -130,7 +133,37 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (!gameStarted) {
 				gameStarted = true;
 				CustomNetworkDiscovery.Instance.StopBroadcasting ();
+				Debug.LogFormat ("Starting game. Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
+			} else {
+				Debug.LogFormat ("Starting Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
 			}
+		}
+
+		private bool InitRoundConfig () {
+			switch (GameConfigManager.Instance.Mode) {
+
+				case GameConfigMode.New:
+					if (configGenerator.TryGenerateDeviceRoundConfigs (NumberOfPlayers, out deviceRoundConfigs)) {
+						if (InFirstRound ()) {
+							PlayerManager.Instance.GenerateNewPlayers ();
+						}
+						PlayerManager.Instance.GeneratePlayerRounds (deviceRoundConfigs);
+						return true;
+					}
+					break;
+
+				case GameConfigMode.Old:
+					var gameConfig = GameConfigManager.Instance.GetSelectedGameConfig ();
+					if (configGenerator.MatchDevicesToGameConfig (gameConfig, out deviceRoundConfigs)) {
+						PlayerManager.Instance.InitPlayersWithPlayerRounds (gameConfig);
+
+						currRound = GameConfigManager.Instance.GetStartingRound ();
+						return true;
+					}
+					break;
+			}
+
+			return false;
 		}
 
 		private void IncrementModeAndRoundNumber () {

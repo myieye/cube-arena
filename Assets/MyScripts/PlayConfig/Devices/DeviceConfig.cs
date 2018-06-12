@@ -1,3 +1,4 @@
+using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
