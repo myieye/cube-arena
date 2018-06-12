@@ -88,6 +88,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 				if (UIModeList.Instance) {
 					UIModeList.Instance.SetEnabled (!Settings.Instance.DisableUIModeListOnClients);
 				}
+				CustomNetworkDiscovery.Instance.StopBroadcasting ();
 			}
 		}
 

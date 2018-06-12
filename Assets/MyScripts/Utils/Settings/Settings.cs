@@ -189,6 +189,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public string ServerIp {
 			get { return serverIp; }
+			set { serverIp = value; }
 		}
 		public bool StartServerAutomatically {
 			get { return startServerAutomatically; }

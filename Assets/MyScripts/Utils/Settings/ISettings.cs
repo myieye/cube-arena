@@ -8,7 +8,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		void EnableUserStudySettings ();
 
 		bool ForceUserStudySettings { get; }
-		string ServerIp { get; }
+		string ServerIp { get; set; }
         bool StartServerAutomatically { get; }
 		bool StartClientAutomatically { get; }
 		PlayerNumberMode PlayerNumberMode { get; }

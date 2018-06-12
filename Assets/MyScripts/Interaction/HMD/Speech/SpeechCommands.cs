@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
+using CubeArena.Assets.MyScripts.Utils.UIUtils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -88,5 +89,9 @@ public class SpeechCommands : MonoBehaviour {
 
 	public void StartNetworkSearch () {
 		CustomNetworkDiscovery.Instance.StartBroadcasting ();
+	}
+
+	public void SetIpAddress () {
+		IPAddressSetter.Instance.OpenIPAddressSetter ();
 	}
 }

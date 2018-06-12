@@ -36,6 +36,8 @@ namespace HoloToolkit.Unity.InputModule
 
         private readonly InputSourcePointer inputSourcePointer = new InputSourcePointer();
 
+        public static SimpleSinglePointerSelector Instance { get; private set; }
+
         #endregion
 
         #region MonoBehaviour Implementation
