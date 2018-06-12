@@ -38,7 +38,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             PrintTable<Kill> (printContents);
             PrintTable<Assist> (printContents);
             PrintTable<PlayerCounter> (printContents);
-            PrintTable<GameConfigCounter> (printContents);
+            PrintTable<GameConfig> (printContents);
             PrintTable<AreaInteraction> (printContents);
             PrintTable<CloudMeasurement> (printContents);
             PrintTable<Device> (printContents);
@@ -57,7 +57,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             conn.DropTable<Kill> ();
             conn.DropTable<Assist> ();
             conn.DropTable<PlayerCounter> ();
-            conn.DropTable<GameConfigCounter> ();
+            conn.DropTable<GameConfig> ();
             conn.DropTable<AreaInteraction> ();
             conn.DropTable<CloudMeasurement> ();
             conn.DropTable<Device> ();
@@ -75,7 +75,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             conn.CreateTable<Kill> ();
             conn.CreateTable<Assist> ();
             conn.CreateTable<PlayerCounter> ();
-            conn.CreateTable<GameConfigCounter> ();
+            conn.CreateTable<GameConfig> ();
             conn.CreateTable<AreaInteraction> ();
             conn.CreateTable<CloudMeasurement> ();
             conn.CreateTable<Device> ();
@@ -98,26 +98,20 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
             return newPlayerCount;
         }
 
-        public int GetNextPlayerId () {
-            var maxList = conn.Query<PlayerCounter> ("select * from PlayerCounter");
-            int newPlayerCount = 1;
-            if (maxList.Count > 1) {
-                throw new ApplicationException ("More than one player counter found!");
-            } else if (maxList.Count == 1) {
-                newPlayerCount = maxList[0].Count + 1;
-                conn.Query<int> ("update PlayerCounter set PlayerCount = ?", newPlayerCount);
-            } else {
-                conn.Query<int> ("insert into PlayerCounter values (?)", newPlayerCount);
-            }
-            return newPlayerCount;
-        }
-
         public T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new () {
             return conn.Find<T> (condition);
         }
 
-        public List<T> FindAll<T> (Expression<Func<T, bool>> condition) where T : new () {
-            return conn.Table<T> ().Where (condition).ToList ();
+        public List<T> FindAll<T> (Expression<Func<T, bool>> condition = null) where T : new () {
+            if (condition != null) {
+                return conn.Table<T> ().Where (condition).ToList ();
+            } else {
+                return conn.Table<T> ().ToList ();
+            }
+        }
+
+        public GameConfig InsertGameConfig (GameConfig gameConfig) {
+            return InsertOrUpdate (gameConfig);
         }
 
         public Assist InsertAssist (Assist assist) {

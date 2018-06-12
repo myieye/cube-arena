@@ -168,8 +168,13 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 
 		public List<List<int>> CreatePlayerRounds (List<NetworkPlayer> players, List<List<DeviceConfig>> deviceRoundConfigs) {
 
+			var gameConfig = new GameConfig {
+				NumberOfPlayers = players.Count,
+					NumberOfRounds = deviceRoundConfigs.Count
+			};
+			int gameConfigId = db.InsertGameConfig (gameConfig).Id;
+
 			var gamePlayerRoundIds = new List<List<int>> ();
-			int gameConfigId = db.GetNextId<GameConfigCounter> ();
 
 			for (int r = 0; r < deviceRoundConfigs.Count; r++) {
 
@@ -201,7 +206,11 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		}
 
 		public List<GameConfig> FindGameConfigs (int max = int.MaxValue) {
-			var counter = db.FindAll<PlayerCounter> ((pc) => true).FirstOrDefault ();
+			return db.FindAll<GameConfig> ()
+				.OrderByDescending (gc => gc.Created)
+				.Take (max).ToList ();
+
+			/*var counter = db.FindAll<PlayerCounter> ((pc) => true).FirstOrDefault ();
 			var gameConfigCount = counter != null ? counter.Count : 0;
 			var minGameConfigId = (gameConfigCount - max) + 1;
 
@@ -209,11 +218,11 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			return playerRounds.GroupBy (pr => pr.GameConfigId)
 				.OrderByDescending (gameConfig => gameConfig.First ().GameConfigId)
 				.Select (gameConfig => new GameConfig {
-					gameConfigId = gameConfig.First ().GameConfigId,
-						numPlayers = gameConfig.Max (pr => pr.PlayerId) - gameConfig.Min (pr => pr.PlayerId) + 1,
-						numRounds = gameConfig.Max (pr => pr.RoundNum)
-					/*, lastRound = db.FindMaxRoundForGam*/
-				}).ToList ();
+					Id = gameConfig.First ().GameConfigId,
+						NumberOfPlayers = gameConfig.Max (pr => pr.PlayerId) - gameConfig.Min (pr => pr.PlayerId) + 1,
+						NumberOfRounds = gameConfig.Max (pr => pr.RoundNum)
+					//, lastRound = db.FindMaxRoundForGam
+				}).ToList ();*/
 		}
 
 		public List<List<PlayerRound>> FindPlayerRoundsForGame (int gameConfigId) {

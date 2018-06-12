@@ -21,14 +21,14 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
             return nextIds[t]++;
         }
 
-        public int GetNextPlayerId () {
-            return nextPlayerId++;
-        }
-
         public T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new () {
             var t = typeof (T);
             CheckLists (t);
             return (T) entities[t].FirstOrDefault (e => condition.Compile () ((T) e));
+        }
+
+        public GameConfig InsertGameConfig (GameConfig gameConfig) {
+            return Insert (gameConfig);
         }
 
         public Assist InsertAssist (Assist assist) {
@@ -119,8 +119,8 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
 
         public void OnDestroy () { }
 
-        public List<T> FindAll<T> (Expression<Func<T, bool>> condition) where T : new () {
+        public List<T> FindAll<T> (Expression<Func<T, bool>> condition = null) where T : new () {
             return new List<T> ();
-        }  
+        }
     }
 }

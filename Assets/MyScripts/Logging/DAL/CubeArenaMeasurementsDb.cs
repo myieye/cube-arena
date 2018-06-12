@@ -10,9 +10,9 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
         
         void OnDestroy ();
         int GetNextId<T> () where T : Counter, new ();
-        int GetNextPlayerId ();
         T Find<T> (Expression<Func<T, bool>> condition) where T : BaseEntity, new ();
-        List<T> FindAll<T> (Expression<Func<T, bool>> condition) where T : new ();
+        List<T> FindAll<T> (Expression<Func<T, bool>> condition = null) where T : new ();
+        GameConfig InsertGameConfig(GameConfig gameConfig);
         Assist InsertAssist (Assist assist);
         PlayerRound InsertPlayerRound (PlayerRound playerRound);
         Placement InsertPlacement (Placement placement);
