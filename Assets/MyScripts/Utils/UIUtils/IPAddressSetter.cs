@@ -8,6 +8,9 @@ using Settings_CA = CubeArena.Assets.MyScripts.Utils.Settings.Settings;
 namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
     public class IPAddressSetter : MonoBehaviour {
 
+        [SerializeField]
+        private GameObject cursor;
+
         public static IPAddressSetter Instance { get; private set; }
 
         private string ipPath;
@@ -31,8 +34,10 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
 
         private void PresentIPKeyboard () {
             var ipAddress = Settings_CA.Instance.ServerIp;
-            savedCursorActiveness = !SimpleSinglePointerSelector.Instance.Cursor.gameObject.activeSelf;
-            SimpleSinglePointerSelector.Instance.Cursor.gameObject.SetActive (true);
+            savedCursorActiveness = cursor.activeSelf;
+            cursor.SetActive (true);
+
+            Keyboard.Instance.gameObject.SetActive (true);
 
             Keyboard.Instance.Close ();
             Keyboard.Instance.PresentKeyboard (ipAddress, Keyboard.LayoutType.Alpha);
@@ -44,7 +49,8 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
         }
 
         private void OnTextSubmitted (object sender, EventArgs e) {
-            SimpleSinglePointerSelector.Instance.Cursor.gameObject.SetActive (savedCursorActiveness);
+            cursor.SetActive (savedCursorActiveness);
+            Keyboard.Instance.gameObject.SetActive (false);
 
             var newIpAddress = Keyboard.Instance.InputField.text;
             Debug.Log ("OnTextSubmitted: " + newIpAddress);
