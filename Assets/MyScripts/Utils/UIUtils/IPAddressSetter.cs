@@ -40,6 +40,8 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
                     writer.Write (Settings_CA.Instance.ServerIp);
                 }
             }
+            
+            Keyboard.Instance.OnTextSubmitted += OnTextSubmitted;
         }
 
         public void OpenIPAddressSetter () {
@@ -59,7 +61,6 @@ namespace CubeArena.Assets.MyScripts.Utils.UIUtils {
             Keyboard.Instance.RepositionKeyboard (transform, null, 0.045f);
 
             Keyboard.Instance.SubmitOnEnter = true;
-            Keyboard.Instance.OnTextSubmitted += OnTextSubmitted;
         }
 
         private void OnTextSubmitted (object sender, EventArgs e) {
