@@ -18,9 +18,10 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		public static bool IsServer { get; private set; }
 
-		public void Start () {
+		private void Start () {
+
 			InitializeNetwork ();
-			
+
 #if !UNITY_EDITOR
 			networkAddress = Settings.Instance.ServerIp;
 #endif
@@ -102,7 +103,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		void InitializeNetwork () {
-			var myConfig = new ConnectionConfig ();
+			customConfig = true;
+
+			var myConfig = connectionConfig;
 			myConfig.AddChannel (QosType.Reliable);
 			myConfig.AddChannel (QosType.Unreliable);
 			myConfig.AddChannel (QosType.StateUpdate);
@@ -120,8 +123,10 @@ namespace CubeArena.Assets.MyScripts.Network {
 			myConfig.AcksType = ConnectionAcksType.Acks128;
 			myConfig.MaxSentMessageQueueSize = 256;
 			myConfig.AckDelay = 1;
-			HostTopology myTopology = new HostTopology (myConfig, 7); //up to 4 connection allowed 
-			NetworkServer.Configure (myTopology);
+
+			//HostTopology myTopology = new HostTopology (myConfig, 4); //up to 4 connection allowed 
+			//NetworkServer.Configure (myTopology);
+			//client.Configure (myTopology);
 		}
 	}
 }
