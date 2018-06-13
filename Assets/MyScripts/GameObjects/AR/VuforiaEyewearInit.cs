@@ -15,6 +15,10 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 #endif
         }
 
+        /*void Start () {
+            Screen.SetResolution(1280, 720, true);
+        }*/
+
         void OnVuforiaInitialized () {
 #if UNITY_WSA
             DigitalEyewearARController.Instance.SetEyewearType (DigitalEyewearARController.EyewearType.OpticalSeeThrough);
