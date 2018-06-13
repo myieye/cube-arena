@@ -119,7 +119,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected virtual void Update () {
-			if (!hasAuthority) return;
+			if (!hasAuthority) {
+				cursorRenderer.enabled = ARManager.WorldEnabled;
+				return;
+			}
 
 			if (Raycasting) {
 				UpdateRaycast ();
