@@ -29,9 +29,11 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             }
         }
         private static bool matricesInitialized = false;
-        private static int matricesUpdateFrame = -1;
+        //private static long matricesUpdateFrame = -1;
         private static Matrix4x4 localToWorldMatrix;
         private static Matrix4x4 worldToLocalMatrix;
+
+        //private static long fixedFrameCount = 0;
 
         void Start () {
             Ground = GameObject.Find (Names.Ground).GetComponent<BoxCollider> ();
@@ -51,18 +53,23 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             IsInitialized = true;
         }
 
+        /*private void FixedUpdate () {
+            fixedFrameCount++;
+        }*/
+
         private static void CheckTransformMatricesReady () {
             // Only the HoloLens needs to repeatedly compute the matrices.
 #if !UNITY_WSA || UNITY_EDITOR
             if (matricesInitialized) return;
 #endif
-            if (matricesUpdateFrame == Time.frameCount) return;
+            // TODO: Optimize without breaking.
+            //if (matricesUpdateFrame == fixedFrameCount) return;
 
             localToWorldMatrix = Matrix4x4.TRS (World.position, World.rotation,
                 Vector3.one * (LocalRadius / ServerRadius));
             worldToLocalMatrix = localToWorldMatrix.inverse;
             matricesInitialized = true;
-            matricesUpdateFrame = Time.frameCount;
+            //matricesUpdateFrame = fixedFrameCount;
         }
 
         public override void OnStartClient () {

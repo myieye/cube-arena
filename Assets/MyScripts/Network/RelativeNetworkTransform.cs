@@ -92,7 +92,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         public void ResetTarget () {
             localTargetState = GetCurrentState ();
-            serverTargetState = CalcStateInServerCoordinates ();
+            serverTargetState = localTargetState.ToServer (mode == NetworkTransformMode.Rigidbody);
         }
 
         protected bool Init () {
@@ -132,10 +132,6 @@ namespace CubeArena.Assets.MyScripts.Network {
             }
         }
 
-        /**
-        Testing fix for problem: HoloLens constantly Lerps to targetState, which is a fixed state,
-            Not a local state. It actually needs to save the target and reconvert on every fixed update.
-         */
         protected virtual void FixedUpdate () {
             if (!sendUpdates || IsSender || !isInitialized) {
                 return;
@@ -143,14 +139,13 @@ namespace CubeArena.Assets.MyScripts.Network {
 
             if (wasSenderInLastFrame) {
                 wasSenderInLastFrame = false;
-                
+                ResetTarget ();
+            } else {
+#if UNITY_WSA && !UNITY_EDITOR
+                localTargetState = serverTargetState.ToLocal (mode == NetworkTransformMode.Rigidbody);
+#endif
             }
 
-#if UNITY_WSA && !UNITY_EDITOR
-            localTargetState = serverTargetState.ToLocal (mode == NetworkTransformMode.Rigidbody);
-#endif
-
-            // TODO: Try not lerping
             switch (mode) {
                 case NetworkTransformMode.Rigidbody:
                     if (!rb) return;

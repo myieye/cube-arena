@@ -36,6 +36,10 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             return TransformUtil.Transform (TransformDirection.ServerToLocal, rotation);
         }
 
+        public static RigidbodyState ToServer (this RigidbodyState rbs, bool transformVelocity) {
+            return TransformUtil.Transform (TransformDirection.LocalToServer, ref rbs, transformVelocity);
+        }
+
         public static RigidbodyState ToLocal (this RigidbodyState rbs, bool transformVelocity) {
             return TransformUtil.Transform (TransformDirection.ServerToLocal, ref rbs, transformVelocity);
         }
