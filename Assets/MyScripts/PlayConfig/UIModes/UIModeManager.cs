@@ -115,6 +115,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (uiModeList) {
 				uiModeList.SetVisible (false || isServer);
 			}
+			if (controls) {
+				controls.SetActive (false);
+			}
 		}
 
 		private void TryRegisterUIModeMessageHandler () {
