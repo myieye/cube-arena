@@ -71,7 +71,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
 
 		private GameObject SpawnPlayerCursor (Transform startPos, NetworkPlayer netPlayer) {
 			// The start position is used for calculating area interactions
-			var cursor = Instantiate (cursorPrefab, startPos.position, startPos.rotation);
+			var cursor = Instantiate (cursorPrefab, startPos.position + (Vector3.up * 3), startPos.rotation);
 
 			var transparentColor = Highlight.ReduceTransparency (netPlayer.Color.value, Highlight.CursorTransparency);
 			cursor.GetComponent<Colourer> ().color = transparentColor;
