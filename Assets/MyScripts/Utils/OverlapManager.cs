@@ -27,7 +27,7 @@ namespace CubeArena.Assets.MyScripts.Utils {
 		}
 
 		public virtual void OnTriggerExit (Collider col) {
-			if (!OwnCollider(col) &&HasMatchingTag (col.gameObject)) {
+			if (!OwnCollider(col) && HasMatchingTag (col.gameObject)) {
 				touchedObjects.Remove (col.gameObject);
 			}
 		}
