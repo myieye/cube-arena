@@ -81,8 +81,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			enemy.GetComponent<Enemy> ().enabled = true;
 			enemy.GetComponent<ARRelativeNetworkTransform> ().enabled = true;
 			enemy.GetComponent<RandomAgentNavigation> ().enabled = true;
-			foreach (var c in enemy.GetComponentsInChildren<Collider> ())
-				c.isTrigger = false;
+			foreach (var c in enemy.GetComponentsInChildren<Collider> ()) {
+				if (!(c is CapsuleCollider)) {
+					c.isTrigger = false;
+				}
+			}
 			foreach (var r in enemy.GetComponentsInChildren<Renderer> ())
 				r.enabled = true;
 			enemySpawnList.Remove (enemy);
