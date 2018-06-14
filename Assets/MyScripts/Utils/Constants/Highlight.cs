@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
 	public static class Highlight {
-		public const float HoverHighlight = 0.8f;
-		public const float SelectHighlight = 0.6f;
+		public const float HoverHighlight = 0.2f;
+		public const float SelectHighlight = 0.4f;
 		public const float DisallowHighlight = 0.4f;
 		public const float CursorTransparency = 0.2f;
 
