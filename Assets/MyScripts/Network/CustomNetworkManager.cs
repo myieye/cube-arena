@@ -30,6 +30,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 				NetworkTransform_CA.HandleTransform_CA);
 			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA2,
 				NetworkTransform_CA2.HandleTransform_CA2);
+			NetworkServer.RegisterHandler (MessageIds.RelativeNetworkTransform_Server,
+				RelativeNetworkTransform.HandleRelativeNetworkTransform_Server);
 		}
 
 		public override void OnServerDisconnect (NetworkConnection conn) {
@@ -74,6 +76,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 			Added extra message.
 		 */
 		public override void OnClientConnect (NetworkConnection conn) {
+			client.RegisterHandler (MessageIds.RelativeNetworkTransform_Client,
+				RelativeNetworkTransform.HandleRelativeNetworkTransform_Client);
+
 			if (!clientLoadedScene) {
 				// Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
 				ClientScene.Ready (conn);

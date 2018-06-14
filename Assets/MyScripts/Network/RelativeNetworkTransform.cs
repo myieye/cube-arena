@@ -64,8 +64,11 @@ namespace CubeArena.Assets.MyScripts.Network {
         private Vector3 startPosition;
         private Quaternion startRotation;
 
-        private long nextMessageId = 0;
-        private long prevMessageId = -1;
+        private int nextMessageId = 0;
+        private int prevMessageId = -1;
+
+        private NetworkWriter transformWriter;
+        private static NetworkWriter serverTransformWriter;
 
         protected virtual void Awake () {
             agent = GetComponent<NavMeshAgent> ();
@@ -81,6 +84,11 @@ namespace CubeArena.Assets.MyScripts.Network {
                 mode = NetworkTransformMode.Rigidbody;
             } else {
                 mode = NetworkTransformMode.Transform;
+            }
+
+            transformWriter = new NetworkWriter ();
+            if (isServer) {
+                serverTransformWriter = new NetworkWriter ();
             }
         }
 
@@ -169,17 +177,89 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         void TransmitSync () {
             var relativeRbs = CalcStateInServerCoordinates ();
-            CmdSyncPosition (relativeRbs, nextMessageId++);
+            //CmdSyncPosition (relativeRbs, nextMessageId++);
+            SendTransformToServer (relativeRbs, nextMessageId++);
+        }
+
+        private void SendTransformToServer (RigidbodyState rigidbodyState, int messageId) {
+            transformWriter.StartMessage (MessageIds.RelativeNetworkTransform_Server);
+            transformWriter.Write (netId);
+            transformWriter.Write (messageId);
+            transformWriter.Write (mode == NetworkTransformMode.Rigidbody);
+            transformWriter.Write (rigidbodyState.position);
+            transformWriter.Write (rigidbodyState.rotation);
+            if (mode == NetworkTransformMode.Rigidbody) {
+                transformWriter.Write (rigidbodyState.velocity);
+                transformWriter.Write (rigidbodyState.angularVelocity);
+            }
+            transformWriter.FinishMessage ();
+            ClientScene.readyConnection.SendWriter (transformWriter, Channels.DefaultUnreliable);
         }
 
         // TODO: Don't call and see if Command without authority errors show up.
         [Command]
-        private void CmdSyncPosition (RigidbodyState rigidbodyState, long messageId) {
+        private void CmdSyncPosition (RigidbodyState rigidbodyState, int messageId) {
             RpcBroadcastPosition (rigidbodyState, messageId);
         }
 
+        public static void HandleRelativeNetworkTransform_Server (NetworkMessage netMsg) {
+            var reader = netMsg.reader;
+            NetworkInstanceId netId = reader.ReadNetworkId ();
+            GameObject foundObj = NetworkServer.FindLocalObject (netId);
+
+            if (foundObj == null) {
+                Debug.LogError ("HandleRelativeNetworkTransform_Server no gameObject");
+                return;
+            }
+
+            serverTransformWriter.StartMessage (MessageIds.RelativeNetworkTransform_Client);
+            serverTransformWriter.Write (netId);
+            serverTransformWriter.Write (reader.ReadInt32 ());
+            var isRigidbody = reader.ReadBoolean ();
+            serverTransformWriter.Write (isRigidbody);
+            serverTransformWriter.Write (reader.ReadVector3 ());
+            serverTransformWriter.Write (reader.ReadQuaternion ());
+            if (isRigidbody) {
+                serverTransformWriter.Write (reader.ReadVector3 ());
+                serverTransformWriter.Write (reader.ReadVector3 ());
+            }
+            serverTransformWriter.FinishMessage ();
+
+            NetworkServer.SendWriterToReady (foundObj, serverTransformWriter, Channels.DefaultUnreliable);
+        }
+
         [ClientRpc]
-        private void RpcBroadcastPosition (RigidbodyState rbs, long messageId) {
+        private void RpcBroadcastPosition (RigidbodyState rbs, int messageId) {
+            UpdatePosition (rbs, messageId);
+        }
+
+        public static void HandleRelativeNetworkTransform_Client (NetworkMessage netMsg) {
+            var reader = netMsg.reader;
+            NetworkInstanceId netId = reader.ReadNetworkId ();
+
+            GameObject localObject = ClientScene.FindLocalObject (netId);
+
+            if (localObject == null) {
+                Debug.LogError ("HandleRelativeNetworkTransform_Client no gameObject");
+                return;
+            }
+
+            var messageId = reader.ReadInt32 ();
+            var isRigidbody = reader.ReadBoolean ();
+            var rbs = new RigidbodyState () {
+                position = reader.ReadVector3 (),
+                rotation = reader.ReadQuaternion ()
+            };
+
+            if (isRigidbody) {
+                rbs.velocity = reader.ReadVector3 ();
+                rbs.angularVelocity = reader.ReadVector3 ();
+            }
+
+            localObject.GetComponent<RelativeNetworkTransform> ().UpdatePosition (rbs, messageId);
+        }
+
+        private void UpdatePosition (RigidbodyState rbs, int messageId) {
             if (IsSender || !isInitialized || messageId < prevMessageId) return;
 
             prevMessageId = messageId;
