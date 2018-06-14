@@ -1,4 +1,6 @@
-﻿#if UNITY_CHANGE1 || UNITY_CHANGE2 || UNITY_CHANGE3
+﻿#if UNITY_EDITOR
+
+#if UNITY_CHANGE1 || UNITY_CHANGE2 || UNITY_CHANGE3
 #warning UNITY_CHANGE has been set manually
 #elif UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 #define UNITY_CHANGE1
@@ -149,3 +151,5 @@ public class TestReporter : MonoBehaviour
 	}
 
 }
+
+#endif
