@@ -69,7 +69,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected override void StartMove (GameObject cube) {
 			var box = cube.GetComponent<BoxCollider> ();
 			cubeRadius = (box.size.x * cube.transform.lossyScale.x) / 2;
-			Debug.Log ("cubeRadius:" + cubeRadius);
 			
 			SelectCubeOnNetwork (cube);
 		}
