@@ -76,7 +76,6 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
 
         public virtual void OnNavigationUpdated (NavigationEventData eventData) {
             if (isRotatingCube) {
-                //Debug.Log ("NormalizedOffset: " + eventData.NormalizedOffset);
                 var horizontal = eventData.NormalizedOffset.x * Settings.Instance.AxisSensitivity;
                 var vertical = -(eventData.NormalizedOffset.y * Settings.Instance.AxisSensitivity);
                 CrossPlatformInputManager.SetAxis (Axes.Horizontal, horizontal);
@@ -107,12 +106,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             CrossPlatformInputManager.SetButtonUp (Buttons.Select);
         }
 
-        public void OnInputClicked (InputClickedEventData eventData) {
-            InteractionSourceInfo kind;
-            if (eventData.InputSource.TryGetSourceKind (eventData.SourceId, out kind)) {
-                Debug.Log (kind);
-            }
-        }
+        public void OnInputClicked (InputClickedEventData eventData) { }
 
         private void ResetAxes () {
             CrossPlatformInputManager.SetAxis (Axes.Horizontal, 0);
