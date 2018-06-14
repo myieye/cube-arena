@@ -20,7 +20,9 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL.SQLite {
 
             CreateTablesIfNotExist ();
 
-            PrintTables (dumpTablesToConsole);
+            if (Settings.Instance.PrintDbTablesOnInit) {
+                PrintTables (dumpTablesToConsole);
+            }
 
             if (resetIfExists) {
                 DropTables ();

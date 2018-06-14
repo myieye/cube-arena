@@ -42,6 +42,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		bool LogDbVersion { get; }
 		bool ResetDebugDbOnStart { get; }
 		DatabaseVersion DefaultDatabaseVersion { get; }
+        bool PrintDbTablesOnInit { get; }
 		bool LogMeasurementsToConsole { get; }
 		bool ServerOnlyMeasurementLogging { get; }
 		int InteractionAreaGridSize { get; }

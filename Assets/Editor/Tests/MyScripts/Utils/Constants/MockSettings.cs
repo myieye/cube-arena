@@ -58,6 +58,7 @@ namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
         public bool LogDbVersion { get; set; }
         public bool ResetDebugDbOnStart { get; set; }
         public DatabaseVersion DefaultDatabaseVersion { get; set; }
+        public bool PrintDbTablesOnInit { get; set; }
         public bool LogMeasurementsToConsole { get; set; }
         public bool ServerOnlyMeasurementLogging { get; set; }
         public int InteractionAreaGridSize { get; set; }

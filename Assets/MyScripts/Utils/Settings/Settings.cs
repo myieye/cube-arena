@@ -157,6 +157,8 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 
 		[Header ("Measurements")]
 		[SerializeField]
+		private bool printDbTablesOnInit;
+		[SerializeField]
 		private bool logMeasurementsToConsole;
 		[SerializeField]
 		private bool logDbVersion;
@@ -302,6 +304,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		}
 		public DatabaseVersion DefaultDatabaseVersion {
 			get { return defaultDatabaseVersion; }
+		}
+		public bool PrintDbTablesOnInit {
+			get { return printDbTablesOnInit; }
 		}
 		public bool LogMeasurementsToConsole {
 			get { return logMeasurementsToConsole; }
