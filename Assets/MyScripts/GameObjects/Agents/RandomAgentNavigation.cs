@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.TransformUtils;
@@ -40,7 +41,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 
 			if (movingEnemy && !target) {
 				target = Instantiate (targetPrefab);
-				target.SetActive (false);
 			}
 
 			if (movingEnemy && isServer) {
@@ -57,6 +57,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 		void Update () {
 			Debug.DrawRay (agent.destination, Vector3.up, Color.blue, Mathf.Infinity);
 			Move ();
+			if (target) {
+				target.SetActive (ARManager.WorldEnabled);
+			}
 		}
 
 		private void Move () {
@@ -85,7 +88,6 @@ namespace CubeArena.Assets.MyScripts.GameObjects.Agents {
 			}
 
 			if (target) {
-				target.SetActive (true);
 				target.transform.rotation = TransformUtil.World.rotation;
 				target.transform.position = navMeshDestination.Value;
 			}
