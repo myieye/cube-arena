@@ -1,4 +1,5 @@
 ﻿using System;
+using CubeArena.Assets.MyScripts.GameObjects.AR;
 using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Attributes;
@@ -28,6 +29,9 @@ namespace CubeArena.Assets.MyScripts.Network {
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
         private float rotationThreshold = 1f;
+        [SerializeField]
+        [ConditionalField ("sendUpdates", true)]
+        private float maxWait = 2000;
         /*
         [SerializeField]
         [ConditionalField ("sendUpdates", true)]
@@ -50,7 +54,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         private bool wasSenderInLastFrame;
 
-        //private float wait = 0;
+        private float wait = 0;
         protected bool isInitialized;
         public bool IsSender {
             get {
@@ -121,14 +125,16 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         protected virtual void Update () {
-            if (!IsSender || !sendUpdates || !isInitialized) return;
+            if (!IsSender || !sendUpdates || !isInitialized || !ARManager.WorldEnabled) return;
 
             wasSenderInLastFrame = true;
 
-            //wait = Mathf.Lerp (wait, MaxWait, Time.deltaTime * interpolationSpeed);
             if (PastThreshold ()) {
                 TransmitSync ();
                 SaveState ();
+                wait = 0;
+            } else {
+                wait += Time.deltaTime;
             }
         }
 
@@ -182,6 +188,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 
             localTargetState = localRbs;
             serverTargetState = rbs;
+            wasSenderInLastFrame = false;
 
             switch (mode) {
                 /*case NetworkTransformMode.Rigidbody:
@@ -239,9 +246,17 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private bool PastThreshold () {
-            return
-            Vector3.Distance (transform.position, rbs.position) > positionThreshold ||
-                Quaternion.Angle (transform.rotation, rbs.rotation) > rotationThreshold;
+            if (wait > maxWait) {
+                return true;
+            }
+
+            if (TransformUtil.IsCentered) {
+                return Vector3.Distance (transform.position, rbs.position) > positionThreshold ||
+                    Quaternion.Angle (transform.rotation, rbs.rotation) > rotationThreshold;
+            } else {
+                return Vector3.Distance (transform.position.ToServer (), rbs.position) > positionThreshold ||
+                    Quaternion.Angle (transform.rotation.ToServer (), rbs.rotation) > rotationThreshold;
+            }
         }
 
         private RigidbodyState GetCurrentState () {
@@ -259,21 +274,31 @@ namespace CubeArena.Assets.MyScripts.Network {
         }
 
         private void SaveState () {
-            //wait = 0;
-            if (mode == NetworkTransformMode.Rigidbody && rb) {
-                rbs.position = rb.position;
-                rbs.rotation = rb.rotation;
-                rbs.velocity = rb.velocity;
-                rbs.angularVelocity = rb.angularVelocity;
+            if (TransformUtil.IsCentered) {
+                if (mode == NetworkTransformMode.Rigidbody && rb) {
+                    rbs.position = rb.position;
+                    rbs.rotation = rb.rotation;
+                    rbs.velocity = rb.velocity;
+                    rbs.angularVelocity = rb.angularVelocity;
+                } else {
+                    rbs.position = transform.position;
+                    rbs.rotation = transform.rotation;
+                }
             } else {
-                rbs.position = transform.position;
-                rbs.rotation = transform.rotation;
+                SaveServerState ();
             }
         }
 
-        /*
-        private float ScaleThreshold (float threshold) {
-            return threshold * (1 - (wait / MaxWait));
-        } */
+        private void SaveServerState () {
+            if (mode == NetworkTransformMode.Rigidbody && rb) {
+                rbs.position = rb.position.ToServer ();
+                rbs.rotation = rb.rotation.ToServer ();
+                rbs.velocity = rb.velocity.ToServerDirection ();
+                rbs.angularVelocity = rb.angularVelocity.ToServerDirection ();
+            } else {
+                rbs.position = transform.position.ToServer ();
+                rbs.rotation = transform.rotation.ToServer ();
+            }
+        }
     }
 }
