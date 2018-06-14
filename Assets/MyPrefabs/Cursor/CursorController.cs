@@ -20,7 +20,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		[SerializeField]
 		private float speed;
-
+		[SyncVar]
 		private bool showOnNetwork;
 
 		// Components ---
