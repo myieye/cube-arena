@@ -38,7 +38,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		protected override void Rotate () {
 			if (selectedRigidbody != null && HasSavedTorque ()) {
 				rotationWaitTime = 0;
-				var torque = savedTorque;// CalculateRotationTorque ();
+				var torque = savedTorque; // CalculateRotationTorque ();
 				selectedRigidbody.AddTorque (torque, ForceMode.VelocityChange);
 				CmdApplyTorqueOnNetwork (selectedRigidbody.gameObject, torque.ToServerDirection ());
 			}
@@ -122,8 +122,9 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override bool IsEndingRotate () {
-			return rotationWaitTime > Settings.Instance.RotationTimeout &&
-				selectedRigidbody.angularVelocity.magnitude < Settings.Instance.MinRotationVelocity;
+			return (!selectedRigidbody) ||
+				(rotationWaitTime > Settings.Instance.RotationTimeout &&
+					selectedRigidbody.angularVelocity.magnitude < Settings.Instance.MinRotationVelocity);
 		}
 
 		protected override Vector3 CalculateRotationTorque () {
@@ -150,5 +151,5 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			}
 			networkTransform.enabled = enabled;
 		}
-    }
+	}
 }
