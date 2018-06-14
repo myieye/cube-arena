@@ -173,7 +173,7 @@ public class Reporter : MonoBehaviour {
 	bool showFpsButton = true;
 	bool showSearchText = true;
 
-	string buildDate;
+	string buildDate = "";
 	string logDate;
 	float logsMemUsage;
 	float graphMemUsage;
