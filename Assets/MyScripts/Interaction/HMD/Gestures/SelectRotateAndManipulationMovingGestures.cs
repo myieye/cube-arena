@@ -12,8 +12,8 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
         protected bool isManipulating;
         private bool resetAfterMove;
 
-        private const float minScale = 2.5f;
-        private const float maxScale = 5.0f;
+        private const float minScale = 2f;
+        private const float maxScale = 6.0f;
         private Vector3 prevCumulativeDelta;
         private Vector3 prevScaledCumulativeDelta;
         private float maxDetectedMagnitude = 0.000001f;
