@@ -2181,9 +2181,9 @@ MonoBehaviour:
   sendUpdates: 1
   movementInterpolation: 0
   rotationInterpolation: 0
-  positionThreshold: 10
+  positionThreshold: 2
   rotationThreshold: 10
-  maxWait: 2000
+  maxWait: 3
 --- !u!114 &114215491181903306
 MonoBehaviour:
   m_ObjectHideFlags: 1

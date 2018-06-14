@@ -356,6 +356,7 @@ MonoBehaviour:
   rotationInterpolation: 0.2
   positionThreshold: 0.6
   rotationThreshold: 3
+  maxWait: 2
 --- !u!114 &114366437682871960
 MonoBehaviour:
   m_ObjectHideFlags: 1
