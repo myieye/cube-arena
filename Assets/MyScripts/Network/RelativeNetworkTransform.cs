@@ -47,8 +47,10 @@ namespace CubeArena.Assets.MyScripts.Network {
         private Rigidbody rb;
         private RigidbodyState savedRbs = new RigidbodyState ();
         private RigidbodyState localTargetState = new RigidbodyState ();
+#if UNITY_WSA && !UNITY_EDITOR
         private RigidbodyState serverTargetState = new RigidbodyState ();
-        
+#endif
+
         private NavMeshAgent agent;
         private int navMeshMissCount;
         // ---
@@ -96,7 +98,9 @@ namespace CubeArena.Assets.MyScripts.Network {
 
         public void ResetTarget () {
             localTargetState = RigidbodyStateUtil.BuildRigidbodyState (transform, rb, SyncVelocity);
+#if UNITY_WSA && !UNITY_EDITOR
             serverTargetState = localTargetState.ToServer (mode == NetworkTransformMode.Rigidbody);
+#endif
         }
 
         protected bool Init () {
@@ -110,12 +114,16 @@ namespace CubeArena.Assets.MyScripts.Network {
                     break;
                 case NetworkTransformMode.Rigidbody:
                     localTargetState = rb.ToLocalState ();
+#if UNITY_WSA && !UNITY_EDITOR
                     serverTargetState = rb.ToServerState ();
+#endif
                     transform.MoveToLocal ();
                     break;
                 default:
                     localTargetState = transform.ToLocalState ();
+#if UNITY_WSA && !UNITY_EDITOR
                     serverTargetState = transform.ToServerState ();
+#endif
                     transform.MoveToLocal ();
                     break;
             }
@@ -181,7 +189,9 @@ namespace CubeArena.Assets.MyScripts.Network {
             wasSenderInLastFrame = false;
 
             localTargetState = localRbs;
+#if UNITY_WSA && !UNITY_EDITOR
             serverTargetState = serverRbs;
+#endif
 
             if (mode == NetworkTransformMode.Agent) {
                 UpdateAgentPosition (localTargetState);

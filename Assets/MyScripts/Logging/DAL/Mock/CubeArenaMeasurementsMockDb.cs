@@ -11,7 +11,6 @@ using UnityEngine;
 namespace CubeArena.Assets.MyScripts.Logging.DAL.Mock {
     public class CubeArenaMeasurementsMockDb : CubeArenaMeasurementsDb {
 
-        private int nextPlayerId = 1;
         private Dictionary<Type, List<BaseEntity>> entities = new Dictionary<Type, List<BaseEntity>> ();
         private Dictionary<Type, int> nextIds = new Dictionary<Type, int> ();
 
