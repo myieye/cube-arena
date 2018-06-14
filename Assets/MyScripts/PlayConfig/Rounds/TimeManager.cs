@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.Utils;
+using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -24,7 +25,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		void OnDisable () {
-			Debug.Log ("Time on disable: " + GetTimeText ());
+			if (Settings.Instance.ForceUserStudySettings) {
+				Debug.Log ("Time on disable: " + GetTimeText ());
+			}
 
 			Clear ();
 			OnRoundTimeRemainingChanged (roundTimeRemaining_S);

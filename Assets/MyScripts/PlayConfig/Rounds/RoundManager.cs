@@ -65,8 +65,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		void OnDisable () {
-			Debug.Log (string.Format ("Round on disable: {0}. PM: {1}. TP: {2}.",
-				currRound, InPracticeMode, InTestPhase));
+			if (Settings.Instance.ForceUserStudySettings) {
+				Debug.Log (string.Format ("Round on disable: {0}. PM: {1}. TP: {2}.",
+					currRound, InPracticeMode, InTestPhase));
+			}
 		}
 
 		public void OnRoundOver (bool force = false) {
@@ -124,9 +126,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 			if (!gameStarted) {
 				gameStarted = true;
 				CustomNetworkDiscovery.Instance.StopBroadcasting ();
-				Debug.LogFormat ("Starting game. Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
+				if (Settings.Instance.ForceUserStudySettings) {
+					Debug.LogFormat ("Starting game. Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
+				}
 			} else {
-				Debug.LogFormat ("Starting Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
+				if (Settings.Instance.ForceUserStudySettings) {
+					Debug.LogFormat ("Starting Round: {0}. PM: {1}. TP: {2}.", currRound, InPracticeMode, InTestPhase);
+				}
 			}
 		}
 
