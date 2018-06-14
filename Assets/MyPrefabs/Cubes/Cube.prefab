@@ -46,13 +46,11 @@ GameObject:
   - component: {fileID: 114288766872020012}
   - component: {fileID: 54618727065633808}
   - component: {fileID: 114525807228677854}
-  - component: {fileID: 114162078682063732}
   - component: {fileID: 208097920480794762}
   - component: {fileID: 114580346044469584}
   - component: {fileID: 114990484945501140}
   - component: {fileID: 114541207846551170}
   - component: {fileID: 114064981291196522}
-  - component: {fileID: 114879067907608222}
   m_Layer: 11
   m_Name: Cube
   m_TagString: Cube
@@ -323,27 +321,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fire: {fileID: 198732771120252670}
   burning: 0
---- !u!114 &114162078682063732
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 15
-  m_InterpolateMovement: 1
 --- !u!114 &114288766872020012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -440,7 +417,7 @@ MonoBehaviour:
   rotationInterpolation: 0.2
   positionThreshold: 0.01
   rotationThreshold: 1
-  maxWait: 2000
+  maxWait: 1
 --- !u!114 &114870904069057950
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,26 +435,6 @@ MonoBehaviour:
   - Fire
   - 2DTranslationPlane
   touchedObjects: []
---- !u!114 &114879067907608222
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1185236769734356}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7ced2518edc3b4185dc2319f355a7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 1
-  m_MovementTheshold: 0.001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 0
-  m_InterpolateMovement: 1
 --- !u!114 &114925533598605862
 MonoBehaviour:
   m_ObjectHideFlags: 1

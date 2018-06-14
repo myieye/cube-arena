@@ -2217,9 +2217,9 @@ MonoBehaviour:
   sendUpdates: 1
   movementInterpolation: 0
   rotationInterpolation: 0
-  positionThreshold: 10
+  positionThreshold: 2
   rotationThreshold: 10
-  maxWait: 2000
+  maxWait: 3
 --- !u!136 &136917956573300838
 CapsuleCollider:
   m_ObjectHideFlags: 1

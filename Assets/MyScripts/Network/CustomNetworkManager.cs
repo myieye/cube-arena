@@ -20,18 +20,11 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 		private void Start () {
 
-			InitializeNetwork ();
+			ConfigureNetwork ();
 
 #if !UNITY_EDITOR
 			networkAddress = Settings.Instance.ServerIp;
 #endif
-
-			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA,
-				NetworkTransform_CA.HandleTransform_CA);
-			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA2,
-				NetworkTransform_CA2.HandleTransform_CA2);
-			NetworkServer.RegisterHandler (MessageIds.RelativeNetworkTransform_Server,
-				RelativeNetworkTransform.HandleRelativeNetworkTransform_Server);
 		}
 
 		public override void OnServerDisconnect (NetworkConnection conn) {
@@ -39,10 +32,8 @@ namespace CubeArena.Assets.MyScripts.Network {
 		}
 
 		public override void OnStartServer () {
-			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA,
-				NetworkTransform_CA.HandleTransform_CA);
-			NetworkServer.RegisterHandler (MessageIds.CustomHandleTransform_CA2,
-				NetworkTransform_CA2.HandleTransform_CA2);
+			NetworkServer.RegisterHandler (MessageIds.RelativeNetworkTransform_Server,
+				RelativeNetworkTransformMessageHandler.HandleRelativeNetworkTransform_Server);
 
 			IsServer = true;
 		}
@@ -58,10 +49,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 
 			DeviceManager.Instance.RegisterConnectedDevice (
 				new ConnectedDevice (conn, playerControllerId, msg.Type, msg.Model));
-
-			/*if (Settings.Instance.AutoStartGame) {
-				FindObjectOfType<RoundManager> ().TriggerNewRound ();
-			}*/
 		}
 
 		override public void OnServerAddPlayer (NetworkConnection conn, short playerControllerId) {
@@ -77,7 +64,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 		 */
 		public override void OnClientConnect (NetworkConnection conn) {
 			client.RegisterHandler (MessageIds.RelativeNetworkTransform_Client,
-				RelativeNetworkTransform.HandleRelativeNetworkTransform_Client);
+				RelativeNetworkTransformMessageHandler.HandleRelativeNetworkTransform_Client);
 
 			if (!clientLoadedScene) {
 				// Ready/AddPlayer is usually triggered by a scene load completing. if no scene was loaded, then Ready/AddPlayer it here instead.
@@ -87,7 +74,6 @@ namespace CubeArena.Assets.MyScripts.Network {
 						Model = SystemInfo.deviceModel
 				};
 				ClientScene.AddPlayer (client.connection, 0, msg);
-				//UIModeManager.Instance<UIModeMAnager> ().uiModeManager.OnClientConnect ();
 			}
 
 			if (!IsServer) {
@@ -107,7 +93,7 @@ namespace CubeArena.Assets.MyScripts.Network {
 			UIModeList.Instance.SetEnabled (true);
 		}
 
-		void InitializeNetwork () {
+		void ConfigureNetwork () {
 			customConfig = true;
 
 			var myConfig = connectionConfig;
