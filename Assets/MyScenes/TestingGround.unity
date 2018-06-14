@@ -7609,7 +7609,7 @@ MonoBehaviour:
       type: 2}
   size: {x: 32, y: 32}
   maxSize: 20
-  numOfCircleToShow: 1
+  numOfCircleToShow: 3
   Initialized: 0
 --- !u!4 &384127162
 Transform:
@@ -20163,6 +20163,11 @@ Prefab:
         type: 2}
       propertyPath: InitialModule.startSize.scalar
       value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
       objectReference: {fileID: 0}
     - target: {fileID: 198683144361346596, guid: bb5629b3da4a94041980063474294c1e,
         type: 2}

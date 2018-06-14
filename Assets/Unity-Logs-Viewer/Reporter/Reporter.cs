@@ -258,7 +258,7 @@ public class Reporter : MonoBehaviour {
 
 	public Vector2 size = new Vector2 (32, 32);
 	public float maxSize = 20;
-	public int numOfCircleToShow = 3;
+	public int numOfCircleToShow = 1;
 	static string[] scenes;
 	string currentScene;
 	string filterText = "";

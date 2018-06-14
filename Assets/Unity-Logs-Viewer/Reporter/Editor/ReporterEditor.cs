@@ -74,6 +74,7 @@ public class ReporterModificationProcessor : UnityEditor.AssetModificationProces
 		static bool isCompiling = true;
 		static void Update()
 		{
+			/*
 			if (!EditorApplication.isCompiling && isCompiling) {
 				//Debug.Log("Finish Compile");
 				if (!Directory.Exists(Application.dataPath + "/StreamingAssets")) {
@@ -86,6 +87,7 @@ public class ReporterModificationProcessor : UnityEditor.AssetModificationProces
 			}
 
 			isCompiling = EditorApplication.isCompiling;
+			 */
 		}
 	}
 }
