@@ -22,23 +22,27 @@
             public static GameConfigManager Instance { get; private set; }
             public GameConfigMode Mode {
                 get {
+#if UNITY_EDITOR || UNITY_STANDALONE
                     if (gameConfigList.value == 0) {
                         return GameConfigMode.New;
                     } else {
                         return GameConfigMode.Old;
                     }
+#else
+                    return GameConfigMode.New;
+#endif
                 }
             }
 
             private List<GameConfig> gameConfigs;
 
             void Awake () {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
+                Instance = this;
+#else
                 Destroy (gameConfigList.gameObject);
                 Destroy (roundList.gameObject);
-                Destroy (this);
-#else
-                Instance = this;
+                //Destroy (this);
 #endif
             }
 
