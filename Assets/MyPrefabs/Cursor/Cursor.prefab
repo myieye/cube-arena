@@ -354,8 +354,8 @@ MonoBehaviour:
   sendUpdates: 1
   movementInterpolation: 0.2
   rotationInterpolation: 0.2
-  positionThreshold: 0.01
-  rotationThreshold: 1
+  positionThreshold: 0.6
+  rotationThreshold: 3
 --- !u!114 &114366437682871960
 MonoBehaviour:
   m_ObjectHideFlags: 1

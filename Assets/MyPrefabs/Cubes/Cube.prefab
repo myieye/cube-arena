@@ -440,6 +440,7 @@ MonoBehaviour:
   rotationInterpolation: 0.2
   positionThreshold: 0.01
   rotationThreshold: 1
+  maxWait: 2000
 --- !u!114 &114870904069057950
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -455,6 +456,7 @@ MonoBehaviour:
   ignoreList:
   - UI
   - Fire
+  - 2DTranslationPlane
   touchedObjects: []
 --- !u!114 &114879067907608222
 MonoBehaviour:
