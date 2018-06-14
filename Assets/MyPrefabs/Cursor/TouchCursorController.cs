@@ -41,10 +41,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
                 LerpLastTouchToCenter ();
             }
 
-            if (stateManager && stateManager.IsRotating ()) {
-                lastHit.point = stateManager.SelectedCube.Cube.transform.position;
-            }
-
             //if (!raycastSuccess) {
             // Set position on network
             //}
@@ -65,7 +61,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
         }
 
         protected override Vector3? GetRaycastOrigin () {
-            if (Input.touchCount > 0) {
+            if (Input.touchCount == 1) {
                 LastTouch = Input.GetTouch (0).position;
                 return LastTouch + currTouchOffset;
             }
