@@ -9,8 +9,10 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
     public class VuforiaEyewearInit : MonoBehaviour {
 
+#if !UNITY_STANDALONE
         [SerializeField]
         private TrackableBehaviour arWorldTrackableBehaviour;
+#endif
 
         void Awake () {
 #if !UNITY_STANDALONE
