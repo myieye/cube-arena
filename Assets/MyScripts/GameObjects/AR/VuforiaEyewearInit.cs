@@ -9,6 +9,9 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 
     public class VuforiaEyewearInit : MonoBehaviour {
 
+        [SerializeField]
+        private TrackableBehaviour arWorldTrackableBehaviour;
+
         void Awake () {
 #if !UNITY_STANDALONE
             VuforiaARController.Instance.RegisterVuforiaInitializedCallback (OnVuforiaInitialized);
@@ -25,7 +28,8 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
             DigitalEyewearARController.Instance.SetSeeThroughConfiguration (DigitalEyewearARController.SeeThroughConfiguration.HoloLens);
 #elif UNITY_ANDROID
             DigitalEyewearARController.Instance.SetEyewearType (DigitalEyewearARController.EyewearType.None);
-            VuforiaARController.Instance.SetWorldCenterMode (VuforiaARController.WorldCenterMode.FIRST_TARGET);
+            VuforiaARController.Instance.SetWorldCenterMode (VuforiaARController.WorldCenterMode.SPECIFIC_TARGET);
+            VuforiaARController.Instance.SetWorldCenter (arWorldTrackableBehaviour);
 #endif
         }
     }
