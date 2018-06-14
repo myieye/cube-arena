@@ -104,6 +104,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 
 		public CACursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
+		private static List<UIModeChangedListener> uiModeChangedListeners;
+
+		static UIModeManager () {
+			uiModeChangedListeners = new List<UIModeChangedListener> ();
+		}
 
 		private void OnEnable () {
 			InvokeRepeating ("TryRegisterUIModeMessageHandler", 0, 0.1f);
@@ -179,7 +184,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			uiModeList.RefreshSelectedUIMode ();
 			DisableAll ();
 			var inputMethod = CrossPlatformInputManager.ActiveInputMethod.Touch;
-			TwoDTranslationPlane.OnUIModeChanged (CurrentUIMode);
 
 			switch (mode) {
 				case UIMode.None:
@@ -234,6 +238,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				StandardCursorController.enabled = !InTouchMode;
 				TouchCursorController.enabled = InTouchMode;
 			}
+
+			NotifyUIModeChangesListeners ();
 		}
 
 		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
@@ -284,6 +290,26 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				HMD_SprayToggle.enabled = false;
 			}
 #endif
+		}
+
+		public static void RegisterUIModeChangedListener (UIModeChangedListener uiModeChangedListener) {
+			uiModeChangedListeners.Add (uiModeChangedListener);
+		}
+
+		public static void UnregisterUIModeChangedListener (UIModeChangedListener uiModeChangedListener) {
+			uiModeChangedListeners.Remove (uiModeChangedListener);
+		}
+
+		private void NotifyUIModeChangesListeners () {
+			for (var i = 0; i < uiModeChangedListeners.Count; i++) {
+				var listener = uiModeChangedListeners[i];
+				if (listener == null || !listener.gameObject) {
+					uiModeChangedListeners.RemoveAt (i);
+					i--;
+				} else {
+					listener.OnUIModeChanged (CurrentUIMode);
+				}
+			}
 		}
 
 		public static bool InUIMode (UIMode mode) {

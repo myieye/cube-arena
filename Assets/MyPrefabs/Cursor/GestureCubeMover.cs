@@ -52,7 +52,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 				if (stateManager.IsMoving ()) {
 					if (StartingYMove (out cube)) {
 						SetMoveState (MoveState.Y);
-					} else if (!moveState.Equals (MoveState.XZ) && base.IsStartingMove (out cube)) {
+					} else if (!moveState.Equals (MoveState.XZ) && base.IsStartingMove (out cube) && cubeRb) {
 						SetMoveState (MoveState.XZ);
 					}
 				}
@@ -125,10 +125,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 			if (moveState.Equals (MoveState.XZ)) {
 				cursor.Get.raycastLayerMask = Layers.TwoDTranslationPlaneMask;
-				TranslationPlane.transform.position = (Vector3.up * cubeRb.transform.position.y).ToLocal ();
+				TranslationPlane.transform.position = Vector3.up * 
+					Mathf.Max(cubeRb.transform.position.y - cubeRadius, 0.1f);
 			} else {
 				cursor.Get.raycastLayerMask = Layers.NotIgnoreRayCastMask;
-				TranslationPlane.transform.position = (Vector3.zero).ToLocal ();
+				TranslationPlane.transform.position = Vector3.down;
 				if (cubeRb != null) {
 					cubeRb.gameObject.layer = Layers.Default;
 				}
@@ -140,6 +141,15 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		public override void OnCubeDeselected (GameObject cube) {
 			SetMoveState (MoveState.None);
 			base.OnCubeDeselected (cube);
+		}
+
+		public override void OnUIModeChanged (UIMode mode) {
+			if (InGestureMode) {
+				cubeOffset = 0;
+			} else {
+				cubeOffset = 0.3f;
+			}
+			base.OnUIModeChanged (mode);
 		}
 	}
 }

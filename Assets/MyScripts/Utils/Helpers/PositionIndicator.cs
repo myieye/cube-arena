@@ -20,7 +20,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 		private CubeStateManager cubeState;
 		private Renderer rend;
 
-		public override void Start () {
+		protected override void Start () {
 			base.Start ();
 			boxCollider = transform.parent.GetComponentInChildren<BoxCollider> ();
 			cubeState = GetComponentInParent<CubeStateManager> ();

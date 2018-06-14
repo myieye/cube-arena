@@ -5,6 +5,7 @@ using CubeArena.Assets.MyScripts.Interaction;
 using CubeArena.Assets.MyScripts.Interaction.Abstract;
 using CubeArena.Assets.MyScripts.Interaction.Listeners;
 using CubeArena.Assets.MyScripts.Interaction.State;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Helpers;
@@ -14,14 +15,15 @@ using UnityEngine.Networking;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace CubeArena.Assets.MyPrefabs.Cursor {
-	public class RaycastCubeMover : AbstractCubeMover, OnCubeDeselectedListener {
+	public class RaycastCubeMover : AbstractCubeMover, CubeDeselectedListener, UIModeChangedListener {
 
 		[SerializeField]
 		[SyncVar]
 		private float dragDistanceThreshold = 1f;
 		[SerializeField]
-		private float cubeOffset = 0.5f;
+		protected float cubeOffset = 0.5f;
 		private float currOffset;
+		protected float cubeRadius = 1.2f;
 		protected Rigidbody cubeRb;
 		private NavMeshObstacle cubeNavObstacle;
 		private OverlapManager overlapManager;
@@ -35,6 +37,11 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			stateManager.AddOnCubeDeselectedListener (this);
 			cursor = new EnabledComponent<CursorController> (gameObject);
 			ResetOffset ();
+			UIModeManager.RegisterUIModeChangedListener (this);
+		}
+
+		private void OnDestroy () {
+			UIModeManager.UnregisterUIModeChangedListener (this);
 		}
 
 		protected override void Update () {
@@ -60,6 +67,10 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override void StartMove (GameObject cube) {
+			var box = cube.GetComponent<BoxCollider> ();
+			cubeRadius = (box.size.x * cube.transform.lossyScale.x) / 2;
+			Debug.Log ("cubeRadius:" + cubeRadius);
+			
 			SelectCubeOnNetwork (cube);
 		}
 
@@ -68,7 +79,15 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override void EndMove () {
+			EndMoveLocal ();
 			CmdDeselectMovingCube (stateManager.SelectedCube.Cube);
+		}
+
+		private void EndMoveLocal () {
+			if (cubeRb) {
+				DeselectCube (cubeRb.gameObject);
+				ResetOffset ();
+			}
 		}
 
 		protected override bool IsDisallowed () {
@@ -94,15 +113,21 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		[ClientRpc]
 		void RpcSelectCubeOnOtherClients (GameObject cube) {
-			if (!hasAuthority) {
-				SelectCube (cube);
+			if (!hasAuthority && cube) {
+				lock (this) {
+					SelectCube (cube);
+				}
 			}
 		}
 
 		private void SelectCube (GameObject cube) {
+			var rb = cube.GetComponent<Rigidbody> ();
+			if (cubeRb && !(rb == cubeRb)) {
+				DeselectCube (cubeRb.gameObject);
+			}
+			cubeRb = rb;
 			cube.layer = Layers.IgnoreRaycast;
 			cube.GetComponent<Collider> ().isTrigger = true;
-			cubeRb = cube.GetComponent<Rigidbody> ();
 			cubeRb.useGravity = false;
 			cubeRb.constraints = RigidbodyConstraints.FreezeRotation;
 			cubeNavObstacle = cube.GetComponent<NavMeshObstacle> ();
@@ -121,32 +146,39 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		[ClientRpc]
 		void RpcDeselectMovingCube (GameObject cube) {
-			lock (this) {
-				if (cubeRb != null && cube) {
-					cube.layer = Layers.Cubes;
-					cube.GetComponent<Collider> ().isTrigger = false;
-					cubeRb.constraints = RigidbodyConstraints.None;
-					cubeRb.useGravity = true;
-					cubeRb.velocity = Vector3.zero;
-					cubeRb = null;
-					ResetOffset ();
-					cubeNavObstacle.enabled = true;
-					cubeNavObstacle = null;
-
-					if (hasAuthority) {
-						overlapManager = null;
-					}
+			if (!hasAuthority && cube) {
+				lock (this) {
+					DeselectCube (cube);
 				}
 			}
 		}
 
-		void ResetOffset () {
-			currOffset = cubeOffset + 1;
+		private void DeselectCube (GameObject cube) {
+			cube.layer = Layers.Cubes;
+			cube.GetComponent<Collider> ().isTrigger = false;
+
+			var rb = cube.GetComponent<Rigidbody> ();
+			rb.constraints = RigidbodyConstraints.None;
+			rb.useGravity = true;
+			rb.velocity = Vector3.zero;
+			if (rb == cubeRb) {
+				cubeRb = null;
+			}
+
+			var no = cube.GetComponent<NavMeshObstacle> ();
+			no.enabled = true;
+			if (no == cubeNavObstacle) {
+				cubeNavObstacle = null;
+			}
+		}
+
+		protected virtual void ResetOffset () {
+			currOffset = cubeOffset + cubeRadius;
 		}
 
 		bool StuckInDisallow () {
 			return stateManager.InState (InteractionState.Disallowed) &&
-				cubeRb.velocity.magnitude < 2 &&
+				cubeRb.velocity.magnitude < 4 &&
 				overlapManager.HasOverlapWith (cursor.Get.GetAlignedWith ());
 		}
 
@@ -159,9 +191,14 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		public virtual void OnCubeDeselected (GameObject cube) {
-			if (cubeRb != null) {
+			if (cubeRb) {
+				EndMoveLocal ();
 				CmdDeselectMovingCube (cube);
 			}
+		}
+
+		public virtual void OnUIModeChanged (UIMode mode) {
+			ResetOffset ();
 		}
 	}
 }

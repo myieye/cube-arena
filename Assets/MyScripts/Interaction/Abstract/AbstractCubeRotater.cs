@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace CubeArena.Assets.MyScripts.Interaction.Abstract {
-	public abstract class AbstractCubeRotater : NetworkBehaviour, OnCubeDeselectedListener {
+	public abstract class AbstractCubeRotater : NetworkBehaviour, CubeDeselectedListener {
 
 		protected InteractionStateManager stateManager;
 		private bool isRotating;

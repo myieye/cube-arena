@@ -2,7 +2,7 @@ using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using UnityEngine;
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {
-    public class UIModeARObject : CustomARObject {
+    public class UIModeARObject : CustomARObject, UIModeChangedListener {
 
         [SerializeField]
         private UIMode activeUIMode;
@@ -12,12 +12,12 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
         private bool uiModeActive;
         private Renderer rend;
         private Collider coll;
-		public override bool ARActive {
-			set {
+        public override bool ARActive {
+            set {
                 base.ARActive = value;
                 Refresh ();
             }
-		}
+        }
 
         public void Awake () {
             rend = GetComponent<Renderer> ();
@@ -25,6 +25,11 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
             uiModeActive = false;
             ARActive = false;
             Refresh ();
+        }
+
+        protected override void Start () {
+            base.Start ();
+            UIModeManager.RegisterUIModeChangedListener (this);
         }
 
         public void OnUIModeChanged (UIMode mode) {
@@ -39,6 +44,10 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
             if (coll) {
                 coll.enabled = uiModeActive && ARActive;
             }
+        }
+
+        private void OnDestroy () {
+            UIModeManager.UnregisterUIModeChangedListener (this);
         }
     }
 }

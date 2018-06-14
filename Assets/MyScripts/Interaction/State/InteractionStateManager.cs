@@ -18,13 +18,13 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		public InteractionState State { get; private set; }
 		public CubeStatePair HoveredCube { get; private set; }
 		public CubeStatePair SelectedCube { get; private set; }
-		private List<OnCubeDeselectedListener> onCubeDeselectedListeners;
+		private List<CubeDeselectedListener> onCubeDeselectedListeners;
 		private InteractionState prevState = InteractionState.Idle;
 		private bool rotationIsLocked = false;
 		public bool MovingDisabled { get; set; }
 
 		public void Awake () {
-			onCubeDeselectedListeners = new List<OnCubeDeselectedListener> ();
+			onCubeDeselectedListeners = new List<CubeDeselectedListener> ();
 		}
 
 		public void Update () {
@@ -42,7 +42,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			}
 		}
 
-		public void AddOnCubeDeselectedListener (OnCubeDeselectedListener onCubeDeselectedListener) {
+		public void AddOnCubeDeselectedListener (CubeDeselectedListener onCubeDeselectedListener) {
 			onCubeDeselectedListeners.Add (onCubeDeselectedListener);
 		}
 
@@ -87,6 +87,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			if (rotationIsLocked) return;
 
 			FinishAnyMeasurements ();
+
 			if (HasSelection ()) {
 				if (!reselecting) {
 					Measure.LocalInstance.MadeSelection (SelectionActionType.Deselect);
@@ -99,12 +100,24 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		}
 
 		public bool StartMove (GameObject cube) {
-			if (MovingDisabled) {
+			if (MovingDisabled || InState (InteractionState.Disallowed)) {
 				return false;
 			}
 
 			FinishAnyMeasurements ();
 
+			if (HasSelection ()) {
+				if (!IsSelected (cube)) {
+					Deselect (true);
+					Select (cube);
+				}
+			} else {
+				Select (cube);
+			}
+
+			State = InteractionState.Moving;
+
+			/*
 			if (HasSelection () && !InState (InteractionState.Disallowed)) {
 				State = InteractionState.Moving;
 			} else if (IsHovering ()) {
@@ -114,6 +127,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 				Select (cube);
 				State = InteractionState.Moving;
 			}
+			 */
 
 			SelectedCube.StateManager.StartDrag ();
 			Measure.LocalInstance.StartMove (SelectedCube.Cube);
@@ -127,7 +141,9 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 		}
 
 		public void StartRotation () {
+
 			FinishAnyMeasurements ();
+			
 			if (IsMoving ()) {
 				if (InState (InteractionState.Disallowed)) {
 					Debug.LogError ("StartRotation while disallowed");
@@ -219,8 +235,11 @@ namespace CubeArena.Assets.MyScripts.Interaction.State {
 			if (InState (InteractionState.Moving)) {
 				Measure.LocalInstance.EndMove (SelectedCube.Cube);
 				Debug.LogWarning ("FinishAnyMeasurements.EndMove");
+				//Debug.Log (UnityEngine.StackTraceUtility.ExtractStackTrace ());
 			} else if (IsRotating ()) {
 				Measure.LocalInstance.EndRotation (SelectedCube.Cube);
+				Debug.LogWarning ("FinishAnyMeasurements.EndRotation");
+				//Debug.Log (UnityEngine.StackTraceUtility.ExtractStackTrace ());
 			}
 		}
 	}

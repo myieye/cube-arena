@@ -8,7 +8,7 @@ using UnityEngine;
 namespace CubeArena.Assets.MyScripts.Utils.Helpers {
 	public class HideIfNotAR : CustomARObject {
 
-		public override void Start () {
+		protected override void Start () {
 			base.Start();
 			GetComponent<Renderer> ().enabled = !Settings.Settings.Instance.AREnabled;
 		}
