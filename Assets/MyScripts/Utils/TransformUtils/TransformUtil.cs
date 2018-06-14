@@ -53,12 +53,11 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
             IsInitialized = true;
         }
 
-        /*private void FixedUpdate () {
-            fixedFrameCount++;
-        }*/
-
         private static void CheckTransformMatricesReady () {
             // Only the HoloLens needs to repeatedly compute the matrices.
+            // TODO: Test always refreshing
+            // Then log all Fixed updates and Updates.
+            // And maybe : public virtual void OnStopAuthority();
 #if !UNITY_WSA || UNITY_EDITOR
             if (matricesInitialized) return;
 #endif
@@ -155,6 +154,7 @@ namespace CubeArena.Assets.MyScripts.Utils.TransformUtils {
 
             var currServerPoint = TransformToServerCoordinates (transform.position);
 
+            // Should be ServerRadius?
             var max = LocalRadius - radius;
             var outOfBounds = false;
 
