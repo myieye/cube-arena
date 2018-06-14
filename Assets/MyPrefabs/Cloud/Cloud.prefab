@@ -230,3 +230,4 @@ MonoBehaviour:
   rotationInterpolation: 0
   positionThreshold: 1
   rotationThreshold: 10
+  maxWait: 2000

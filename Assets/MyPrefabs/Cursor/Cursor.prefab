@@ -508,8 +508,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprayPrefab: {fileID: 1321071089660636, guid: 9278d38a721021b4e9300379d09e942e,
     type: 2}
-  capacity: 50
-  rechargeSpeed: 2
+  capacity: 35
+  rechargeSpeed: 1.1
   cooldown: 15
 --- !u!114 &114783138639940740
 MonoBehaviour:

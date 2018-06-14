@@ -2118,7 +2118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   penaltyPerSlower: 0.01
-  minSpeed: 0.05
+  minSpeed: 0.03
 --- !u!114 &114538347110860040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2227,8 +2227,8 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
+  m_IsTrigger: 0
+  m_Enabled: 1
   m_Radius: 0.7
   m_Height: 3.3745146
   m_Direction: 1
@@ -2241,7 +2241,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 100000}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Speed: 0.1
   m_Acceleration: 1
   avoidancePriority: 50
