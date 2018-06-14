@@ -21,6 +21,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		[SerializeField]
 		private float speed;
 
+		private bool showOnNetwork;
+
 		// Components ---
 		private Renderer cursorRenderer;
 		protected Rigidbody cursorRb;
@@ -86,7 +88,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		public Vector3 TranslationPosition { get; set; }
 		// ---
 
-        public override void OnStartAuthority () {
+		public override void OnStartAuthority () {
 			Measure.LocalInstance.Cursor = new EnabledComponent<CursorController> (gameObject);
 		}
 
@@ -99,7 +101,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			arObj = GetComponent<CustomARObject> ();
 			stateManager = GetComponent<InteractionStateManager> ();
 
-			if (GetType() == typeof (CursorController) && UIModeManager.InTouchMode) {
+			if (GetType () == typeof (CursorController) && UIModeManager.InTouchMode) {
 				enabled = false;
 			}
 		}
@@ -120,7 +122,8 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected virtual void Update () {
 			if (!hasAuthority) {
-				cursorRenderer.enabled = ARManager.WorldEnabled;
+				cursorRenderer.enabled = (ARManager.WorldEnabled &&
+					(showOnNetwork || Settings.Instance.DebugCursor));
 				return;
 			}
 
@@ -131,6 +134,16 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			}
 
 			cursorRenderer.enabled = ShouldShowCursor ();
+
+			if (showOnNetwork != IsActive) {
+				showOnNetwork = IsActive;
+				CmdSetShowOnNetwork (showOnNetwork);
+			}
+		}
+
+		[Command]
+		private void CmdSetShowOnNetwork (bool showOnNetwork) {
+			this.showOnNetwork = showOnNetwork;
 		}
 
 		private void UpdateRaycast () {
@@ -223,7 +236,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		public GameObject GetAlignedWith () {
 			if (Raycasting && raycastSuccess) {
-				if (UIModeManager.InTouchMode && stateManager.HasSelection()) {
+				if (UIModeManager.InTouchMode && stateManager.HasSelection ()) {
 					var cube = stateManager.SelectedCube.Cube;
 					return RayUtil.FindGameObjectBelow (cube.transform, raycastLayerMask);
 				} else {
