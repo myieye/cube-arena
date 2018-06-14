@@ -276,7 +276,7 @@ public class Reporter : MonoBehaviour {
 		if (!Initialized)
 			Initialize ();
 	}
-	
+
 	void Start () {
 		SceneManager.sceneLoaded += OnSceneLoaded;
 		logDate = System.DateTime.Now.ToString ();
@@ -1865,7 +1865,7 @@ public class Reporter : MonoBehaviour {
 	//save user config
 	void OnApplicationQuit () {
 		PlayerPrefs.SetInt ("Reporter_currentView", (int) currentView);
-		PlayerPrefs.SetInt ("Reporter_show", (show == true) ? 1 : 0);
+		PlayerPrefs.SetInt ("Reporter_show", 0);
 		PlayerPrefs.SetInt ("Reporter_collapse", (collapse == true) ? 1 : 0);
 		PlayerPrefs.SetInt ("Reporter_clearOnNewSceneLoaded", (clearOnNewSceneLoaded == true) ? 1 : 0);
 		PlayerPrefs.SetInt ("Reporter_showTime", (showTime == true) ? 1 : 0);
@@ -1891,6 +1891,7 @@ public class Reporter : MonoBehaviour {
 
 	//read build information 
 	IEnumerator readInfo () {
+		/*
 		string prefFile = "build_info.txt";
 		string url = prefFile;
 
@@ -1914,6 +1915,7 @@ public class Reporter : MonoBehaviour {
 		} else {
 			buildDate = www.text;
 		}
+		 */
 
 		yield break;
 	}
