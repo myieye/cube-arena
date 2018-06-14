@@ -37,13 +37,11 @@
             private List<GameConfig> gameConfigs;
 
             void Awake () {
-#if UNITY_EDITOR || UNITY_STANDALONE
-                Instance = this;
-#else
+#if !(UNITY_EDITOR || UNITY_STANDALONE)
                 Destroy (gameConfigList.gameObject);
                 Destroy (roundList.gameObject);
-                //Destroy (this);
 #endif
+                Instance = this;
             }
 
             public void Refresh () {
