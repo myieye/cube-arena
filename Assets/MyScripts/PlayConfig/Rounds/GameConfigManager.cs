@@ -37,13 +37,11 @@
             private List<GameConfig> gameConfigs;
 
             void Awake () {
-#if UNITY_EDITOR || UNITY_STANDALONE
-                Instance = this;
-#else
+#if !(UNITY_EDITOR || UNITY_STANDALONE)
                 Destroy (gameConfigList.gameObject);
                 Destroy (roundList.gameObject);
-                //Destroy (this);
 #endif
+                Instance = this;
             }
 
             public void Refresh () {
@@ -51,6 +49,9 @@
             }
 
             public void OnSelectedGameConfigChanged () {
+#if !(UNITY_EDITOR || UNITY_STANDALONE)
+                return;
+#endif
                 roundList.gameObject.SetActive (gameConfigList.value > 0);
             }
 
@@ -66,6 +67,10 @@
             }
 
             private void InitGameConfigList () {
+#if !(UNITY_EDITOR || UNITY_STANDALONE)
+                return;
+#endif
+
                 gameConfigs = DataService.Instance.FindGameConfigs ();
                 gameConfigList.options = (
                     from gameConfig in gameConfigs select new Dropdown.OptionData (

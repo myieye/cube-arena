@@ -6,7 +6,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
         public static Vector2 CanvasRightBottom { get; private set; }
 
         static Positions() {
-           CanvasRightMiddle = new Vector2(-140, 280);
+           CanvasRightMiddle = new Vector2(-140, 330);
            CanvasRightBottom = new Vector2(-140, 140);
         }
     }

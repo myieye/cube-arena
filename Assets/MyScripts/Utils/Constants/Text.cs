@@ -1,5 +1,6 @@
 using System;
 using CubeArena.Assets.MyScripts.PlayConfig.Players;
+using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 
 namespace CubeArena.Assets.MyScripts.Utils.Constants {
     public static class Text {
@@ -11,8 +12,9 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
             Move = string.Format ("{0} {1}", InactiveText ("Spray"), ActiveText ("Move"));
         }
 
-        public static string PassToPlayerText (int playerNum) {
-            return string.Format ("Pass device to player: <size=60>{0}</size>", playerNum);
+        public static string PassToPlayerText (int playerNum, UIMode uiMode) {
+            return string.Format ("Pass device to player: <size=60>{0}</size>\n{1}",
+                playerNum, uiMode.GetShortDescription ());
         }
 
         public static string CubeName (NetworkPlayer player, int cubeNum) {
@@ -28,11 +30,11 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
         }
 
         private static string InactiveText (string text) {
-            return string.Format ("<size=20><color=#CCC>{0}</color></size>", text);
+            return string.Format ("<size=35><color=#CCC>{0}</color></size>", text);
         }
 
         private static string ActiveText (string text) {
-            return string.Format ("<b>{0}</b>", text);
+            return string.Format ("<size=45><color=#FFF><b>{0}</b></color></size>", text);
         }
     }
 }

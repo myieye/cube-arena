@@ -16,6 +16,10 @@ public class SpeechCommands : MonoBehaviour {
 	[SerializeField]
 	private ParticleSystem groundFlame;
 
+	private void Start () {
+		groundFlame.gameObject.SetActive (false);
+	}
+
 	public void ShiftWorldToCameraPosition () {
 		var blue = Color.blue;
 		blue.a = 0.4f;
@@ -76,11 +80,7 @@ public class SpeechCommands : MonoBehaviour {
 	}
 
 	public void ToggleGroundFlame () {
-		if (groundFlame.isPlaying) {
-			groundFlame.Stop ();
-		} else {
-			groundFlame.Play ();
-		}
+		groundFlame.gameObject.SetActive (!groundFlame.gameObject.activeSelf);
 	}
 
 	public void CancelNetworkSearch () {

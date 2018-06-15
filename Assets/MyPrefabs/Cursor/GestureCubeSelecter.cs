@@ -9,18 +9,18 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
     public class GestureCubeSelecter : OverlapCubeSelecter {
 
-        private TapDetecter tapDetecter;
+        private CachedComponent<TapDetecter> tapDetecter;
 
         protected override void Start () {
             base.Start ();
-            tapDetecter = FindObjectOfType<TapDetecter> ();
+            tapDetecter = new CachedComponent<TapDetecter> ();
         }
 
         protected override bool IsDeselecting () {
             if (!UIModeManager.InUIMode (UIMode.HHD3_Gestures)) {
                 return base.IsDeselecting ();
             } else {
-                return !selecting && tapDetecter.Tapped &&
+                return !selecting && tapDetecter.Is (t => t.Tapped) &&
                     !stateManager.InStates (InteractionState.Moving, InteractionState.Disallowed);
             }
         }

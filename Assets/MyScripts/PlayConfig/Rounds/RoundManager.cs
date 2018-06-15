@@ -112,16 +112,16 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 				return;
 			}
 
+			float roundDelay = 0;
 			if (IsTimeForNextUIMode ()) {
+				roundDelay = Settings.Instance.PassToPlayerTime;
 				PlayerManager.Instance.ConfigurePlayersForRound (currRound, deviceRoundConfigs[currRound - 1]);
-				UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (PlayerManager.Instance.Players);
-
-				timeManager.StartRound (RoundLength, Settings.Instance.PassToPlayerTime, this, InPracticeMode);
-				StartCoroutine (DelayUtil.Do (Settings.Instance.PassToPlayerTime, SpawnGameObjects));
-			} else {
-				timeManager.StartRound (RoundLength, 0, this, InPracticeMode);
-				SpawnGameObjects ();
 			}
+
+			StartCoroutine (DelayUtil.Do (roundDelay, SpawnGameObjects));
+			timeManager.StartRound (RoundLength, roundDelay, this, InPracticeMode);
+			UIModeManager.Instance<UIModeManager> ().SetPlayerUIModes (
+				PlayerManager.Instance.Players, roundDelay + 0.2f, IsTimeForNextUIMode ());
 
 			if (!gameStarted) {
 				gameStarted = true;

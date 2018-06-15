@@ -30,6 +30,7 @@ namespace CubeArena.Assets.MyScripts.Interaction.HMD.Gestures {
             base.OnManipulationStarted (eventData);
             if (isManipulating) {
                 CursorController.Raycasting = false;
+                CursorController.TranslationPosition = CursorController.transform.position;
                 absoluteTarget = CursorController.transform.position.ToServer ();
             }
         }

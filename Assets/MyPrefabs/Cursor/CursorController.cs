@@ -100,10 +100,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			cursorRb = GetComponent<Rigidbody> ();
 			arObj = GetComponent<CustomARObject> ();
 			stateManager = GetComponent<InteractionStateManager> ();
-
-			if (GetType () == typeof (CursorController) && UIModeManager.InTouchMode) {
-				enabled = false;
-			}
 		}
 
 		public void Refresh () {
