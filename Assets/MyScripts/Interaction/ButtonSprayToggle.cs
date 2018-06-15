@@ -11,6 +11,9 @@ namespace CubeArena.Assets.MyScripts.Interaction {
         void Awake () {
             toggleText = GetComponentInChildren<Text> ();
             toggleText.text = Utils.Constants.Text.Move;
+#if UNITY_WSA && !UNITY_EDITOR
+            GetComponent<RectTransform> ().sizeDelta = new Vector2 (150, 100);
+#endif
         }
 
         public override void ToggleState () {

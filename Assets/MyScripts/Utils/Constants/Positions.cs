@@ -5,9 +5,13 @@ namespace CubeArena.Assets.MyScripts.Utils.Constants {
         public static Vector2 CanvasRightMiddle { get; private set; }
         public static Vector2 CanvasRightBottom { get; private set; }
 
-        static Positions() {
-           CanvasRightMiddle = new Vector2(-140, 330);
-           CanvasRightBottom = new Vector2(-140, 140);
+        static Positions () {
+            CanvasRightMiddle = new Vector2 (-140, 330);
+            CanvasRightBottom = new Vector2 (-140, 140);
+                
+#if UNITY_WSA && !UNITY_EDITOR
+            CanvasRightBottom = new Vector2 (-105, 115);
+#endif
         }
     }
 }
