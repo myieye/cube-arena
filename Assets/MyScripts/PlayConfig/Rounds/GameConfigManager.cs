@@ -49,10 +49,9 @@
             }
 
             public void OnSelectedGameConfigChanged () {
-#if !(UNITY_EDITOR || UNITY_STANDALONE)
-                return;
-#endif
+#if UNITY_EDITOR || UNITY_STANDALONE
                 roundList.gameObject.SetActive (gameConfigList.value > 0);
+#endif
             }
 
             public List<List<PlayerRound>> GetSelectedGameConfig () {
@@ -67,10 +66,7 @@
             }
 
             private void InitGameConfigList () {
-#if !(UNITY_EDITOR || UNITY_STANDALONE)
-                return;
-#endif
-
+#if UNITY_EDITOR || UNITY_STANDALONE
                 gameConfigs = DataService.Instance.FindGameConfigs ();
                 gameConfigList.options = (
                     from gameConfig in gameConfigs select new Dropdown.OptionData (
@@ -80,6 +76,7 @@
                 gameConfigList.value = 0;
                 gameConfigList.RefreshShownValue ();
                 OnSelectedGameConfigChanged ();
+#endif
             }
 
             private string ToGameConfigString (GameConfig gameConfig) {

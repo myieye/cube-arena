@@ -102,7 +102,7 @@ namespace UnityEngine.Networking {
 
         public CharacterController characterContoller { get { return m_CharacterController; } }
         public Rigidbody rigidbody3D { get { return m_RigidBody3D; } }
-#if !(UNITY_METRO || UNITY_WP8) || UNITY_EDITOR // EDIT (|| UNITY_EDITOR)
+#if !(UNITY_METRO || UNITY_WP8 || UNITY_ANDROID) || UNITY_EDITOR // EDIT (|| UNITY_EDITOR)
         new
 #endif
         public Rigidbody2D rigidbody2D { get { return m_RigidBody2D; } }
