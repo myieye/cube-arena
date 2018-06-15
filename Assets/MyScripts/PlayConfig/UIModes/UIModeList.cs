@@ -14,7 +14,6 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		[SerializeField]
 		private GameObject dropdownArrow;
 
-		
 		[SerializeField]
 		private int touchCount;
 		private bool valid;
@@ -35,6 +34,10 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 		public static UIModeList Instance { get; private set; }
 
 		void Awake () {
+#if UNITY_EDITOR || UNITY_STANDALONE
+			GetComponent<RectTransform> ().anchoredPosition = new Vector2 (-140, -50);
+			GetComponent<RectTransform> ().sizeDelta = new Vector2 (220, 70);
+#endif
 			valid = true;
 			dropdownEnabled = true;
 
@@ -42,7 +45,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			Instance = this;
 			dropdown = GetComponent<Dropdown> ();
 			dropdown.options = (
-				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetFriendlyString ())).ToList ();
+				from mode in UIModeHelpers.UIModesForCurrentDevice select new Dropdown.OptionData (mode.GetShortDescription ())).ToList ();
 		}
 
 		private void Update () {

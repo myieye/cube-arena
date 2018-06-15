@@ -39,6 +39,28 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
             }
         }
 
+        public static string GetShortDescription (this UIMode uiMode) {
+            switch (uiMode) {
+                case UIMode.HHD1_Camera:
+                    return "HHD1: Camera + Joystick";
+                case UIMode.HHD2_Touch:
+                    return "HHD2: Touch + Joystick";
+                case UIMode.HHD3_Gestures:
+                    return "HHD3: Touch Gestures";
+                case UIMode.HMD1_Gaze:
+                    return "HMD1: Gaze + Clicker";
+                case UIMode.HMD2_Point:
+                    return "HMD2: Gaze/Point + Clicker";
+                case UIMode.HMD3_Translate:
+                    return "HMD3: Gaze/Move + Clicker";
+                default:
+                    return uiMode.ToString ()
+                        .Replace ("__", ", ")
+                        .Replace ("_", " ")
+                        .Replace ("And", " + ");
+            }
+        }
+
         internal static UIMode UIModeOrFirstCompatible (UIMode uiMode, DeviceTypeSpec deviceType) {
             var compatibleUIModes = ActiveUIModes.Where (mode => mode.IsForDeviceType (deviceType));
             if (compatibleUIModes.Contains (uiMode)) {

@@ -149,21 +149,21 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 				mode = modeMsg.UIMode;
 			}
 
-			if (mode != UIMode.None) {
+			if (modeMsg.SwappingDevices) {
 				PassToPlayerText.enabled = true;
-				PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum);
-				StartCoroutine (DelayUtil.Do (modeMsg.PassToPlayerTime, () => {
-					PassToPlayerText.text = "";
-					PassToPlayerText.enabled = false;
-					uiModeList.SetVisible (true);
-				}));
-			} else {
-				uiModeList.SetVisible (false || isServer);
+				PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum, mode);
 			}
 
-			uiModeList.SetEnabled (!modeMsg.DisableUIModeList || isServer);
+			uiModeList.SetVisible (false);
 
-			SetUIMode (mode);
+			StartCoroutine (DelayUtil.Do (modeMsg.Delay, () => {
+				PassToPlayerText.text = "";
+				PassToPlayerText.enabled = false;
+				uiModeList.SetVisible (mode != UIMode.None || isServer);
+				SetUIMode (mode);
+			}));
+
+			uiModeList.SetEnabled (!modeMsg.DisableUIModeList || isServer);
 		}
 
 		public void OnUIModeChanged (int uiMode) {
@@ -242,22 +242,23 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			NotifyUIModeChangesListeners ();
 		}
 
-		public void SetPlayerUIModes (List<Players.NetworkPlayer> players) {
+		public void SetPlayerUIModes (List<Players.NetworkPlayer> players, float delay, bool swappingDevices) {
 			foreach (var player in players) {
-				SetPlayerUIMode (player, player.DeviceConfig.UIMode);
+				SetPlayerUIMode (player, player.DeviceConfig.UIMode, delay, swappingDevices);
 			}
 		}
 
 		public void DisablePlayerUIs (List<Players.NetworkPlayer> players) {
 			foreach (var player in players) {
-				SetPlayerUIMode (player, UIMode.None);
+				SetPlayerUIMode (player, UIMode.None, 0, false);
 			}
 		}
 
-		private void SetPlayerUIMode (Players.NetworkPlayer player, UIMode uiMode) {
+		private void SetPlayerUIMode (Players.NetworkPlayer player, UIMode uiMode, float delay, bool swappingDevices) {
 			var msg = new UIModeMessage {
 				UIMode = uiMode, PlayerNum = player.PlayerNum,
-					PassToPlayerTime = Settings.Instance.PassToPlayerTime,
+					SwappingDevices = swappingDevices,
+					Delay = delay,
 					DisableUIModeList = Settings.Instance.DisableUIModeListOnClients,
 					ForceUserStudySettings = Settings.Instance.ForceUserStudySettings
 			};
