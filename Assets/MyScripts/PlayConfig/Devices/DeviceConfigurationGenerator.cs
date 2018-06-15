@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CubeArena.Assets.MyScripts.Logging.DAL.Models;
 using CubeArena.Assets.MyScripts.PlayConfig.Devices;
+using CubeArena.Assets.MyScripts.PlayConfig.Players;
 using CubeArena.Assets.MyScripts.PlayConfig.Rounds;
 using CubeArena.Assets.MyScripts.PlayConfig.UIModes;
 using CubeArena.Assets.MyScripts.Utils;
@@ -217,7 +218,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Devices {
         }
 
         private bool GetEmptyConfig (int numPlayers, int numRounds, out List<List<DeviceConfig>> config) {
-            if (!CheckEnoughDevicesAvailable (numPlayers) || numPlayers < 1) {
+            if (!CheckEnoughDevicesAvailable (numPlayers) ||
+                numPlayers < 1 || numPlayers > PlayerManager.Instance.MaxPlayers) {
                 config = null;
                 return false;
             }

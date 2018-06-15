@@ -41,6 +41,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Players {
                 }
             }
         }
+
+        public int MaxPlayers { get { return PlayerSpawner.Instance.colors.Length; } }
+
         private List<List<int>> gamePlayerRoundIds;
         private List<int> playerRoundIds;
         private DataService dataService;
