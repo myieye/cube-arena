@@ -8430,6 +8430,11 @@ Prefab:
       propertyPath: mWorldCenter
       value: 
       objectReference: {fileID: 1237844835}
+    - target: {fileID: 20069438404047812, guid: 21692c54e44861141b493a43ff3d9050,
+        type: 2}
+      propertyPath: m_AllowMSAA
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 21692c54e44861141b493a43ff3d9050, type: 2}
   m_IsPrefabParent: 0
