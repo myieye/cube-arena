@@ -18,7 +18,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		[SerializeField]
 		private float speed;
-		private TapDetecter tapDetecter;
+		private CachedComponent<TapDetecter> tapDetecter;
 		private MoveState moveState;
 		private Vector2? prevYPoint;
 		private GameObject TranslationPlane {
@@ -35,7 +35,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		protected override void Start () {
 			base.Start ();
-			tapDetecter = FindObjectOfType<TapDetecter> ();
+			tapDetecter = new CachedComponent<TapDetecter> ();
 			moveState = MoveState.None;
 			prevYPoint = null;
 		}
@@ -72,7 +72,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		protected override bool IsEndingMove () {
-			return (InGestureMode && tapDetecter.Tapped) || (!InGestureMode && base.IsEndingMove ());
+			return (InGestureMode && tapDetecter.Is (t => t.Tapped)) || (!InGestureMode && base.IsEndingMove ());
 		}
 
 		protected override void Move () {
@@ -117,7 +117,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		}
 
 		private bool HoldingSinglePOC () {
-			return TouchInput.HasSinglePOC () && tapDetecter.Holding;
+			return TouchInput.HasSinglePOC () && tapDetecter.Is (t => t.Holding);
 		}
 
 		private void SetMoveState (MoveState moveState) {

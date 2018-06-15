@@ -24,10 +24,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
             base.Start ();
             currTouchOffset = Vector2.zero;
             LastTouch = screenCenter;
-
-            if (!UIModeManager.InTouchMode) {
-                enabled = false;
-            }
         }
 
         protected override void Update () {

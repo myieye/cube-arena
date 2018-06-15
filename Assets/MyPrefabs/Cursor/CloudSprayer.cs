@@ -21,7 +21,6 @@ using UnityStandardAssets.CrossPlatformInput;
 namespace CubeArena.Assets.MyPrefabs.Cursor {
 	public class CloudSprayer : NetworkBehaviour {
 
-		private ProgressBarBehaviour progressBar;
 		[SerializeField]
 		private GameObject sprayPrefab;
 		[SerializeField]
@@ -30,26 +29,27 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 		private float rechargeSpeed;
 		[SerializeField]
 		private float cooldown;
+
 		private const float Cost = 1;
-		private float _currAmount;
-		private float CurrAmount {
-			get {
-				return _currAmount;
-			}
-			set {
-				_currAmount = value;
-				progressBar.Value = ((_currAmount / capacity) * 100);
-			}
-		}
 		private DateTime lastSpray;
 
 		private InteractionStateManager stateManager;
 		private EnabledComponent<CursorController> cursor;
-
+		private CachedComponent<ProgressBarBehaviour> progressBar;
 		private PlayerId playerId;
 
+		private float _currAmount = -1;
+		private float CurrAmount {
+			get { return _currAmount; }
+			set {
+				if (_currAmount == value) return;
+				_currAmount = value;
+				progressBar.Try (() => progressBar.Get.Value = ((_currAmount / capacity) * 100));
+			}
+		}
+
 		void Start () {
-			progressBar = FindObjectOfType<ProgressBarBehaviour> ();
+			progressBar = new CachedComponent<ProgressBarBehaviour> ();
 			stateManager = GetComponent<InteractionStateManager> ();
 			cursor = new EnabledComponent<CursorController> (gameObject);
 			playerId = GetComponent<PlayerId> ();
@@ -104,7 +104,7 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			spray.transform.position = position;
 			spray.GetComponent<Colourer> ().color = playerColour;
 			spray.GetComponent<CloudEffectivenessMeasurer> ().PlayerMeasuerer =
-				PlayerManager.Instance.GetPlayerMeasurer (GetComponent <PlayerId> ());
+				PlayerManager.Instance.GetPlayerMeasurer (GetComponent<PlayerId> ());
 
 			return spray;
 		}

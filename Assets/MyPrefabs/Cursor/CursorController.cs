@@ -90,10 +90,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 
 		public override void OnStartAuthority () {
 			Measure.LocalInstance.Cursor = new EnabledComponent<CursorController> (gameObject);
-			
-			if (GetType () == typeof (CursorController) && UIModeManager.InTouchMode) {
-				enabled = false;
-			}
 		}
 
 		protected virtual void Start () {
@@ -124,10 +120,6 @@ namespace CubeArena.Assets.MyPrefabs.Cursor {
 			if (!hasAuthority) {
 				cursorRenderer.enabled = (ARManager.WorldEnabled &&
 					(showOnNetwork || Settings.Instance.DebugCursor));
-				Debug.Log ("Start ---");
-				Debug.Log (ARManager.WorldEnabled && (showOnNetwork || Settings.Instance.DebugCursor));
-				Debug.Log ((showOnNetwork || Settings.Instance.DebugCursor));
-				Debug.Log (showOnNetwork);
 				return;
 			}
 
