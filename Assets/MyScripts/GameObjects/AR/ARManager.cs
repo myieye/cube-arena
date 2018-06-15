@@ -6,20 +6,20 @@ using CubeArena.Assets.MyScripts.Network;
 using CubeArena.Assets.MyScripts.Utils.Constants;
 using CubeArena.Assets.MyScripts.Utils.Settings;
 using UnityEngine;
-#if !UNITY_STANDALONE
+#if !UNITY_STANDALONE || UNITY_EDITOR
 using Vuforia;
 #endif
 
 namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 	public class ARManager:
-#if !UNITY_STANDALONE// && !UNITY_EDITOR
+#if !UNITY_STANDALONE || UNITY_EDITOR
 		DefaultTrackableEventHandler
 #else
 	DummyTrackableEventHandler
 #endif
 	{
 
-#if !UNITY_STANDALONE
+#if !UNITY_STANDALONE || UNITY_EDITOR
 		[SerializeField]
 		private VuforiaBehaviour vuforiaBehaviour;
 #endif
@@ -55,7 +55,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 			AddWorldComponents ();
 			RefreshWorld ();
 
-#if !UNITY_STANDALONE
+#if !UNITY_STANDALONE || UNITY_EDITOR
 			if (Settings.Instance.AREnabled) {
 				VuforiaRuntime.Instance.InitVuforia ();
 				VuforiaBehaviour.Instance.enabled = true;
