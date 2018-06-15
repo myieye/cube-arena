@@ -212,7 +212,10 @@ namespace UnityEngine.Networking {
     /// <summary>
     ///   <para>Cached Rigidbody2D.</para>
     /// </summary>
-    public new Rigidbody2D rigidbody2D { // EDIT (new)
+#if !UNITY_ANDROID
+    new
+#endif
+    public Rigidbody2D rigidbody2D { // EDIT (new)
       get {
         return this.m_RigidBody2D;
       }
