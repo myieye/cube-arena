@@ -33,20 +33,20 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
                 customRatingQuestions.Add (new RatingQuestion (12, "", "I collaborated with the other players a lot."));
                 customRatingQuestions.Add (new RatingQuestion (13, "", "I was very helpful to the other players."));
                 customRatingQuestions.Add (new RatingQuestion (14, "", "The system seemed very buggy."));
+                customRatingQuestions.Add (new RatingQuestion (15, "", "I always had a good overview of the play field."));
 
-                //customRatingQuestions.Add (new RatingQuestion (, "", "I always had a good overview of the play field."));
-                //customRatingQuestions.Add (new RatingQuestion (, "", "I would have been much more effective by myself."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "The other players were very helpful to me."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "I needed to move a lot in order to accomplish what I wanted to."));
+                //customRatingQuestions.Add (new RatingQuestion (, "", "I would have been much more effective by myself."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "The system worked flawlessly."));
             }
 
             oneTimeRatingQuestions = new List<RatingQuestion> ();
 
-            oneTimeRatingQuestions.Add (new RatingQuestion (15, "", "I have a lot of experience using the HoloLens."));
+            oneTimeRatingQuestions.Add (new RatingQuestion (16, "", "How much experience do you have with the HoloLens?"));
             if (Settings.Instance.ForceUserStudySettings) {
-                oneTimeRatingQuestions.Add (new RatingQuestion (16, "", "I have a lot of experience using a smartphone."));
-                oneTimeRatingQuestions.Add (new RatingQuestion (17, "", "I have a lot of experience with augmented reality."));
+                oneTimeRatingQuestions.Add (new RatingQuestion (17, "", "How much experience do you have with smartphones?"));
+                oneTimeRatingQuestions.Add (new RatingQuestion (18, "", "How much experience do you have with augmented reality?"));
             }
 
             weightQuestions = new List<WeightQuestion> ();

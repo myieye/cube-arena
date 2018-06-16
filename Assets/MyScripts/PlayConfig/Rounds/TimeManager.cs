@@ -50,16 +50,13 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 
 		[ClientRpc]
 		public void RpcClear (bool clearOnServer) {
-			Debug.Log ("RpcClear: " + clearOnServer);
 			if (!isServer || clearOnServer) {
 				Clear ();
-				Debug.Log ("clearing");
 			}
 		}
 
 		private void Clear () {
 			CancelInvoke (TickClock_Method);
-			Debug.Log ("canceled invoked");
 			roundTimeRemaining_S = 0;
 			if (clock) {
 				clock.enabled = false;

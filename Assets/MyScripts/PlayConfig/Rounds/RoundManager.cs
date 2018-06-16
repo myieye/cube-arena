@@ -72,12 +72,9 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		public void OnRoundOver (bool force = false) {
-			Debug.Log ("OnRoundOver: " + force);
 			if (!force && Settings.Instance.EndlessRounds) return;
-			Debug.Log ("yes");
 
 			ResetGameObjects (0.5f);
-			Debug.Log ("clear");
 			timeManager.RpcClear (true);
 
 			if (!InTestPhase && !InPracticeMode && currRound > 0) {

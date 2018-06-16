@@ -102,6 +102,18 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			}
 		}
 
+		[SerializeField]
+		private UnityEngine.UI.Text playerNumberText;
+		private UnityEngine.UI.Text PlayerNumberText {
+			get {
+				if (!playerNumberText) {
+					playerNumberText = GameObject.Find (Names.PlayerNumberText)
+						.GetComponent<UnityEngine.UI.Text> ();
+				}
+				return playerNumberText;
+			}
+		}
+
 		public CACursorMode CurrentCursorMode { get; private set; }
 		public UIMode CurrentUIMode { get; private set; }
 		private static List<UIModeChangedListener> uiModeChangedListeners;
@@ -152,6 +164,11 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.UIModes {
 			if (modeMsg.SwappingDevices) {
 				PassToPlayerText.enabled = true;
 				PassToPlayerText.text = Text.PassToPlayerText (modeMsg.PlayerNum, mode);
+				PlayerNumberText.enabled = true;
+				PlayerNumberText.text = modeMsg.PlayerNum.ToString ();
+			} else if (mode == UIMode.None) {
+				PlayerNumberText.enabled = false;
+				PlayerNumberText.text = "";
 			}
 
 			uiModeList.SetVisible (false);
