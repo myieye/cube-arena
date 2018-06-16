@@ -36,13 +36,14 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 #endif
 		}
 
-		public void CheckUserStudySettings () {
+		public bool CheckUserStudySettings () {
 			if (forceUserStudySettings) {
-				EnableUserStudySettings ();
+				return EnableUserStudySettings ();
 			}
+			return true;
 		}
 
-		public void EnableUserStudySettings () {
+		public bool EnableUserStudySettings () {
 			forceUserStudySettings = true;
 			autoStartGame = false;
 			endlessRounds = false;
@@ -56,9 +57,15 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 				logDeviceConnections = true;
 				resetDebugDbOnStart = false;
 				overrideAvailableDevices = false;
-				if (DatabaseManager.Instance) {
-					DatabaseManager.Instance.SetDbVersion (DatabaseVersion.Release);
+#if UNITY_EDITOR || UNITY_STANDALONE
+				if (!DatabaseManager.Instance) {
+					Debug.LogError ("Database Manager not found");
+					return false;
+				} else if (DatabaseManager.Instance.SelectedDbVersion != DatabaseVersion.Release) {
+					Debug.LogError ("Please select Release Database");
+					return false;
 				}
+#endif
 			} else {
 				overrideAvailableDevices = true;
 			}
@@ -73,6 +80,7 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 				fpsDisplay.SetActive (false);
 			}
 #endif
+			return true;
 		}
 
 		public static ISettings Instance { get; set; }

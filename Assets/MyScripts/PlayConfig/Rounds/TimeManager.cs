@@ -37,7 +37,8 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		public void StartRound (float roundLength, float roundDelay, RoundOverListener roundOverListener, bool practiceMode) {
 			this.roundOverListener = roundOverListener;
 
-			RpcClear ();
+			Clear ();
+			RpcClear (false);
 
 			StartCoroutine (DelayUtil.Do (roundDelay,
 				() => {
@@ -48,12 +49,17 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		}
 
 		[ClientRpc]
-		public void RpcClear () {
-			Clear ();
+		public void RpcClear (bool clearOnServer) {
+			Debug.Log ("RpcClear: " + clearOnServer);
+			if (!isServer || clearOnServer) {
+				Clear ();
+				Debug.Log ("clearing");
+			}
 		}
 
 		private void Clear () {
 			CancelInvoke (TickClock_Method);
+			Debug.Log ("canceled invoked");
 			roundTimeRemaining_S = 0;
 			if (clock) {
 				clock.enabled = false;
@@ -73,7 +79,7 @@ namespace CubeArena.Assets.MyScripts.PlayConfig.Rounds {
 		private void TickClock () {
 			roundTimeRemaining_S -= 1;
 			if (roundTimeRemaining_S <= 0) {
-				RpcClear ();
+				RpcClear (true);
 				roundOverListener.OnRoundOver ();
 			}
 		}

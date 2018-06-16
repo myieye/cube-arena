@@ -16,6 +16,13 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		[SerializeField]
 		private Dropdown dbVersionList;
 
+		public DatabaseVersion SelectedDbVersion {
+			get {
+				var dbIndex = dbVersionList.value;
+				return (DatabaseVersion) dbIndex;
+			}
+		}
+
 		public static DatabaseManager Instance { get; private set; }
 
 		void Awake () {
@@ -55,7 +62,7 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 		[Server]
 		private void RefreshDbVersion () {
 #if UNITY_EDITOR
-			var dbVersion = GetSelectedDbVersion ();
+			var dbVersion = SelectedDbVersion;
 			dbVersionList.GetComponent<Image> ().color = dbVersion.GetColor ();
 			DataService.Instance.SetDbVersion (dbVersion);
 			dbVersionList.RefreshShownValue ();
@@ -63,11 +70,6 @@ namespace CubeArena.Assets.MyScripts.Logging.DAL {
 			DataService.Instance.SetDbVersion (DatabaseVersion.Mock);
 #endif
 			GameConfigManager.Instance.Refresh ();
-		}
-
-		private DatabaseVersion GetSelectedDbVersion () {
-			var dbIndex = dbVersionList.value;
-			return (DatabaseVersion) dbIndex;
 		}
 	}
 }

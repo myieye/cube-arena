@@ -6,12 +6,12 @@ using CubeArena.Assets.MyScripts.Utils.Settings;
 namespace CubeArena.Assets.Tests.MyScripts.Utils.Constants {
     public class MockSettings : ISettings {
 
-        public void EnableUserStudySettings () {
-
+        public bool EnableUserStudySettings () {
+            return true;
         }
 
-        public void CheckUserStudySettings () {
-            
+        public bool CheckUserStudySettings () {
+            return true;
         }
 
         public bool ForceUserStudySettings { get; set; }

@@ -5,7 +5,8 @@ using CubeArena.Assets.MyScripts.Utils.Settings;
 namespace CubeArena.Assets.MyScripts.Utils.Settings {
 	public interface ISettings {
 
-		void EnableUserStudySettings ();
+		bool EnableUserStudySettings ();
+        bool CheckUserStudySettings ();
 
 		bool ForceUserStudySettings { get; }
 		string ServerIp { get; set; }
@@ -50,8 +51,6 @@ namespace CubeArena.Assets.MyScripts.Utils.Settings {
 		float MinRotationVelocity { get; }
 		float MaxRotationVelocity { get; }
 		float AxisSensitivity { get; }
-
-        void CheckUserStudySettings ();
 		//int[] AreaRadiuses { get; }
 		//float AreaCenterPlayerStartPointOffset { get; }
 	}
