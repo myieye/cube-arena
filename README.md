@@ -4,7 +4,7 @@ CubeArena is a multiplayer, cooperative, augmented reality (AR) game for testing
 
 The game was developed for my Master's thesis (MSc in Software Engineering).
 
-![Alt text](screenshot.png "Title")
+![Screenshot](Screenshot.png "Screenshot")
 
 ## Concept
 
