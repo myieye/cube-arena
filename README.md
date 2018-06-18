@@ -4,6 +4,8 @@ CubeArena is a multiplayer, cooperative, augmented reality (AR) game for testing
 
 The game was developed for my Master's thesis (MSc in Software Engineering).
 
+![Alt text](screenshot.png "Title")
+
 ## Concept
 
 Each player has a set of cubes. Working together they stack their cubes and then tip them over to squash the bad guys! They can also change into "Spray Mode" to spray the bad guys and slow them down.
