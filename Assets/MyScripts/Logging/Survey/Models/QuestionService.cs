@@ -24,16 +24,16 @@ namespace CubeArena.Assets.MyScripts.Logging.Survey.Models {
 
             customRatingQuestions = new List<RatingQuestion> ();
 
-            customRatingQuestions.Add (new RatingQuestion (7, "", "I always knew what other players were doing."));
-            customRatingQuestions.Add (new RatingQuestion (8, "", "I found it very difficult to work together."));
+            customRatingQuestions.Add (new RatingQuestion (7, "", "I always knew what other players were doing.")); // Collab:overview/FoV
+            customRatingQuestions.Add (new RatingQuestion (8, "", "I found it very difficult to work together.")); // Collab:overall
             if (Settings.Instance.ForceUserStudySettings) {
-                customRatingQuestions.Add (new RatingQuestion (9, "", "I could easily communicate with the other players."));
-                customRatingQuestions.Add (new RatingQuestion (10, "", "I found the device was a significant hindrance to my communication."));
-                customRatingQuestions.Add (new RatingQuestion (11, "", "I could reach every area of the play field without dfficulty."));
-                customRatingQuestions.Add (new RatingQuestion (12, "", "I collaborated with the other players a lot."));
-                customRatingQuestions.Add (new RatingQuestion (13, "", "I was very helpful to the other players."));
-                customRatingQuestions.Add (new RatingQuestion (14, "", "The system seemed very buggy."));
-                customRatingQuestions.Add (new RatingQuestion (15, "", "I always had a good overview of the play field."));
+                customRatingQuestions.Add (new RatingQuestion (9, "", "I could easily communicate with the other players.")); // Collab:communication (+)
+                customRatingQuestions.Add (new RatingQuestion (10, "", "I found the device was a significant hindrance to my communication.")); // Collab:communication (-)
+                customRatingQuestions.Add (new RatingQuestion (11, "", "I could reach every area of the play field without difficulty.")); // Collab:mobility
+                customRatingQuestions.Add (new RatingQuestion (12, "", "I collaborated with the other players a lot.")); // Collab:overall
+                customRatingQuestions.Add (new RatingQuestion (13, "", "I was very helpful to the other players.")); // Collab:overall
+                customRatingQuestions.Add (new RatingQuestion (14, "", "The system seemed very buggy.")); // N/A
+                customRatingQuestions.Add (new RatingQuestion (15, "", "I always had a good overview of the play field.")); // Collab:overview/FoV
 
                 //customRatingQuestions.Add (new RatingQuestion (, "", "The other players were very helpful to me."));
                 //customRatingQuestions.Add (new RatingQuestion (, "", "I needed to move a lot in order to accomplish what I wanted to."));
