@@ -100,7 +100,7 @@ namespace CubeArena.Assets.MyScripts.GameObjects.AR {
 		}
 
 		protected override void OnTrackingLost () {
-			WorldEnabled = false;
+			WorldEnabled = !Settings.Instance.AREnabled;
 			RefreshWorld ();
 		}
 
